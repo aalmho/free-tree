@@ -1,6 +1,4 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import { AppleAuth } from './components/AppleAuth';
 import { supabase } from './utils/supabase';
 import { useEffect, useState } from 'react';
 import { Session } from '@supabase/supabase-js';

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-const AboutUsPage = () => {
+const CreateTreePage = () => {
     return(
         <View>
             <Text>Giv et træ</Text>
@@ -9,4 +9,4 @@ const AboutUsPage = () => {
     )
 }
 
-export default AboutUsPage;
+export default CreateTreePage;

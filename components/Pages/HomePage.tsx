@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text, View, Button} from 'react-native';
 import { supabase } from '../../utils/supabase';
+
 const HomePage = () => {
     return(
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

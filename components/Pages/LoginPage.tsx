@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AppleAuth } from '../../components/AppleAuth';
 
-const AboutUsPage = () => {
+const LoginPage = () => {
     return(
         <View style={styles.container}>
             <AppleAuth />
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default AboutUsPage;
+export default LoginPage;
