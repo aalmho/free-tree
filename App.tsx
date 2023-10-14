@@ -4,6 +4,9 @@ import { AppleAuth } from './components/AppleAuth';
 import { supabase } from './utils/supabase';
 import { useEffect, useState } from 'react';
 import { Session } from '@supabase/supabase-js';
+import { NavigationContainer } from '@react-navigation/native';
+import BottomTabsNavigator from './components/BottomTabsNavigator';
+import LoginPage from './components/Pages/LoginPage';
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -21,25 +24,17 @@ export default function App() {
     return () => subscription.unsubscribe()
   },[])
 
+
   return (
-    <View style={styles.container}>
+    <>
       {session ? 
-      <>
-        <Button title="sign out" onPress={() => supabase.auth.signOut()} />
-        <Text>Open up App.tsx to start working on your app!</Text>
+      <NavigationContainer>
+        <BottomTabsNavigator />
         <StatusBar style="auto" />
-        </>
+      </NavigationContainer>
       :
-      <AppleAuth />}
-      </View>
+      <LoginPage />}
+      
+    </>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
