@@ -1,7 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { GiftedChat, IMessage } from 'react-native-gifted-chat'
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 const MessagesPage = () => {
+    const DEFAULT_TABBAR_HEIGHT = useBottomTabBarHeight();
     const [messages, setMessages] = useState<IMessage[]>([])
     useEffect(() => {
         // Get messages from supabase database
@@ -29,13 +31,13 @@ const MessagesPage = () => {
     return (
         <GiftedChat
         messages={messages}
-        showAvatarForEveryMessage={true}
         onSend={messages => onSend(messages)}
         user={{
             _id: 1,
             name: 'user',
             avatar: 'https://picsum.photos/140'
         }}
+        bottomOffset={DEFAULT_TABBAR_HEIGHT}
         />
     )
 }
