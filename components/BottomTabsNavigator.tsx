@@ -25,7 +25,7 @@ const BottomTabsNavigator = () => {
   return (
     <Tab.Navigator initialRouteName="Hent et træ" screenOptions={screenOptions}>
         <Tab.Screen name="Hent et træ" component={HomePage} options={iconOptions("home")} />
-        <Tab.Screen name="Kø og beskeder" component={MessagesPage} options={iconOptions("chatbox-outline")}/>
+        <Tab.Screen name="Kø og beskeder" component={MessagesPage} options={{...iconOptions("chatbox-outline"), headerShown: false }} />
         <Tab.Screen name="Giv et træ" component={CreateTreePage} options={iconOptions("add-circle-outline")} />
         <Tab.Screen name="Om os" component={AboutUsPage} options={iconOptions("filter")}/>
         <Tab.Screen name="Filter" component={FilterPage} options={iconOptions("options-outline")}/>
