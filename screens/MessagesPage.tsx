@@ -1,6 +1,6 @@
-import Chat from '../Chat';
+import Chat from '../components/chat/Chat';
 import { createStackNavigator } from '@react-navigation/stack';
-import MessagesOverview from '../MessagesOverview';
+import MessagesOverview from '../components/chat/MessagesOverview';
 
 type MessagesStackParamList = {
     MessagesOverview: undefined,
