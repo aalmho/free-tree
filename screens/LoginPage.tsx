@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { AppleAuth } from '../../components/AppleAuth';
+import { AppleAuth } from '../components/AppleAuth';
 
 const LoginPage = () => {
     return(

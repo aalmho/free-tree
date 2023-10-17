@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { GiftedChat, IMessage } from 'react-native-gifted-chat'
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { NavigationProp } from '@react-navigation/native';
 import { Chats } from './MockData';
 import { Route } from '@react-navigation/native';
 import { ChatType } from './types';

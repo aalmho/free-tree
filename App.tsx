@@ -3,8 +3,9 @@ import { supabase } from './utils/supabase';
 import { useEffect, useState } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { NavigationContainer } from '@react-navigation/native';
-import BottomTabsNavigator from './components/BottomTabsNavigator';
-import LoginPage from './components/Pages/LoginPage';
+import BottomTabsNavigator from './navigation/BottomTabsNavigator';
+import LoginPage from './screens/LoginPage';
+import 'react-native-get-random-values'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -21,7 +22,6 @@ export default function App() {
 
     return () => subscription.unsubscribe()
   },[])
-
 
   return (
     <>

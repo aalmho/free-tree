@@ -1,10 +1,10 @@
 import {Ionicons} from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomePage from './Pages/HomePage'
-import MessagesPage from './Pages/MessagesPage';
-import CreateTreePage from './Pages/CreateTreePage';
-import FilterPage from './Pages/FilterPage';
-import AboutUsPage from './Pages/AboutUsPage';
+import HomePage from '../screens/HomePage'
+import MessagesPage from '../screens/MessagesPage';
+import CreateTreePage from '../screens/CreateTreePage';
+import FilterPage from '../screens/FilterPage';
+import AboutUsPage from '../screens/AboutUsPage';
 
 const Tab = createBottomTabNavigator();
 
