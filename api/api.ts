@@ -26,7 +26,7 @@ export const createPost = async (
 }
 
 export const getPosts = async () => {
-    const {data, error} = await supabase.from("posts").select("*");
+    const {data, error} = await supabase.from("posts").select("*").order("created_at", { ascending: false });
     handleError(error)
     return data as Post[];
 }
