@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  Button,
-  ScrollView,
-  RefreshControl,
-  Image,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { Text, View, Button, ScrollView, RefreshControl } from "react-native";
 import { supabase } from "../utils/supabase";
 import { useGetPosts } from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/Post";

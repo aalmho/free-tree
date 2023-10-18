@@ -1,41 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import { supabase } from './utils/supabase';
-import { useEffect, useState, createContext } from 'react';
-import { Session } from '@supabase/supabase-js';
-import { NavigationContainer } from '@react-navigation/native';
-import BottomTabsNavigator from './navigation/BottomTabsNavigator';
-import LoginPage from './screens/LoginPage';
-import 'react-native-get-random-values'
-import { SessionContext } from './context/SessionContext';
+import { StatusBar } from "expo-status-bar";
+import { supabase } from "./utils/supabase";
+import { useEffect, useState, createContext } from "react";
+import { Session } from "@supabase/supabase-js";
+import { NavigationContainer } from "@react-navigation/native";
+import BottomTabsNavigator from "./navigation/BottomTabsNavigator";
+import LoginPage from "./screens/LoginPage";
+import "react-native-get-random-values";
+import { SessionContext } from "./context/SessionContext";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
   useEffect(() => {
-    supabase.auth.getSession().then(({data: {session}}) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-    })
+    });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
+      setSession(session);
+    });
 
-    return () => subscription.unsubscribe()
-  },[])
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <>
-      {session ? 
-      <SessionContext.Provider value={{session}}>
-      <NavigationContainer>
-        <BottomTabsNavigator />
-        <StatusBar style="auto" />
-      </NavigationContainer>
-      </SessionContext.Provider>
-      :
-      <LoginPage />}
-      
+      {session ? (
+        <SessionContext.Provider value={{ session }}>
+          <NavigationContainer>
+            <BottomTabsNavigator />
+            <StatusBar style="auto" />
+          </NavigationContainer>
+        </SessionContext.Provider>
+      ) : (
+        <LoginPage />
+      )}
     </>
-  )
+  );
 }

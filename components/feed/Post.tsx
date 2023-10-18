@@ -1,7 +1,6 @@
-import { FC, useContext, useState } from "react";
-import { Post, requestTree } from "../../api/api";
+import { FC, useCallback, useContext, useMemo, useState } from "react";
+import { Post, requestTree, unrequestTree } from "../../api/api";
 import { View, Image, Text, Pressable } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { SessionContext } from "../../context/SessionContext";
 
 interface FeedPost {
@@ -9,9 +8,31 @@ interface FeedPost {
 }
 
 export const FeedPost: FC<FeedPost> = ({ post }) => {
-  const [treeRequested, setTreeRequested] = useState(false);
-  const requestText = treeRequested ? "Tree requested" : "Request tree";
   const { session } = useContext(SessionContext);
+  const isTreeRequested = useMemo(() => {
+    return post.requests?.some(
+      (request) => request.requester === session?.user.id
+    );
+  }, [post, session]);
+
+  const requestText = useMemo(() => {
+    if (post.user_id === session?.user?.id) {
+      return "Your tree";
+    }
+    return isTreeRequested ? "Unrequest tree" : "Request tree";
+  }, [post, session]);
+
+  const toggleRequest = useCallback(() => {
+    console.log(
+      post.requests?.find((request) => request.post_id === post.id)?.id
+    );
+    isTreeRequested
+      ? unrequestTree(
+          post.requests?.find((request) => request.post_id === post.id)?.id!
+        )
+      : requestTree(session?.user?.id!, post.id);
+  }, [post, session]);
+
   return (
     <View style={{ marginHorizontal: 15, marginTop: 10 }}>
       <View
@@ -35,9 +56,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
         <View style={{ marginTop: 5 }}>
           <Pressable
             style={{ backgroundColor: "green", borderRadius: 16, width: 150 }}
-            onPress={() =>
-              requestTree(session?.user?.id!, post.id)
-            }
+            onPress={() => toggleRequest()}
           >
             <Text
               style={{
@@ -47,9 +66,6 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
               }}
             >
               {requestText}
-              {treeRequested && (
-                <Ionicons name="checkmark" color="white" size={20} />
-              )}
             </Text>
           </Pressable>
         </View>
