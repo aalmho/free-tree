@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { supabase } from './utils/supabase';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { NavigationContainer } from '@react-navigation/native';
 import BottomTabsNavigator from './navigation/BottomTabsNavigator';
 import LoginPage from './screens/LoginPage';
 import 'react-native-get-random-values'
+import { SessionContext } from './context/SessionContext';
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -26,10 +27,12 @@ export default function App() {
   return (
     <>
       {session ? 
+      <SessionContext.Provider value={{session}}>
       <NavigationContainer>
         <BottomTabsNavigator />
         <StatusBar style="auto" />
       </NavigationContainer>
+      </SessionContext.Provider>
       :
       <LoginPage />}
       
