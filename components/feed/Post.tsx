@@ -23,9 +23,6 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
   }, [post, session]);
 
   const toggleRequest = useCallback(() => {
-    console.log(
-      post.requests?.find((request) => request.post_id === post.id)?.id
-    );
     isTreeRequested
       ? unrequestTree(
           post.requests?.find((request) => request.post_id === post.id)?.id!

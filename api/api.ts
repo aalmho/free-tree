@@ -51,7 +51,6 @@ export const unrequestTree = async (requestId: number) => {
     .from("requests")
     .delete()
     .eq("id", requestId);
-  console.log(requestId);
   handleError(error);
 };
 
