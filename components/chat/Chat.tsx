@@ -1,30 +1,22 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useContext } from 'react'
 import { GiftedChat, IMessage } from 'react-native-gifted-chat'
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { Chats } from './MockData';
 import { Route } from '@react-navigation/native';
-import { ChatType } from './types';
+import { useGetMessages } from '../../hooks/use-messages';
+import { SessionContext } from '../../context/SessionContext';
+import { sendMessage } from '../../api/api';
 
 const Chat = ({ route }: { route: Route<string, { chatId: number }> }) => {
     const { chatId } = route.params
-
+    const { session } = useContext(SessionContext);
     const DEFAULT_TABBAR_HEIGHT = useBottomTabBarHeight();
-    const [messages, setMessages] = useState<IMessage[]>([])
-    useEffect(() => {
-        // Get messages from supabase database based on some id of the chat?
-        // This is mockData
-        const thisChat: ChatType = Chats.find( (chat: ChatType) => chat.id === chatId)!;
-        setMessages(thisChat?.chatMessages)
-    }, [])
+    const { messages, setMessages } = useGetMessages(chatId)
 
     const onSend = useCallback((messages: IMessage[] = []) => {
         setMessages(previousMessages =>
             GiftedChat.append(previousMessages, messages),
         );
-        //Add latest message to the chat in supabase-database
-        //This is adding to MockData:
-        const thisChatIndex = Chats.findIndex( (chat: ChatType) => chat.id === chatId)!;
-        Chats[thisChatIndex].chatMessages.unshift(messages[0]);
+        sendMessage(chatId, messages[0].text, session?.user?.id!)
     }, [])
 
     return (
@@ -32,9 +24,7 @@ const Chat = ({ route }: { route: Route<string, { chatId: number }> }) => {
         messages={messages}
         onSend={messages => onSend(messages)}
         user={{
-            _id: 1,
-            name: 'user',
-            avatar: 'https://picsum.photos/140'
+            _id: session?.user?.id!,
         }}
         bottomOffset={DEFAULT_TABBAR_HEIGHT}
         />
