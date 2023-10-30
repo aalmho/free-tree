@@ -1,17 +1,10 @@
-import { useState, useEffect } from "react";
-import { Post, getPosts } from "../api/api";
+import { getPosts } from "../api/api";
+import { useQuery, QueryKey } from "@tanstack/react-query";
 
-export const useGetPosts = (
-  refreshing: boolean,
-  setRefreshing: (refreshing: boolean) => void
-) => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  useEffect(() => {
-    getPosts().then((val) => {
-      setPosts(val);
-      setRefreshing(false);
-    });
-  }, [refreshing]);
+export const usePosts = () => {
+  const queryKey: QueryKey = ['posts'];
 
-  return { posts };
-};
+  return useQuery({queryKey, queryFn: async () => {
+    return getPosts();
+  }});
+}

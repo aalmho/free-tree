@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { PostRequest, getPostRequests, Request } from "../api/api";
+import { getPostRequests, Request } from "../api/api";
+import { useQuery, QueryKey } from "@tanstack/react-query";
 
-export const useGetPostRequests = (userId: string) => {
-  const [postRequests, setPostRequests] = useState<PostRequest[]>([]);
-  useEffect(() => {
-    getPostRequests(userId).then((value) => {
-      setPostRequests(value);
-    });
-  }, []);
-
-  return { requests: postRequests.flatMap((post) => post?.requests as Request[])};
+export const useRequests = (userId: string) => {
+  const queryKey: QueryKey = ["userRequests", userId];
+  return useQuery({
+    queryKey,
+    queryFn: async () => {
+      const postRequests = await getPostRequests(userId);
+      return postRequests.flatMap((post) => post?.requests as Request[]);
+    },
+  });
 };
