@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PostRequest, getPostRequests } from "../api/api";
+import { PostRequest, getPostRequests, Request } from "../api/api";
 
 export const useGetPostRequests = (userId: string) => {
   const [postRequests, setPostRequests] = useState<PostRequest[]>([]);
@@ -8,5 +8,6 @@ export const useGetPostRequests = (userId: string) => {
       setPostRequests(value);
     });
   }, []);
-  return { requests: postRequests[0]?.requests };
+
+  return { requests: postRequests.flatMap((post) => post?.requests as Request[])};
 };

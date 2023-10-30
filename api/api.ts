@@ -4,7 +4,7 @@ import { PostgrestError } from "@supabase/supabase-js";
 
 export type Request = {
     id: number;
-    post_id: number;
+    post_id?: number;
     approved?: string;
     requester?: string;
 };
@@ -40,7 +40,7 @@ export const getPosts = async () => {
   const { data, error } = await supabase
     .from("posts")
     .select(
-      `id, created_at, image_url, description, user_id, requests (requester, id, post_id)`
+      `id, created_at, image_url, description, user_id, requests (requester, id)`
     )
     .order("created_at", { ascending: false });
   handleError(error);

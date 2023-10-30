@@ -1,4 +1,4 @@
-import { FC, useCallback, useContext, useMemo, useState } from "react";
+import { FC, useCallback, useContext, useMemo } from "react";
 import { Post, requestTree, unrequestTree } from "../../api/api";
 import { View, Image, Text, Pressable } from "react-native";
 import { SessionContext } from "../../context/SessionContext";
@@ -25,7 +25,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
   const toggleRequest = useCallback(() => {
     isTreeRequested
       ? unrequestTree(
-          post.requests?.find((request) => request.post_id === post.id)?.id!
+          post.requests?.find((request) => request.requester === session?.user?.id)?.id!
         )
       : requestTree(session?.user?.id!, post.id);
   }, [post, session]);

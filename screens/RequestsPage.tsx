@@ -8,7 +8,7 @@ export const RequestsPage = () => {
   const { session } = useContext(SessionContext);
   const { requests} = useGetPostRequests(session?.user?.id!);
 
-  if(!requests) {
+  if(!requests || !requests.length) {
     return <View><Text>You have no requests</Text></View>
   }
 

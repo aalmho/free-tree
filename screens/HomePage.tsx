@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Text, View, Button, ScrollView, RefreshControl } from "react-native";
 import { supabase } from "../utils/supabase";
 import { useGetPosts } from "../hooks/use-posts";
-import { FeedPost } from "../components/feed/Post";
+import { FeedPost } from "../components/feed/FeedPost";
 
 const HomePage = () => {
   const [refreshing, setRefreshing] = useState(false);
