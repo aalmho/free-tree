@@ -20,8 +20,12 @@ export const usePosts = () => {
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
-    mutationFn: async (args: { fileName: string; description: string }) => {
-      return createPost(args.fileName, args.description);
+    mutationFn: async (args: {
+      fileName: string;
+      description: string;
+      date: Date;
+    }) => {
+      return createPost(args.fileName, args.description, args.date);
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey });

@@ -25,7 +25,9 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
   const toggleRequest = useCallback(() => {
     isTreeRequested
       ? unrequestTree(
-          post.requests?.find((request) => request.requester === session?.user?.id)?.id!
+          post.requests?.find(
+            (request) => request.requester === session?.user?.id
+          )?.id!
         )
       : requestTree(session?.user?.id!, post.id);
   }, [post, session]);
@@ -68,6 +70,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
         </View>
         <View style={{ marginTop: 5, marginBottom: 15 }}>
           <Text> {post.description}</Text>
+          <Text> {post.pick_up_date?.toString()} </Text>
         </View>
       </View>
     </View>

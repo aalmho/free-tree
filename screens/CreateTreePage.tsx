@@ -8,12 +8,14 @@ import {
   Button,
   Image,
   Dimensions,
+  Text
 } from "react-native";
 import { uploadImage } from "../api/api";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
 import { v4 as uuidv4 } from "uuid";
 import { useCreatePost } from "../hooks/use-posts";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const deviceWidth = Dimensions.get("window").width;
 
@@ -23,6 +25,7 @@ const CreateTreePage = () => {
   const [formData, setFormData] = useState<FormData | null>(null);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [fileUri, setFileUri] = useState("");
+  const [date, setDate] = useState(new Date())
   const uploadImageText = fileUri ? "Change image" : "Upload image";
 
   const { mutate: createPostMutation } = useCreatePost();
@@ -37,7 +40,7 @@ const CreateTreePage = () => {
   const submitPost = useCallback(async () => {
     if (formData) {
       await uploadImage(fileName, formData);
-      createPostMutation({ fileName, description });
+      createPostMutation({ fileName, description, date });
       cleanUp();
     }
   }, [fileName, formData, description]);
@@ -88,6 +91,14 @@ const CreateTreePage = () => {
           placeholder="Make a description"
         />
         <Button onPress={submitPost} title="Submit" />
+        <Text>Select date of pick up</Text>
+      <DateTimePicker
+        value={date}
+        mode="date"
+        onChange={(event, date) => {
+          setDate(date!)
+        }}
+      />
       </View>
     </TouchableWithoutFeedback>
   );
