@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -9,10 +9,11 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import { createPost, uploadImage } from "../api/api";
+import { uploadImage } from "../api/api";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
 import { v4 as uuidv4 } from "uuid";
+import { useCreatePost } from "../hooks/use-posts";
 
 const deviceWidth = Dimensions.get("window").width;
 
@@ -24,6 +25,8 @@ const CreateTreePage = () => {
   const [fileUri, setFileUri] = useState("");
   const uploadImageText = fileUri ? "Change image" : "Upload image";
 
+  const { mutate: createPostMutation } = useCreatePost();
+
   const cleanUp = useCallback(() => {
     setDescription("");
     setFilename("");
@@ -34,7 +37,7 @@ const CreateTreePage = () => {
   const submitPost = useCallback(async () => {
     if (formData) {
       await uploadImage(fileName, formData);
-      await createPost(fileName, description);
+      createPostMutation({ fileName, description });
       cleanUp();
     }
   }, [fileName, formData, description]);

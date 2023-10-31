@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, View, Button, ScrollView, RefreshControl } from "react-native";
 import { supabase } from "../utils/supabase";
 import { usePosts } from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
 
 const HomePage = () => {
-  const {data: posts, isLoading, refetch, isRefetching} = usePosts();
+  const { data: posts, isLoading, refetch, isRefetching } = usePosts();
 
   return (
     <ScrollView
       style={{ flex: 1 }}
       refreshControl={
         <RefreshControl
-          refreshing={isLoading || isRefetching}
+          refreshing={isLoading || isRefetching}
           onRefresh={refetch}
         />
       }

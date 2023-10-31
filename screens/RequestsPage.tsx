@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
-import { useRequests } from "../hooks/use-requests";
+import { useApproveRequest, useRequests } from "../hooks/use-requests";
 import { SessionContext } from "../context/SessionContext";
 import { PostRequest } from "../components/requests/PostRequest";
 
