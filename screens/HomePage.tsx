@@ -1,28 +1,26 @@
-import React, { useState } from "react";
-import { Text, View, Button, ScrollView, RefreshControl } from "react-native";
+import React from "react";
+import { View, Button, ScrollView, RefreshControl } from "react-native";
 import { supabase } from "../utils/supabase";
-import { useGetPosts } from "../hooks/use-posts";
+import { usePosts } from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
 
 const HomePage = () => {
-  const [refreshing, setRefreshing] = useState(false);
-  const { posts } = useGetPosts(refreshing, setRefreshing);
+  const { data: posts, isLoading, refetch, isRefetching } = usePosts();
 
   return (
     <ScrollView
       style={{ flex: 1 }}
       refreshControl={
         <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => setRefreshing(true)}
+          refreshing={isLoading || isRefetching}
+          onRefresh={refetch}
         />
       }
     >
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Button title="sign out" onPress={() => supabase.auth.signOut()} />
-        <Text>{`Number of posts: ${posts.length}`}</Text>
       </View>
-      {posts.map((post) => (
+      {posts?.map((post) => (
         <FeedPost key={post.created_at.toString()} post={post} />
       ))}
     </ScrollView>

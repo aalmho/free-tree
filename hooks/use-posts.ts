@@ -1,17 +1,48 @@
-import { useState, useEffect } from "react";
-import { Post, getPosts } from "../api/api";
+import { createPost, deletePost, getPosts } from "../api/api";
+import {
+  useQuery,
+  QueryKey,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 
-export const useGetPosts = (
-  refreshing: boolean,
-  setRefreshing: (refreshing: boolean) => void
-) => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  useEffect(() => {
-    getPosts().then((val) => {
-      setPosts(val);
-      setRefreshing(false);
-    });
-  }, [refreshing]);
+const queryKey: QueryKey = ["posts"];
 
-  return { posts };
+export const usePosts = () => {
+  return useQuery({
+    queryKey,
+    queryFn: async () => {
+      return getPosts();
+    },
+  });
+};
+
+export const useCreatePost = () => {
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+    mutationFn: async (args: {
+      fileName: string;
+      description: string;
+      date: Date;
+    }) => {
+      return createPost(args.fileName, args.description, args.date);
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+  return mutate;
+};
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+    mutationFn: async (args: { postId: number }) => {
+      return deletePost(args.postId);
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+  return mutate;
 };
