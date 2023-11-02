@@ -8,8 +8,8 @@ import { RequestsPage } from '../screens/RequestsPage';
 const Tab = createBottomTabNavigator();
 
 const screenOptions = {
-    tabBarActiveTintColor: 'tomato',
-    tabBarInactiveTintColor: 'pink',
+    tabBarActiveTintColor: 'red',
+    tabBarInactiveTintColor: 'green',
     headerShown: true,
 }
 

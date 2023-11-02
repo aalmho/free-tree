@@ -1,6 +1,6 @@
 import { FC, useContext } from "react";
 import { View, Text, Pressable } from "react-native";
-import { Request, approveRequest } from "../../api/api";
+import { Request } from "../../api/api";
 import { useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
 
