@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, Button, ScrollView, RefreshControl } from "react-native";
+import { View, Button, ScrollView, RefreshControl } from "react-native";
 import { supabase } from "../utils/supabase";
 import { usePosts } from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
@@ -19,7 +19,6 @@ const HomePage = () => {
     >
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Button title="sign out" onPress={() => supabase.auth.signOut()} />
-        <Text>{`Number of posts: ${posts?.length}`}</Text>
       </View>
       {posts?.map((post) => (
         <FeedPost key={post.created_at.toString()} post={post} />
