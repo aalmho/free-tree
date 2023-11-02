@@ -24,8 +24,16 @@ export const useCreatePost = () => {
       fileName: string;
       description: string;
       date: Date;
+      postalCode: string;
+      city: string;
     }) => {
-      return createPost(args.fileName, args.description, args.date);
+      return createPost(
+        args.fileName,
+        args.description,
+        args.date,
+        args.postalCode,
+        args.city
+      );
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey });

@@ -20,6 +20,8 @@ export type Post = {
   image_url: string;
   description: string;
   pick_up_date: Date;
+  postal_code: string;
+  city: string;
   user_id: string;
   requests?: Request[];
 };
@@ -31,13 +33,22 @@ export const uploadImage = async (fileName: string, formData: FormData) => {
 export const createPost = async (
   fileName: string,
   description: string,
-  date: Date
+  date: Date,
+  postalCode: string,
+  city: string
 ) => {
+    console.log(date);
   const storagePath = "/storage/v1/object/public/tree_images/";
   const storageUrl = supabaseUrl + storagePath + fileName;
   const { error } = await supabase
     .from("posts")
-    .insert({ image_url: storageUrl, description, pick_up_date: date });
+    .insert({
+      image_url: storageUrl,
+      description,
+      pick_up_date: date,
+      postal_code: postalCode,
+      city,
+    });
   handleError(error);
 };
 
@@ -50,7 +61,7 @@ export const getPosts = async () => {
   const { data, error } = await supabase
     .from("posts")
     .select(
-      `id, created_at, image_url, description, user_id, pick_up_date, requests (requester, id)`
+      `id, created_at, image_url, description, user_id, pick_up_date, postal_code, city, requests (requester, id)`
     )
     .order("created_at", { ascending: false });
   handleError(error);

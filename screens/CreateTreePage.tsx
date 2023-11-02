@@ -8,30 +8,40 @@ import {
   Button,
   Image,
   Dimensions,
-  Text
+  Text,
+  ScrollView,
 } from "react-native";
 import { uploadImage } from "../api/api";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
 import { v4 as uuidv4 } from "uuid";
 import { useCreatePost } from "../hooks/use-posts";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const deviceWidth = Dimensions.get("window").width;
 
 const CreateTreePage = () => {
-  const [description, setDescription] = useState("");
   const [fileName, setFilename] = useState("");
   const [formData, setFormData] = useState<FormData | null>(null);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [fileUri, setFileUri] = useState("");
-  const [date, setDate] = useState(new Date())
   const uploadImageText = fileUri ? "Change image" : "Upload image";
+  const [postInfo, setPostInfo] = useState({
+    description: "",
+    postalCode: "",
+    city: "",
+    date: new Date(),
+  });
 
   const { mutate: createPostMutation } = useCreatePost();
 
   const cleanUp = useCallback(() => {
-    setDescription("");
+    setPostInfo({
+      description: "",
+      postalCode: "",
+      city: "",
+      date: new Date()
+    });
     setFilename("");
     setFormData(null);
     setFileUri("");
@@ -40,10 +50,16 @@ const CreateTreePage = () => {
   const submitPost = useCallback(async () => {
     if (formData) {
       await uploadImage(fileName, formData);
-      createPostMutation({ fileName, description, date });
+      createPostMutation({
+        fileName,
+        description: postInfo.description,
+        date: postInfo.date,
+        postalCode: postInfo.postalCode,
+        city: postInfo.city,
+      });
       cleanUp();
     }
-  }, [fileName, formData, description]);
+  }, [fileName, formData, postInfo]);
 
   const selectImage = useCallback(async () => {
     if (permission?.granted) {
@@ -80,27 +96,54 @@ const CreateTreePage = () => {
   }, [permission]);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Button title={uploadImageText} onPress={selectImage} />
-        {fileUri && <Image style={styles.image} source={{ uri: fileUri }} />}
-        <TextInput
-          style={styles.input}
-          value={description}
-          onChangeText={setDescription}
-          placeholder="Make a description"
-        />
-        <Button onPress={submitPost} title="Submit" />
-        <Text>Select date of pick up</Text>
-      <DateTimePicker
-        value={date}
-        mode="date"
-        onChange={(event, date) => {
-          setDate(date!)
-        }}
-      />
-      </View>
-    </TouchableWithoutFeedback>
+    <ScrollView>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 10,
+          }}
+        >
+          <Button title={uploadImageText} onPress={selectImage} />
+          {fileUri && <Image style={styles.image} source={{ uri: fileUri }} />}
+          <TextInput
+            style={styles.input}
+            value={postInfo.description}
+            onChangeText={(val) =>
+              setPostInfo({ ...postInfo, description: val })
+            }
+            placeholder="Tree description"
+          />
+          <TextInput
+            inputMode="numeric"
+            style={styles.input}
+            value={postInfo.postalCode}
+            onChangeText={(val) =>
+              setPostInfo({ ...postInfo, postalCode: val })
+            }
+            placeholder="Postal code"
+          />
+          <TextInput
+            style={styles.input}
+            value={postInfo.city}
+            onChangeText={(data) => setPostInfo({ ...postInfo, city: data })}
+            placeholder="City"
+          />
+          <Text>Date of pick up</Text>
+          <DateTimePicker
+            value={postInfo.date}
+            mode="date"
+            onChange={(event, date) => {
+              console.log(date);
+              setPostInfo({...postInfo, date: date!})
+            }}
+          />
+          <Button onPress={submitPost} title="Submit" />
+        </View>
+      </TouchableWithoutFeedback>
+    </ScrollView>
   );
 };
 
@@ -108,7 +151,6 @@ const styles = StyleSheet.create({
   input: {
     minWidth: 200,
     height: 40,
-    margin: 12,
     borderWidth: 1,
     padding: 10,
     borderRadius: 8,
