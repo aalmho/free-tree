@@ -3,10 +3,10 @@ import { supabase, supabaseUrl } from "../utils/supabase";
 import { PostgrestError } from "@supabase/supabase-js";
 
 export type Request = {
-    id: number;
-    post_id?: number;
-    approved?: string;
-    requester?: string;
+  id: number;
+  post_id?: number;
+  approved?: string;
+  requester?: string;
 };
 
 export type PostRequest = {
@@ -28,13 +28,21 @@ export const uploadImage = async (fileName: string, formData: FormData) => {
   await supabase.storage.from("tree_images").upload(fileName, formData);
 };
 
-export const createPost = async (fileName: string, description: string, date: Date) => {
+export const createPost = async (
+  fileName: string,
+  description: string,
+  date: Date
+) => {
   const storagePath = "/storage/v1/object/public/tree_images/";
   const storageUrl = supabaseUrl + storagePath + fileName;
   const { error } = await supabase
     .from("posts")
     .insert({ image_url: storageUrl, description, pick_up_date: date });
-    console.log(error);
+  handleError(error);
+};
+
+export const deletePost = async (postId: number) => {
+  const { error } = await supabase.from("posts").delete().eq("id", postId);
   handleError(error);
 };
 

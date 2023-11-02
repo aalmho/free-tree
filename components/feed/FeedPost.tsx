@@ -4,6 +4,7 @@ import { View, Image, Text, Pressable } from "react-native";
 import { SessionContext } from "../../context/SessionContext";
 import { useRequestTree, useUnrequestTree } from "../../hooks/use-requests";
 import dayjs from "dayjs";
+import { useDeletePost } from "../../hooks/use-posts";
 
 interface FeedPost {
   post: Post;
@@ -11,7 +12,8 @@ interface FeedPost {
 
 export const FeedPost: FC<FeedPost> = ({ post }) => {
   const { session } = useContext(SessionContext);
-  const { mutate } = useRequestTree();
+  const { mutate: requestTreeMutation } = useRequestTree();
+  const { mutate: deleteTreeMutation } = useDeletePost();
   const { mutate: unrequest } = useUnrequestTree();
   const isTreeRequested = useMemo(() => {
     return post.requests?.some(
@@ -27,8 +29,14 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
   }, [post, session]);
 
   const toggleRequest = useCallback(() => {
+    if (post.user_id === session?.user?.id) {
+      return deleteTreeMutation({ postId: post.id });
+    }
     if (!isTreeRequested) {
-      mutate({ requesterUserId: session?.user?.id!, postId: post.id });
+      requestTreeMutation({
+        requesterUserId: session?.user?.id!,
+        postId: post.id,
+      });
     } else {
       unrequest({
         requestId: post.requests?.find(

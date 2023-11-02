@@ -1,4 +1,4 @@
-import { createPost, getPosts } from "../api/api";
+import { createPost, deletePost, getPosts } from "../api/api";
 import {
   useQuery,
   QueryKey,
@@ -26,6 +26,19 @@ export const useCreatePost = () => {
       date: Date;
     }) => {
       return createPost(args.fileName, args.description, args.date);
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+  return mutate;
+};
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+    mutationFn: async (args: { postId: number }) => {
+      return deletePost(args.postId);
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey });
