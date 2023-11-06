@@ -40,7 +40,7 @@ const CreateTreePage = () => {
       description: "",
       postalCode: "",
       city: "",
-      date: new Date()
+      date: new Date(),
     });
     setFilename("");
     setFormData(null);
@@ -136,8 +136,7 @@ const CreateTreePage = () => {
             value={postInfo.date}
             mode="date"
             onChange={(event, date) => {
-              console.log(date);
-              setPostInfo({...postInfo, date: date!})
+              setPostInfo({ ...postInfo, date: date! });
             }}
           />
           <Button onPress={submitPost} title="Submit" />

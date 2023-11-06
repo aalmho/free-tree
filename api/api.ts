@@ -37,18 +37,15 @@ export const createPost = async (
   postalCode: string,
   city: string
 ) => {
-    console.log(date);
   const storagePath = "/storage/v1/object/public/tree_images/";
   const storageUrl = supabaseUrl + storagePath + fileName;
-  const { error } = await supabase
-    .from("posts")
-    .insert({
-      image_url: storageUrl,
-      description,
-      pick_up_date: date,
-      postal_code: postalCode,
-      city,
-    });
+  const { error } = await supabase.from("posts").insert({
+    image_url: storageUrl,
+    description,
+    pick_up_date: date,
+    postal_code: postalCode,
+    city,
+  });
   handleError(error);
 };
 
