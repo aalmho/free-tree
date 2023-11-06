@@ -49,7 +49,7 @@ export const useDeletePost = () => {
       return deletePost(args.postId);
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey });
+      return queryClient.invalidateQueries({ queryKey });
     },
   });
   return mutate;

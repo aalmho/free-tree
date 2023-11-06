@@ -64,7 +64,7 @@ export const useApproveRequest = () => {
     },
     onSuccess: async (data, variables) => {
       const queryKey: QueryKey = ["userRequests", variables.userId];
-      queryClient.invalidateQueries({ queryKey });
+      return queryClient.invalidateQueries({ queryKey });
     },
   });
   return mutate;
@@ -77,7 +77,7 @@ export const useRequestTree = () => {
       return requestTree(args.requesterUserId, args.postId);
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      return queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
   return mutate;
