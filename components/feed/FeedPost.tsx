@@ -80,7 +80,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
         >
           <View style={{ paddingTop: 10, marginBottom: 15, gap: 10, flex: 1 }}>
             <Text>🎄 {post.description}</Text>
-            <Text>📍 2100, Kbh Ø</Text>
+            <Text>📍 {`${post.postal_code}, ${post.city}`}</Text>
             <Text>
               🗓️ {dayjs(post.pick_up_date).format("DD MMM YYYY").toString()}
             </Text>
