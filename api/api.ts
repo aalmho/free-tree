@@ -119,8 +119,6 @@ export const getFirstName = async (userId: string) => {
     .select(`id, first_name`)
     .eq("id", userId)
   handleError(error);
-  // PROBLEM: data er tom:
-  console.log('namedata', data, userId);
   if (data && data.length > 0) {
     return data[0].first_name as string;
   }
@@ -144,11 +142,8 @@ export const getChats = async (userId: string) => {
   }
 
   const chatCards: ChatCardProps[] = await Promise.all(data.map(async (chat) => {
-    const correspondentId = chat.requester_id === userId ? chat.donator_id : chat.requester_id;
-    // UDKOMMENTERET FOR NU FORDI NAME ER TOMT 
-    //const nameOfCorrespondent = await getFirstName(correspondentId);
-    const nameOfCorrespondent = 'Michael'
-
+    const correspondentId = chat.requester_id === userId ? chat.donator_id : chat.requester_id; 
+    const nameOfCorrespondent = await getFirstName(correspondentId);
     return {
       Id: chat.id,
       nameOfCorrespondent,

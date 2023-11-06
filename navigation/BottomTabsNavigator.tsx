@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomePage from '../screens/HomePage'
 import MessagesPage from '../screens/MessagesPage';
 import CreateTreePage from '../screens/CreateTreePage';
-import { RequestsPage } from '../screens/RequestsPage';
+import RequestsStack from '../components/requests/RequestsStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,7 +26,7 @@ const BottomTabsNavigator = () => {
         <Tab.Screen name="Hent et træ" component={HomePage} options={iconOptions("home")} />
         <Tab.Screen name="Kø og beskeder" component={MessagesPage} options={{...iconOptions("chatbox-outline"), headerShown: false }} />
         <Tab.Screen name="Giv et træ" component={CreateTreePage} options={iconOptions("add-circle-outline")} />
-        <Tab.Screen name="Requests" component={RequestsPage} options={iconOptions("filter")}/>
+        <Tab.Screen name="Requests" component={RequestsStack} options={{...iconOptions("filter"), headerShown: false }}/>
     </Tab.Navigator>
   );
 }
