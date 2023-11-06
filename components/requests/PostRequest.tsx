@@ -1,39 +1,78 @@
 import { FC, useContext } from "react";
-import { View, Text, Pressable } from "react-native";
-import { Request } from "../../api/api";
-import { useApproveRequest } from "../../hooks/use-requests";
+import { View, Text, Pressable, Image } from "react-native";
+import { } from "../../api/api";
+import { RequestWithImg, useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
+import dayjs from "dayjs";
+import { Ionicons } from "@expo/vector-icons";
 
 interface RequestProps {
-  request: Request;
+  request: RequestWithImg;
 }
 
 export const PostRequest: FC<RequestProps> = ({ request }) => {
   const { session } = useContext(SessionContext);
   const { mutate } = useApproveRequest();
   return (
-    <View style={{ marginHorizontal: 15, marginTop: 10 }}>
-      <Text>{`post id: ${request.post_id}`}</Text>
-      <Text>
-        {request.approved
-          ? "Request is approved"
-          : "Request is not yet approved"}
-      </Text>
-      <Pressable
+    <View
+      style={{
+        backgroundColor: "lightgrey",
+        borderColor: "white",
+        borderBottomWidth: 1,
+        height: 90,
+      }}
+    >
+      <View
         style={{
-          backgroundColor: "green",
-          borderRadius: 16,
-          width: 100,
-          height: 50,
-          justifyContent: "center",
+          paddingHorizontal: 5,
+          flex: 1,
+          flexDirection: "row",
           alignItems: "center",
         }}
-        onPress={() =>
-          mutate({ requestId: request.id, userId: session?.user?.id! })
-        }
       >
-        <Text>{request.approved ? "approved" : "approve"}</Text>
-      </Pressable>
+        <View style={{flex: 0.5, padding: 10}}>
+        <Image
+            style={{
+              height: "100%",
+              borderRadius: 100,
+            }}
+            source={{ uri: request?.image_url }}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text>{request?.profiles?.first_name}</Text>
+          <Text>
+            {dayjs(request.created_at).format("DD MMM YYYY").toString()}
+          </Text>
+        </View>
+        <View style={{ flex: 1, alignItems: "center" }}>
+          {request.approved ? (
+            <Ionicons name="chatbubbles-sharp" color="green" size={40} />
+          ) : (
+            <Pressable
+              style={{
+                backgroundColor: "green",
+                borderRadius: 24,
+                minWidth: 100,
+                alignItems: "center",
+              }}
+              onPress={() =>
+                mutate({ requestId: request.id!, userId: session?.user?.id! })
+              }
+            >
+              <Text
+                style={{
+                  color: "white",
+                  paddingHorizontal: 10,
+                  paddingVertical: 10,
+                }}
+              >
+                {request.approved ? "approved" : "approve"}
+              </Text>
+            </Pressable>
+          )}
+        </View>
+      </View>
     </View>
   );
 };

@@ -17,19 +17,23 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
   const { mutate: unrequest } = useUnrequestTree();
   const isTreeRequested = useMemo(() => {
     return post.requests?.some(
-      (request) => request.requester === session?.user.id
+      (request) => request.profiles?.id === session?.user.id
     );
   }, [post, session]);
 
+  const isUsersPost = useMemo(() => {
+    return post.user_id === session?.user?.id;
+  }, [post.user_id, session])
+
   const requestText = useMemo(() => {
-    if (post.user_id === session?.user?.id) {
+    if (isUsersPost) {
       return "Delete";
     }
     return isTreeRequested ? "Pending" : "Request tree";
   }, [post, session]);
 
   const toggleRequest = useCallback(() => {
-    if (post.user_id === session?.user?.id) {
+    if (isUsersPost) {
       return deleteTreeMutation({ postId: post.id });
     }
     if (!isTreeRequested) {
@@ -40,7 +44,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
     } else {
       unrequest({
         requestId: post.requests?.find(
-          (request) => request.requester === session?.user?.id
+          (request) => request.profiles?.id === session?.user?.id
         )?.id!,
       });
     }
@@ -53,6 +57,8 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
           backgroundColor: "lightgrey",
           marginBottom: 15,
           borderRadius: 8,
+          shadowOpacity: 1,
+          shadowOffset: {width: 1, height: 1}
         }}
       >
         <View
@@ -88,7 +94,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
           <View style={{ flex: 1, alignItems: "center" }}>
             <Pressable
               style={{
-                backgroundColor: "green",
+                backgroundColor: `${isUsersPost ? 'red' : 'green'}`,
                 borderRadius: 24,
                 minWidth: 100,
                 alignItems: "center",

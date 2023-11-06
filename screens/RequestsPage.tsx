@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
-import { useApproveRequest, useRequests } from "../hooks/use-requests";
+import { useRequests, useRequestsByUser } from "../hooks/use-requests";
 import { SessionContext } from "../context/SessionContext";
 import { PostRequest } from "../components/requests/PostRequest";
+import { RequestByUser } from "../components/requests/RequestByUser";
 
 export const RequestsPage = () => {
   const { session } = useContext(SessionContext);
@@ -12,7 +13,7 @@ export const RequestsPage = () => {
     isRefetching,
     refetch,
   } = useRequests(session?.user?.id!);
-
+  const { data: requestsByUser } = useRequestsByUser(session?.user?.id!);
   if (!requests || !requests.length) {
     return (
       <View>
@@ -31,9 +32,18 @@ export const RequestsPage = () => {
         />
       }
     >
-      {requests?.map((req) => (
-        <PostRequest key={req.id} request={req} />
-      ))}
+      {!!requests?.length && <View>
+        <Text style={{ padding: 8 }}>Requests of my trees</Text>
+        {requests?.map((req) => (
+          <PostRequest key={req.id} request={req} />
+        ))}
+      </View>}
+      {!!requestsByUser?.length && <View>
+        <Text style={{ padding: 8 }}>My requests</Text>
+        {requestsByUser?.map((req) => (
+          <RequestByUser key={req.id} request={req} />
+        ))}
+      </View>}
     </ScrollView>
   );
 };
