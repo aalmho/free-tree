@@ -111,17 +111,9 @@ export const getRequestsByUser = async (userId: string) => {
 };
 
 export const requestTree = async (requesterUserId: string, postId: number) => {
-  const { error } = await supabase
-    .from("requests")
-    .insert({ requester: requesterUserId, post_id: postId });
-  handleError(error);
-};
-
-export const unrequestTree = async (requestId: number) => {
   const { error, data } = await supabase
     .from("requests")
-    .delete()
-    .eq("id", requestId);
+    .insert({ requester: requesterUserId, post_id: postId });
   handleError(error);
 };
 

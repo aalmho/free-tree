@@ -1,18 +1,12 @@
 import { createPost, deletePost, getPosts } from "../api/api";
-import {
-  useQuery,
-  QueryKey,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-
-const queryKey: QueryKey = ["posts"];
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const usePosts = () => {
   return useQuery({
-    queryKey,
+    queryKey: ["getPosts"],
     queryFn: async () => {
-      return getPosts();
+      const posts = await getPosts();
+      return posts;
     },
   });
 };
@@ -36,7 +30,7 @@ export const useCreatePost = () => {
       );
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey });
+      return queryClient.invalidateQueries({ queryKey: ["getPosts"] });
     },
   });
   return mutate;
@@ -49,7 +43,7 @@ export const useDeletePost = () => {
       return deletePost(args.postId);
     },
     onSuccess: async () => {
-      return queryClient.invalidateQueries({ queryKey });
+      return queryClient.invalidateQueries({ queryKey: ["getPosts"] });
     },
   });
   return mutate;

@@ -2,7 +2,6 @@ import {
   getPostRequests,
   approveRequest,
   requestTree,
-  unrequestTree,
   getRequestsByUser,
 } from "../api/api";
 import {
@@ -77,21 +76,7 @@ export const useRequestTree = () => {
       return requestTree(args.requesterUserId, args.postId);
     },
     onSuccess: async () => {
-      return queryClient.invalidateQueries({ queryKey: ["posts"] });
-    },
-  });
-  return mutate;
-};
-
-export const useUnrequestTree = () => {
-  const queryClient = useQueryClient();
-  const mutate = useMutation({
-    mutationFn: async (args: { requestId: number }) => {
-      return unrequestTree(args.requestId);
-    },
-    onSuccess: async () => {
-      const queryKey: QueryKey = ["posts"];
-      queryClient.invalidateQueries({ queryKey });
+      return queryClient.invalidateQueries({ queryKey: ["getPosts"] });
     },
   });
   return mutate;

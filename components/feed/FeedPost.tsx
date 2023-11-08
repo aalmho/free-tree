@@ -2,7 +2,7 @@ import { FC, useCallback, useContext, useMemo } from "react";
 import { Post } from "../../api/api";
 import { View, Image, Text, Pressable } from "react-native";
 import { SessionContext } from "../../context/SessionContext";
-import { useRequestTree, useUnrequestTree } from "../../hooks/use-requests";
+import { useRequestTree } from "../../hooks/use-requests";
 import dayjs from "dayjs";
 import { useDeletePost } from "../../hooks/use-posts";
 
@@ -14,7 +14,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
   const { session } = useContext(SessionContext);
   const { mutate: requestTreeMutation } = useRequestTree();
   const { mutate: deleteTreeMutation } = useDeletePost();
-  const { mutate: unrequest } = useUnrequestTree();
+
   const isTreeRequested = useMemo(() => {
     return post.requests?.some(
       (request) => request.profiles?.id === session?.user.id
@@ -23,7 +23,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
 
   const isUsersPost = useMemo(() => {
     return post.user_id === session?.user?.id;
-  }, [post.user_id, session])
+  }, [post.user_id, session]);
 
   const requestText = useMemo(() => {
     if (isUsersPost) {
@@ -41,12 +41,6 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
         requesterUserId: session?.user?.id!,
         postId: post.id,
       });
-    } else {
-      unrequest({
-        requestId: post.requests?.find(
-          (request) => request.profiles?.id === session?.user?.id
-        )?.id!,
-      });
     }
   }, [post, session]);
 
@@ -58,7 +52,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
           marginBottom: 15,
           borderRadius: 8,
           shadowOpacity: 1,
-          shadowOffset: {width: 1, height: 1}
+          shadowOffset: { width: 1, height: 1 },
         }}
       >
         <View
@@ -94,7 +88,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
           <View style={{ flex: 1, alignItems: "center" }}>
             <Pressable
               style={{
-                backgroundColor: `${isUsersPost ? 'red' : 'green'}`,
+                backgroundColor: `${isUsersPost ? "red" : "green"}`,
                 borderRadius: 24,
                 minWidth: 100,
                 alignItems: "center",
