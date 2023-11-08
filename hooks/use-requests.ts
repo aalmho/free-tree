@@ -1,11 +1,9 @@
 import {
   getPostRequests,
   approveRequest,
-  Request,
   requestTree,
   unrequestTree,
-  Post,
-  getPosts,
+  getRequestsByUser,
 } from "../api/api";
 import {
   useQuery,
@@ -14,13 +12,46 @@ import {
   useMutation,
 } from "@tanstack/react-query";
 
+export type RequestWithImg = {
+  id?: number;
+  image_url?: string;
+  post_id?: number;
+  approved?: string;
+  profiles?: {
+    id?: string;
+    first_name?: string;
+  };
+  created_at?: Date;
+};
+
 export const useRequests = (userId: string) => {
   const queryKey: QueryKey = ["userRequests", userId];
   return useQuery({
     queryKey,
     queryFn: async () => {
       const postRequests = await getPostRequests(userId);
-      return postRequests.flatMap((post) => post?.requests as Request[]);
+      const postsWithRequests = postRequests.filter(
+        (post) => post.requests && post.requests.length > 0
+      );
+      const requestsWithImageUrls = postsWithRequests.flatMap((post) => {
+        return post.requests!.map((request) => ({
+          ...request,
+          image_url: post.image_url || "",
+        }));
+      });
+
+      return requestsWithImageUrls;
+    },
+  });
+};
+
+export const useRequestsByUser = (userId: string) => {
+  const queryKey: QueryKey = ["requestsByUser", userId];
+  return useQuery({
+    queryKey,
+    queryFn: async () => {
+      const requests = await getRequestsByUser(userId);
+      return requests;
     },
   });
 };
@@ -33,7 +64,7 @@ export const useApproveRequest = () => {
     },
     onSuccess: async (data, variables) => {
       const queryKey: QueryKey = ["userRequests", variables.userId];
-      queryClient.invalidateQueries({ queryKey });
+      return queryClient.invalidateQueries({ queryKey });
     },
   });
   return mutate;
@@ -46,7 +77,7 @@ export const useRequestTree = () => {
       return requestTree(args.requesterUserId, args.postId);
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      return queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
   return mutate;
