@@ -5,7 +5,7 @@ import { SessionContext } from "../context/SessionContext";
 import { PostRequest } from "../components/requests/PostRequest";
 import { RequestByUser } from "../components/requests/RequestByUser";
 
-export const RequestsPage = () => {
+const RequestsScreen = () => {
   const { session } = useContext(SessionContext);
   const {
     data: requests,
@@ -69,3 +69,5 @@ export const RequestsPage = () => {
     </ScrollView>
   );
 };
+
+export default RequestsScreen;
