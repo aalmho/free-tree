@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Button } from "react-native";
 import { supabase } from "../utils/supabase";
 import HomeScreen from "../screens/HomeScreen";
-import MessageScreen from "../screens/MessagesScreen";
 import RequestsScreen from "../screens/RequestsScreen";
 import MyPostsScreen from "../screens/MyPostsScreen";
 
@@ -48,14 +47,6 @@ const BottomTabsNavigator = () => {
           headerRight: () => (
             <Button title="sign out" onPress={() => supabase.auth.signOut()} />
           ),
-        }}
-      />
-      <Tab.Screen
-        name="Kø og beskeder"
-        component={MessageScreen}
-        options={{
-          ...iconOptions("chatbox-outline", "chatbox"),
-          headerShown: false,
         }}
       />
       <Tab.Screen
