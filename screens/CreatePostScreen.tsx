@@ -20,7 +20,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 const deviceWidth = Dimensions.get("window").width;
 
-const CreateTreePage = () => {
+const CreatePostScreen = ({ navigation }: any) => {
   const [fileName, setFilename] = useState("");
   const [formData, setFormData] = useState<FormData | null>(null);
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -58,6 +58,7 @@ const CreateTreePage = () => {
         city: postInfo.city,
       });
       cleanUp();
+      navigation.navigate("Mine træer");
     }
   }, [fileName, formData, postInfo]);
 
@@ -161,4 +162,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateTreePage;
+export default CreatePostScreen;
