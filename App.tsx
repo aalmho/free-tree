@@ -9,10 +9,18 @@ import { SessionContext } from "./context/SessionContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createStackNavigator } from "@react-navigation/stack";
 import CreatePostScreen from "./screens/CreatePostScreen";
+import Chat from "./components/chat/Chat";
 
 export default function App() {
+
+  type StackParamList = {
+    Home: undefined,
+    CreatePostScreen: undefined,
+      Chat: { requestId: number }; 
+    };
+
   const [session, setSession] = useState<Session | null>(null);
-  const Stack = createStackNavigator();
+  const Stack = createStackNavigator<StackParamList>();
 
   const queryClient = new QueryClient();
 
@@ -43,6 +51,7 @@ export default function App() {
                   name="CreatePostScreen"
                   component={CreatePostScreen}
                 />
+                <Stack.Screen name="Chat" component={Chat} options={{ title: "Beskeder", headerShown: true }} />
               </Stack.Navigator>
             </QueryClientProvider>
           </NavigationContainer>
