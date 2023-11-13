@@ -86,9 +86,9 @@ export const useApproveRequest = () => {
         queryClient.setQueryData(["userRequests", args.userId], previousData);
       }
     },
-    onSuccess: (data, variables) => {
+    onSuccess: async (data, variables) => {
       const queryKey: QueryKey = ["userRequests", variables.userId];
-      queryClient.invalidateQueries({ queryKey });
+      return queryClient.invalidateQueries({ queryKey });
     },
   });
 
