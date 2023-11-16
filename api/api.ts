@@ -124,6 +124,13 @@ export const approveRequest = async (requestId: number) => {
     .eq("id", requestId);
 };
 
+export const deleteUser = async (userId: string) => {
+  const {error, data} = await supabase
+  .from("users")
+  .delete()
+  .eq("id", userId)
+};
+
 const handleError = (error: PostgrestError | null) => {
   if (error) {
     return Alert.alert("Something went wrong. Please try again");

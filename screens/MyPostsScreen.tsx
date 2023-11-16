@@ -1,13 +1,30 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, ScrollView, RefreshControl, Pressable } from "react-native";
 import { usePosts } from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
 import { SessionContext } from "../context/SessionContext";
 import { Ionicons } from "@expo/vector-icons";
+import {SignOutDropdown} from "../components/SignOutDropdown";
 
-const MyPostsScreen = ({navigation}: any) => {
+const MyPostsScreen = ({ navigation }: any) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { data: posts, isLoading, refetch, isRefetching } = usePosts();
   const { session } = useContext(SessionContext);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Ionicons
+        onPress={() => setIsDropdownOpen(!isDropdownOpen)}
+        name="menu-outline"
+        color="green"
+        size={30}
+        style={{ paddingRight: 10 }}
+      />
+      ),
+    });
+  }, [navigation, isDropdownOpen]);
+
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -18,7 +35,8 @@ const MyPostsScreen = ({navigation}: any) => {
         />
       }
     >
-              <View style={{ gap: 20 }}>
+      <View style={{ gap: 20 }}>
+      {isDropdownOpen && <SignOutDropdown userId={session?.user?.id!} />}
         <View
           style={{
             justifyContent: "center",
@@ -42,13 +60,13 @@ const MyPostsScreen = ({navigation}: any) => {
             />
           </Pressable>
         </View>
-      <View style={{ gap: 20 }}>
-        {posts
-          ?.filter((post) => post.user_id === session?.user?.id)
-          .map((post) => (
-            <FeedPost key={post.created_at.toString()} post={post} />
-          ))}
-      </View>
+        <View style={{ gap: 20 }}>
+          {posts
+            ?.filter((post) => post.user_id === session?.user?.id)
+            .map((post) => (
+              <FeedPost key={post.created_at.toString()} post={post} />
+            ))}
+        </View>
       </View>
     </ScrollView>
   );
