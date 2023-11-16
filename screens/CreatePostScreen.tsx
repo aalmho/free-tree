@@ -5,9 +5,7 @@ import {
   View,
   TouchableWithoutFeedback,
   Keyboard,
-  Button,
   Image,
-  Dimensions,
   Text,
   ScrollView,
   Pressable,
@@ -47,7 +45,7 @@ const CreatePostScreen = ({ navigation }: any) => {
   }, []);
 
   const submitPost = useCallback(async () => {
-    if (formData) {
+    if (formData && fileName) {
       await uploadImage(fileName, formData);
       createPostMutation({
         fileName,
@@ -191,6 +189,11 @@ const CreatePostScreen = ({ navigation }: any) => {
               </Text>
             </View>
           </Pressable>
+          {isPending && (
+            <View>
+              <Text>Uploader dit juletræ...</Text>
+            </View>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </ScrollView>
