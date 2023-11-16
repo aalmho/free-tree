@@ -50,6 +50,13 @@ const RequestsScreen = () => {
         />
       }
     >
+      {requests?.length === 0 && requestsByUser?.length === 0 && (
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text style={{ padding: 8 }}>
+            Create a post or request a tree to see your requests
+          </Text>
+        </View>
+      )}
       {!!requests?.length && (
         <View>
           <Text style={{ padding: 8 }}>Requests of my trees</Text>

@@ -1,6 +1,5 @@
 import { FC, useContext } from "react";
 import { View, Text, Pressable, Image } from "react-native";
-import { } from "../../api/api";
 import { RequestWithImg, useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
 import dayjs from "dayjs";
@@ -12,7 +11,7 @@ interface RequestProps {
 
 export const PostRequest: FC<RequestProps> = ({ request }) => {
   const { session } = useContext(SessionContext);
-  const { mutate } = useApproveRequest();
+  const { mutate, isPending } = useApproveRequest();
   return (
     <View
       style={{
@@ -30,8 +29,8 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
           alignItems: "center",
         }}
       >
-        <View style={{flex: 0.5, padding: 10}}>
-        <Image
+        <View style={{ flex: 0.5, padding: 10 }}>
+          <Image
             style={{
               height: "100%",
               borderRadius: 100,
@@ -50,6 +49,7 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
             <Ionicons name="chatbubbles-sharp" color="green" size={40} />
           ) : (
             <Pressable
+              disabled={isPending}
               style={{
                 backgroundColor: "green",
                 borderRadius: 24,
