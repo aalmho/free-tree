@@ -29,9 +29,9 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
 
   const requestText = useMemo(() => {
     if (isUsersPost) {
-      return "Delete";
+      return "Slet";
     }
-    return isTreeRequested ? "Pending" : "Request tree";
+    return isTreeRequested ? "Afventer" : "Anmod";
   }, [post, session]);
 
   const toggleRequest = useCallback(() => {
@@ -88,26 +88,39 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
             </Text>
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
-            <Pressable
-              disabled={isDeletePending || isRequestPending}
-              style={{
-                backgroundColor: `${isUsersPost ? "red" : "green"}`,
-                borderRadius: 24,
-                minWidth: 100,
-                alignItems: "center",
-              }}
-              onPress={() => toggleRequest()}
-            >
+            {requestText === "Afventer" ? (
               <Text
                 style={{
-                  color: "white",
+                  color: "green",
+                  fontWeight: "600",
                   paddingHorizontal: 10,
                   paddingVertical: 10,
                 }}
               >
                 {requestText}
               </Text>
-            </Pressable>
+            ) : (
+              <Pressable
+                disabled={isDeletePending || isRequestPending}
+                style={{
+                  backgroundColor: `${isUsersPost ? "red" : "green"}`,
+                  borderRadius: 24,
+                  minWidth: 100,
+                  alignItems: "center",
+                }}
+                onPress={() => toggleRequest()}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                  }}
+                >
+                  {requestText}
+                </Text>
+              </Pressable>
+            )}
           </View>
         </View>
       </View>

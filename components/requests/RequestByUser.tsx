@@ -48,11 +48,12 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
             <Text
               style={{
                 color: "green",
+                fontWeight: "600",
                 paddingHorizontal: 10,
                 paddingVertical: 10,
               }}
             >
-              {"Pending"}
+              Afventer
             </Text>
           )}
         </View>
