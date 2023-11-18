@@ -9,7 +9,7 @@ import {
 import { Route } from "@react-navigation/native";
 import { SessionContext } from "../../context/SessionContext";
 import { sendMessage } from "../../api/api";
-import { useGetMessages, useSendMessage } from "../../hooks/use-messages";
+import { useGetMessages } from "../../hooks/use-messages";
 import { LogBox, View } from "react-native";
 import { locale } from "../../locales";
 import da from "dayjs/locale/da";
@@ -24,20 +24,13 @@ const Chat = ({
 }) => {
   const { requestId, otherPersonFirstName } = route.params;
   const { session } = useContext(SessionContext);
-  const { mutate } = useSendMessage();
   const { messages, setMessages } = useGetMessages(requestId);
-  // const {
-  //     data: messagesByRequestId
-  //   } = useMessagesByRequest(requestId);
 
   const onSend = useCallback((messages: IMessage[] = []) => {
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, messages)
     );
     sendMessage(requestId, messages[0].text, session?.user?.id!);
-
-    // GiftedChat.append(messagesByRequestId, messages);
-    // mutate({ requestId, content: messages[0].text, author: session?.user?.id! })
   }, []);
 
   useEffect(() => {
