@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import {
   Bubble,
   Day,
@@ -9,12 +9,9 @@ import {
 import { Route } from "@react-navigation/native";
 import { SessionContext } from "../../context/SessionContext";
 import { sendMessage } from "../../api/api";
-import {
-  useGetMessages,
-  useMessagesByRequest,
-  useSendMessage,
-} from "../../hooks/use-messages";
+import { useGetMessages, useSendMessage } from "../../hooks/use-messages";
 import { View } from "react-native";
+import { locale } from "../../locales";
 import da from "dayjs/locale/da";
 
 const Chat = ({ route }: { route: Route<string, { requestId: number }> }) => {
@@ -73,7 +70,7 @@ const Chat = ({ route }: { route: Route<string, { requestId: number }> }) => {
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <GiftedChat
         messages={messages}
-        locale={da}
+        locale={locale.substring(0, 2) === "da" ? da : undefined}
         renderBubble={renderBubble}
         renderDay={renderDay}
         renderTime={renderTime}
