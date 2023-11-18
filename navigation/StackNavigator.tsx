@@ -4,10 +4,12 @@ import CreatePostScreen from "../screens/CreatePostScreen";
 import BottomTabsNavigator from "./BottomTabsNavigator";
 import { FC } from "react";
 
+export type ChatParams = { requestId: number; otherPersonFirstName: string };
+
 type StackParamList = {
   Home: undefined;
   CreatePostScreen: undefined;
-  Chat: { requestId: number };
+  Chat: ChatParams;
 };
 
 export const StackNavigator: FC = () => {
@@ -24,7 +26,7 @@ export const StackNavigator: FC = () => {
       <Stack.Screen
         name="Chat"
         component={Chat}
-        options={{ title: "Beskeder", headerShown: true }}
+        options={{ headerShown: true }}
       />
     </Stack.Navigator>
   );

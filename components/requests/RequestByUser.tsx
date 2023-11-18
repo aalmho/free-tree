@@ -11,10 +11,14 @@ interface RequestByUserProps {
 
 export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
   const navigation: NavigationProp<any> = useNavigation();
+  const firstNameOfTreeDonator = request?.posts?.profiles?.first_name;
 
   const onCardPress = () => {
     if (request.approved) {
-      navigation.navigate("Chat", { requestId: request.id });
+      navigation.navigate("Chat", {
+        requestId: request.id,
+        otherPersonFirstName: firstNameOfTreeDonator,
+      });
     }
   };
 
@@ -46,7 +50,7 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text>{request?.posts?.profiles?.first_name}</Text>
+            <Text>{firstNameOfTreeDonator}</Text>
             <Text>{dayjs(request.created_at).format("ll").toString()}</Text>
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>

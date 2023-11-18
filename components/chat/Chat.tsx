@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import {
   Bubble,
   Day,
@@ -13,9 +13,16 @@ import { useGetMessages, useSendMessage } from "../../hooks/use-messages";
 import { View } from "react-native";
 import { locale } from "../../locales";
 import da from "dayjs/locale/da";
+import { ChatParams } from "../../navigation/StackNavigator";
 
-const Chat = ({ route }: { route: Route<string, { requestId: number }> }) => {
-  const { requestId } = route.params;
+const Chat = ({
+  route,
+  navigation,
+}: {
+  route: Route<string, ChatParams>;
+  navigation: any;
+}) => {
+  const { requestId, otherPersonFirstName } = route.params;
   const { session } = useContext(SessionContext);
   const { mutate } = useSendMessage();
   const { messages, setMessages } = useGetMessages(requestId);
@@ -31,6 +38,12 @@ const Chat = ({ route }: { route: Route<string, { requestId: number }> }) => {
 
     // GiftedChat.append(messagesByRequestId, messages);
     // mutate({ requestId, content: messages[0].text, author: session?.user?.id! })
+  }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: otherPersonFirstName,
+    });
   }, []);
 
   const renderBubble = (props: any) => (
@@ -74,6 +87,7 @@ const Chat = ({ route }: { route: Route<string, { requestId: number }> }) => {
         renderBubble={renderBubble}
         renderDay={renderDay}
         renderTime={renderTime}
+        renderAvatar={null}
         onSend={(messages) => onSend(messages)}
         user={{
           _id: session?.user?.id!,
