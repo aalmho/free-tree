@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { RequestMadeByUser } from "../../api/api";
-import dayjs from "dayjs";
+import dayjs from "../../locales";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 
@@ -11,13 +11,13 @@ interface RequestByUserProps {
 
 export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
   const navigation: NavigationProp<any> = useNavigation();
-  
+
   const onCardPress = () => {
-    if(request.approved) {
-      navigation.navigate('Chat', {requestId: request.id})
+    if (request.approved) {
+      navigation.navigate("Chat", { requestId: request.id });
     }
-  }
-  
+  };
+
   return (
     <TouchableOpacity onPress={() => onCardPress()}>
       <View
@@ -47,9 +47,7 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
           </View>
           <View style={{ flex: 1 }}>
             <Text>{request?.posts?.profiles?.first_name}</Text>
-            <Text>
-              {dayjs(request.created_at).format("DD MMM YYYY").toString()}
-            </Text>
+            <Text>{dayjs(request.created_at).format("ll").toString()}</Text>
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
             {request.approved ? (

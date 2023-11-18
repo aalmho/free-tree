@@ -1,9 +1,9 @@
 import { FC, useContext } from "react";
 import { View, Text, Pressable, Image, TouchableOpacity } from "react-native";
-import { } from "../../api/api";
+import {} from "../../api/api";
 import { RequestWithImg, useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
-import dayjs from "dayjs";
+import dayjs from "../../locales";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 
@@ -17,21 +17,21 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
   const navigation: NavigationProp<any> = useNavigation();
 
   const onCardPress = () => {
-    if(request.approved) {
-      navigation.navigate('Chat', {requestId: request.id})
+    if (request.approved) {
+      navigation.navigate("Chat", { requestId: request.id });
     }
-  }
+  };
 
   return (
     <TouchableOpacity onPress={() => onCardPress()}>
-    <View
-      style={{
-        backgroundColor: "lightgrey",
-        borderColor: "white",
-        borderBottomWidth: 1,
-        height: 90,
-      }}
-    >
+      <View
+        style={{
+          backgroundColor: "lightgrey",
+          borderColor: "white",
+          borderBottomWidth: 1,
+          height: 90,
+        }}
+      >
         <View
           style={{
             paddingHorizontal: 5,
@@ -40,8 +40,8 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
             alignItems: "center",
           }}
         >
-          <View style={{flex: 0.5, padding: 10}}>
-          <Image
+          <View style={{ flex: 0.5, padding: 10 }}>
+            <Image
               style={{
                 height: "100%",
                 borderRadius: 100,
@@ -51,9 +51,7 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
           </View>
           <View style={{ flex: 1 }}>
             <Text>{request?.profiles?.first_name}</Text>
-            <Text>
-              {dayjs(request.created_at).format("DD MMM YYYY").toString()}
-            </Text>
+            <Text>{dayjs(request.created_at).format("ll").toString()}</Text>
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
             {request.approved ? (
