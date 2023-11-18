@@ -1,5 +1,5 @@
 import { FC, useContext } from "react";
-import { View, Text, Pressable, Image } from "react-native";
+import { View, Text, Pressable, Image, TouchableOpacity } from "react-native";
 import {} from "../../api/api";
 import { RequestWithImg, useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
@@ -27,65 +27,66 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
   };
 
   return (
-    <View
-      style={{
-        backgroundColor: "lightgrey",
-        borderColor: "white",
-        borderBottomWidth: 1,
-        height: 90,
-      }}
-    >
+    <TouchableOpacity onPress={onCardPress} disabled={!request.approved}>
       <View
         style={{
-          paddingHorizontal: 5,
-          flex: 1,
-          flexDirection: "row",
-          alignItems: "center",
+          backgroundColor: "lightgrey",
+          borderColor: "white",
+          borderBottomWidth: 1,
+          height: 90,
         }}
       >
-        <View style={{ flex: 0.5, padding: 10 }}>
-          <Image
-            style={{
-              height: "100%",
-              borderRadius: 100,
-            }}
-            source={{ uri: request?.image_url }}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text>{firstNameOfTreeGetter}</Text>
-          <Text>{dayjs(request.created_at).format("ll").toString()}</Text>
-        </View>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          {request.approved ? (
-            <Ionicons name="chatbubbles-sharp" color="green" size={40} />
-          ) : (
-            <Pressable
-              disabled={isPending}
+        <View
+          style={{
+            paddingHorizontal: 5,
+            flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <View style={{ flex: 0.5, padding: 10 }}>
+            <Image
               style={{
-                backgroundColor: "green",
-                borderRadius: 24,
-                minWidth: 100,
-                alignItems: "center",
+                height: "100%",
+                borderRadius: 100,
               }}
-              onPress={() => {
-                mutate({ requestId: request.id!, userId: session?.user?.id! });
-                onCardPress();
-              }}
-            >
-              <Text
+              source={{ uri: request?.image_url }}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text>{firstNameOfTreeGetter}</Text>
+            <Text>{dayjs(request.created_at).format("ll").toString()}</Text>
+          </View>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            {request.approved ? (
+              <Ionicons name="chatbubbles-sharp" color="green" size={40} />
+            ) : (
+              <Pressable
+                disabled={isPending}
                 style={{
-                  color: "white",
-                  paddingHorizontal: 10,
-                  paddingVertical: 10,
+                  backgroundColor: "green",
+                  borderRadius: 24,
+                  minWidth: 100,
+                  alignItems: "center",
                 }}
+                onPress={() =>
+                  mutate({ requestId: request.id!, userId: session?.user?.id! })
+                }
               >
-                {request.approved ? "approved" : "approve"}
-              </Text>
-            </Pressable>
-          )}
+                <Text
+                  style={{
+                    color: "white",
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                  }}
+                >
+                  {request.approved ? "approved" : "approve"}
+                </Text>
+              </Pressable>
+            )}
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };

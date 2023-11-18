@@ -23,7 +23,7 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
   };
 
   return (
-    <TouchableOpacity onPress={() => onCardPress()}>
+    <TouchableOpacity onPress={onCardPress} disabled={!request.approved}>
       <View
         style={{
           backgroundColor: "lightgrey",
