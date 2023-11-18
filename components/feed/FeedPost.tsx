@@ -12,8 +12,10 @@ interface FeedPost {
 
 export const FeedPost: FC<FeedPost> = ({ post }) => {
   const { session } = useContext(SessionContext);
-  const { mutate: requestTreeMutation } = useRequestTree();
-  const { mutate: deleteTreeMutation } = useDeletePost();
+  const { mutate: requestTreeMutation, isPending: isRequestPending } =
+    useRequestTree();
+  const { mutate: deleteTreeMutation, isPending: isDeletePending } =
+    useDeletePost();
 
   const isTreeRequested = useMemo(() => {
     return post.requests?.some(
@@ -85,6 +87,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
             <Pressable
+              disabled={isDeletePending || isRequestPending}
               style={{
                 backgroundColor: `${isUsersPost ? "red" : "green"}`,
                 borderRadius: 24,

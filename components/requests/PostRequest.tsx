@@ -1,5 +1,5 @@
 import { FC, useContext } from "react";
-import { View, Text, Pressable, Image, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, Image } from "react-native";
 import {} from "../../api/api";
 import { RequestWithImg, useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
@@ -13,7 +13,7 @@ interface RequestProps {
 
 export const PostRequest: FC<RequestProps> = ({ request }) => {
   const { session } = useContext(SessionContext);
-  const { mutate } = useApproveRequest();
+  const { mutate, isPending } = useApproveRequest();
   const navigation: NavigationProp<any> = useNavigation();
   const firstNameOfTreeGetter = request?.profiles?.first_name;
 
@@ -27,65 +27,65 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
   };
 
   return (
-    <TouchableOpacity onPress={() => onCardPress()}>
+    <View
+      style={{
+        backgroundColor: "lightgrey",
+        borderColor: "white",
+        borderBottomWidth: 1,
+        height: 90,
+      }}
+    >
       <View
         style={{
-          backgroundColor: "lightgrey",
-          borderColor: "white",
-          borderBottomWidth: 1,
-          height: 90,
+          paddingHorizontal: 5,
+          flex: 1,
+          flexDirection: "row",
+          alignItems: "center",
         }}
       >
-        <View
-          style={{
-            paddingHorizontal: 5,
-            flex: 1,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <View style={{ flex: 0.5, padding: 10 }}>
-            <Image
+        <View style={{ flex: 0.5, padding: 10 }}>
+          <Image
+            style={{
+              height: "100%",
+              borderRadius: 100,
+            }}
+            source={{ uri: request?.image_url }}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text>{firstNameOfTreeGetter}</Text>
+          <Text>{dayjs(request.created_at).format("ll").toString()}</Text>
+        </View>
+        <View style={{ flex: 1, alignItems: "center" }}>
+          {request.approved ? (
+            <Ionicons name="chatbubbles-sharp" color="green" size={40} />
+          ) : (
+            <Pressable
+              disabled={isPending}
               style={{
-                height: "100%",
-                borderRadius: 100,
+                backgroundColor: "green",
+                borderRadius: 24,
+                minWidth: 100,
+                alignItems: "center",
               }}
-              source={{ uri: request?.image_url }}
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text>{firstNameOfTreeGetter}</Text>
-            <Text>{dayjs(request.created_at).format("ll").toString()}</Text>
-          </View>
-          <View style={{ flex: 1, alignItems: "center" }}>
-            {request.approved ? (
-              <Ionicons name="chatbubbles-sharp" color="green" size={40} />
-            ) : (
-              <Pressable
+              onPress={() => {
+                mutate({ requestId: request.id!, userId: session?.user?.id! });
+                onCardPress();
+              }}
+            >
+              <Text
                 style={{
-                  backgroundColor: "green",
-                  borderRadius: 24,
-                  minWidth: 100,
-                  alignItems: "center",
+                  color: "white",
+                  paddingHorizontal: 10,
+                  paddingVertical: 10,
                 }}
-                onPress={() =>
-                  mutate({ requestId: request.id!, userId: session?.user?.id! })
-                }
               >
-                <Text
-                  style={{
-                    color: "white",
-                    paddingHorizontal: 10,
-                    paddingVertical: 10,
-                  }}
-                >
-                  {request.approved ? "approved" : "approve"}
-                </Text>
-              </Pressable>
-            )}
-          </View>
+                {request.approved ? "approved" : "approve"}
+              </Text>
+            </Pressable>
+          )}
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
