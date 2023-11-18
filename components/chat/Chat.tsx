@@ -10,7 +10,7 @@ import { Route } from "@react-navigation/native";
 import { SessionContext } from "../../context/SessionContext";
 import { sendMessage } from "../../api/api";
 import { useGetMessages, useSendMessage } from "../../hooks/use-messages";
-import { View } from "react-native";
+import { LogBox, View } from "react-native";
 import { locale } from "../../locales";
 import da from "dayjs/locale/da";
 import { ChatParams } from "../../navigation/StackNavigator";
@@ -79,6 +79,9 @@ const Chat = ({
     );
   };
 
+  LogBox.ignoreLogs([
+    "Warning: Failed prop type: Invalid prop `locale` of type `object` supplied to `GiftedChat`",
+  ]);
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <GiftedChat
