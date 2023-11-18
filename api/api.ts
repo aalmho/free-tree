@@ -128,9 +128,7 @@ export const approveRequest = async (requestId: number) => {
 export const getMessages = async (request_id: number) => {
   const { data, error } = await supabase
     .from("messages")
-    .select(
-      `id, author, content, request_id, created_at`
-    )
+    .select(`id, author, content, request_id, created_at`)
     .eq("request_id", request_id)
     .order("created_at", { ascending: false });
   handleError(error);
@@ -139,21 +137,27 @@ export const getMessages = async (request_id: number) => {
     return [];
   }
 
-  const messages: IMessage[] = await Promise.all(data.map(async (message) => {
-    const author: User = {
-      _id: message.author,
-    }
-    return {
-      _id: message.id,
-      text: message.content,
-      user: author,
-      createdAt: message.created_at,
-    };
-  }));
+  const messages: IMessage[] = await Promise.all(
+    data.map((message) => {
+      const author: User = {
+        _id: message.author,
+      };
+      return {
+        _id: message.id,
+        text: message.content,
+        user: author,
+        createdAt: message.created_at,
+      };
+    })
+  );
   return messages as IMessage[];
 };
 
-export const sendMessage = async (requestId: number, content: string, author: string ) => {
+export const sendMessage = async (
+  requestId: number,
+  content: string,
+  author: string
+) => {
   const { error: messageError } = await supabase
     .from("messages")
     .insert({ request_id: requestId, content, author });
