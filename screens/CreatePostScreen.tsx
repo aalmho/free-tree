@@ -17,15 +17,17 @@ import { Camera } from "expo-camera";
 import { v4 as uuidv4 } from "uuid";
 import { useCreatePost } from "../hooks/use-posts";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useTranslation } from "react-i18next";
 
 const deviceWidth = Dimensions.get("window").width;
 
 const CreatePostScreen = ({ navigation }: any) => {
+  const { t } = useTranslation();
   const [fileName, setFilename] = useState("");
   const [formData, setFormData] = useState<FormData | null>(null);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [fileUri, setFileUri] = useState("");
-  const uploadImageText = fileUri ? "Change image" : "Upload image";
+  const uploadImageText = fileUri ? t("cpsChangeImage") : t("cpsUploadImage");
   const [postInfo, setPostInfo] = useState({
     description: "",
     postalCode: "",
@@ -58,7 +60,7 @@ const CreatePostScreen = ({ navigation }: any) => {
         city: postInfo.city,
       });
       cleanUp();
-      navigation.navigate("Mine træer");
+      navigation.navigate(t("btnMyTrees"));
     }
   }, [fileName, formData, postInfo]);
 
@@ -115,7 +117,7 @@ const CreatePostScreen = ({ navigation }: any) => {
             onChangeText={(val) =>
               setPostInfo({ ...postInfo, description: val })
             }
-            placeholder="Tree description"
+            placeholder={t("cpsTreeDescription")}
           />
           <TextInput
             inputMode="numeric"
@@ -124,13 +126,13 @@ const CreatePostScreen = ({ navigation }: any) => {
             onChangeText={(val) =>
               setPostInfo({ ...postInfo, postalCode: val })
             }
-            placeholder="Postal code"
+            placeholder={t("cpsZipCode")}
           />
           <TextInput
             style={styles.input}
             value={postInfo.city}
             onChangeText={(data) => setPostInfo({ ...postInfo, city: data })}
-            placeholder="City"
+            placeholder={t("cpsCity")}
           />
           <Text>Date of pick up</Text>
           <DateTimePicker
@@ -140,7 +142,7 @@ const CreatePostScreen = ({ navigation }: any) => {
               setPostInfo({ ...postInfo, date: date! });
             }}
           />
-          <Button onPress={submitPost} title="Submit" />
+          <Button onPress={submitPost} title={t("cpsSubmit")} />
         </View>
       </TouchableWithoutFeedback>
     </ScrollView>

@@ -3,12 +3,14 @@ import { View, Text, Image } from "react-native";
 import { RequestMadeByUser } from "../../api/api";
 import dayjs from "dayjs";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 interface RequestByUserProps {
   request: RequestMadeByUser;
 }
 
 export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
+  const { t } = useTranslation();
   return (
     <View
       style={{
@@ -52,7 +54,7 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
                 paddingVertical: 10,
               }}
             >
-              {"Pending"}
+              {t("requestByUserPendingButton")}
             </Text>
           )}
         </View>

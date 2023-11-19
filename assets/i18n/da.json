@@ -1,0 +1,26 @@
+{
+    "postRequestApproveButton": "Godkend",
+    "postRequestButtonApproved": "Godkendt",
+    "requestByUserPendingButton": "Afventer",
+    "btnFindATree": "Find et træ",
+    "signOut": "Log ud",
+    "btnMyTrees": "Mine træer",
+    "btnRequests": "Anmodninger",
+    "cpsTitle": "Opret træ",
+    "cpsUploadImage": "Tag billede",
+    "cpsChangeImage": "Skift billede",
+    "cpsTreeDescription": "Beskrivelse",
+    "cpsZipCode": "Postnummer",
+    "cpsCity": "By",
+    "cpsDateOfPickUp": "Dato for afhentnnig",
+    "cpsSubmit": "Opret",
+    "loginScreenText": "Find eller giv et juletræ",
+    "requestsScreenNoRequests": "Du har ingen anmodninger",
+    "requestsScreenWhenNoRequests": "Opret et træ eller anmod om at hente et træ for at se dine anmodninger",
+    "requestsOfMyTrees": "Anmodninger af mine træer",
+    "requestScreenMyRequests": "Mine anmodninger",
+    "feedPostDelete": "Slet",
+    "feedPostPending": "Afventer",
+    "feedPostRequestTree": "Anmod træ"
+  }
+  

@@ -1,12 +1,14 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { AppleAuth } from "../components/AppleAuth";
+import { useTranslation } from "react-i18next";
 
 const LoginScreen = () => {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 100 }}>🎄</Text>
-      <Text style={{ fontSize: 20 }}>Find eller giv et juletræ</Text>
+      <Text style={{ fontSize: 20 }}>{t("loginScreenText")} </Text>
       <AppleAuth />
     </View>
   );

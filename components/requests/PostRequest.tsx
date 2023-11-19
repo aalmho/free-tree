@@ -4,6 +4,7 @@ import { RequestWithImg, useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
 import dayjs from "dayjs";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 interface RequestProps {
   request: RequestWithImg;
@@ -12,6 +13,7 @@ interface RequestProps {
 export const PostRequest: FC<RequestProps> = ({ request }) => {
   const { session } = useContext(SessionContext);
   const { mutate, isPending } = useApproveRequest();
+  const { t } = useTranslation();
   return (
     <View
       style={{
@@ -67,7 +69,9 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
                   paddingVertical: 10,
                 }}
               >
-                {request.approved ? "approved" : "approve"}
+                {request.approved
+                  ? t("postRequestButtonApproved")
+                  : t("postRequestApproveButton")}
               </Text>
             </Pressable>
           )}
