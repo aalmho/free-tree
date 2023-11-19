@@ -64,7 +64,7 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
                   paddingVertical: 10,
                 }}
               >
-                {"Pending"}
+                afventer
               </Text>
             )}
           </View>

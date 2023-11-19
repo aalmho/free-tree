@@ -125,6 +125,13 @@ export const approveRequest = async (requestId: number) => {
     .eq("id", requestId);
 };
 
+export const deleteUser = async (userId: string) => {
+  const {error, data} = await supabase
+  .from("users")
+  .delete()
+  .eq("id", userId)
+};
+
 export const getMessages = async (request_id: number) => {
   const { data, error } = await supabase
     .from("messages")
