@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   View,
+  Text,
   ScrollView,
   RefreshControl,
   TouchableOpacity,
@@ -10,11 +11,17 @@ import { FeedPost } from "../components/feed/FeedPost";
 import { SessionContext } from "../context/SessionContext";
 import { Ionicons } from "@expo/vector-icons";
 import { SignOutDropdown } from "../components/SignOutDropdown";
+import { useTranslation } from "react-i18next";
 
 const MyPostsScreen = ({ navigation }: any) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { data: posts, isLoading, refetch, isRefetching } = usePosts();
   const { session } = useContext(SessionContext);
+  const { t } = useTranslation();
+  const userPost = useMemo(
+    () => (posts || [])?.filter((post) => post.user_id === session?.user?.id),
+    [posts, session]
+  );
 
   useEffect(() => {
     navigation.setOptions({
@@ -65,12 +72,15 @@ const MyPostsScreen = ({ navigation }: any) => {
             />
           </TouchableOpacity>
         </View>
+        {userPost?.length === 0 && (
+        <View style={{justifyContent: "center", padding: 20, alignItems: "center"}}>
+          <Text>{t("youHaveNoTreesPlaceholder")}</Text>
+        </View>
+      )}
         <View style={{ gap: 20 }}>
-          {posts
-            ?.filter((post) => post.user_id === session?.user?.id)
-            .map((post) => (
-              <FeedPost key={post.created_at.toString()} post={post} />
-            ))}
+          {userPost.map((post) => (
+            <FeedPost key={post.created_at.toString()} post={post} />
+          ))}
         </View>
       </View>
     </ScrollView>

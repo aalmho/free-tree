@@ -24,5 +24,8 @@
   "feedPostRequestTree": "Request tree",
   "back": "Back",
   "markAsReserved": "Hide",
-  "unreserve": "Unhide"
+  "unreserve": "Unhide",
+  "noTreesPlaceholder": "No trees to show",
+  "youHaveNoTreesPlaceholder": "You have no trees yet. Create one to see it here."
+
 }

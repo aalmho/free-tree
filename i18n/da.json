@@ -24,6 +24,8 @@
     "feedPostRequestTree": "Anmod træ",
     "back": "Tilbage",
     "markAsReserved": "Skjul træ",
-    "unreserve": "Vis træ"
+    "unreserve": "Vis træ",
+    "noTreesPlaceholder": "Ingen træer at vise.",
+    "youHaveNoTreesPlaceholder": "Du har ingen træer endnu. Opret et træ for at få det vist her."
   }
   
