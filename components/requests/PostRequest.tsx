@@ -16,8 +16,6 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
     <View
       style={{
         backgroundColor: "lightgrey",
-        borderColor: "white",
-        borderBottomWidth: 1,
         height: 90,
       }}
     >
