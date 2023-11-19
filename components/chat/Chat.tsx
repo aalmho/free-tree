@@ -1,44 +1,96 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { GiftedChat, IMessage } from 'react-native-gifted-chat'
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { Chats } from './MockData';
-import { Route } from '@react-navigation/native';
-import { ChatType } from './types';
+import React, { useCallback, useContext, useEffect } from "react";
+import {
+  Bubble,
+  Day,
+  GiftedChat,
+  IMessage,
+  Time,
+} from "react-native-gifted-chat";
+import { Route } from "@react-navigation/native";
+import { SessionContext } from "../../context/SessionContext";
+import { sendMessage } from "../../api/api";
+import { useGetMessages } from "../../hooks/use-messages";
+import { LogBox, View } from "react-native";
+import { locale } from "../../dayjsWithLocale";
+import da from "dayjs/locale/da";
+import { ChatParams } from "../../navigation/StackNavigator";
 
-const Chat = ({ route }: { route: Route<string, { chatId: number }> }) => {
-    const { chatId } = route.params
+const Chat = ({
+  route,
+  navigation,
+}: {
+  route: Route<string, ChatParams>;
+  navigation: any;
+}) => {
+  const { requestId, otherPersonFirstName } = route.params;
+  const { session } = useContext(SessionContext);
+  const { messages, setMessages } = useGetMessages(requestId);
 
-    const DEFAULT_TABBAR_HEIGHT = useBottomTabBarHeight();
-    const [messages, setMessages] = useState<IMessage[]>([])
-    useEffect(() => {
-        // Get messages from supabase database based on some id of the chat?
-        // This is mockData
-        const thisChat: ChatType = Chats.find( (chat: ChatType) => chat.id === chatId)!;
-        setMessages(thisChat?.chatMessages)
-    }, [])
+  const onSend = useCallback((messages: IMessage[] = []) => {
+    setMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, messages)
+    );
+    sendMessage(requestId, messages[0].text, session?.user?.id!);
+  }, []);
 
-    const onSend = useCallback((messages: IMessage[] = []) => {
-        setMessages(previousMessages =>
-            GiftedChat.append(previousMessages, messages),
-        );
-        //Add latest message to the chat in supabase-database
-        //This is adding to MockData:
-        const thisChatIndex = Chats.findIndex( (chat: ChatType) => chat.id === chatId)!;
-        Chats[thisChatIndex].chatMessages.unshift(messages[0]);
-    }, [])
+  useEffect(() => {
+    navigation.setOptions({
+      title: otherPersonFirstName,
+    });
+  }, []);
 
+  const renderBubble = (props: any) => (
+    <Bubble
+      {...props}
+      textStyle={{
+        left: {
+          color: "black",
+        },
+      }}
+      wrapperStyle={{
+        left: {
+          backgroundColor: "lightgrey",
+        },
+      }}
+    />
+  );
+
+  const renderDay = (props: any) => {
+    return <Day {...props} textStyle={{ color: "grey" }} />;
+  };
+
+  const renderTime = (props: any) => {
     return (
-        <GiftedChat
-        messages={messages}
-        onSend={messages => onSend(messages)}
-        user={{
-            _id: 1,
-            name: 'user',
-            avatar: 'https://picsum.photos/140'
+      <Time
+        {...props}
+        timeTextStyle={{
+          left: {
+            color: "black",
+          },
         }}
-        bottomOffset={DEFAULT_TABBAR_HEIGHT}
-        />
-    )
-}
+      />
+    );
+  };
+
+  LogBox.ignoreLogs([
+    "Warning: Failed prop type: Invalid prop `locale` of type `object` supplied to `GiftedChat`",
+  ]);
+  return (
+    <View style={{ backgroundColor: "white", flex: 1 }}>
+      <GiftedChat
+        messages={messages}
+        locale={locale.substring(0, 2) === "da" ? da : undefined}
+        renderBubble={renderBubble}
+        renderDay={renderDay}
+        renderTime={renderTime}
+        renderAvatar={null}
+        onSend={(messages) => onSend(messages)}
+        user={{
+          _id: session?.user?.id!,
+        }}
+      />
+    </View>
+  );
+};
 
 export default Chat;

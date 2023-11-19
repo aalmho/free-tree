@@ -3,6 +3,8 @@ import {
   approveRequest,
   requestTree,
   getRequestsByUser,
+  PostRequest,
+  Post,
 } from "../api/api";
 import {
   useQuery,
@@ -57,15 +59,39 @@ export const useRequestsByUser = (userId: string) => {
 
 export const useApproveRequest = () => {
   const queryClient = useQueryClient();
+
   const mutate = useMutation({
     mutationFn: async (args: { requestId: number; userId: string }) => {
-      return approveRequest(args.requestId);
+      const previousData = queryClient.getQueryData([
+        "userRequests",
+        args.userId,
+      ]);
+      queryClient.setQueryData(
+        ["userRequests", args.userId],
+        (oldData: PostRequest | undefined) => {
+          if (oldData && Array.isArray(oldData)) {
+            return oldData.map((request) =>
+              request.id === args.requestId
+                ? { ...request, approved: "true" }
+                : request
+            );
+          }
+          return oldData;
+        }
+      );
+
+      try {
+        return await approveRequest(args.requestId);
+      } catch {
+        queryClient.setQueryData(["userRequests", args.userId], previousData);
+      }
     },
     onSuccess: async (data, variables) => {
       const queryKey: QueryKey = ["userRequests", variables.userId];
       return queryClient.invalidateQueries({ queryKey });
     },
   });
+
   return mutate;
 };
 
@@ -73,7 +99,34 @@ export const useRequestTree = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: async (args: { requesterUserId: string; postId: number }) => {
-      return requestTree(args.requesterUserId, args.postId);
+      const previousData = queryClient.getQueryData(["getPosts"]);
+
+      queryClient.setQueryData(["getPosts"], (oldData: Post[] | undefined) => {
+        if (oldData) {
+          return oldData.map((post) =>
+            post.id === args.postId
+              ? {
+                  ...post,
+                  requests: [
+                    ...(post.requests || []),
+                    {
+                      approved: false,
+                      profiles: { id: args.requesterUserId },
+                      post_id: args.postId,
+                    },
+                  ],
+                }
+              : post
+          );
+        }
+        return oldData;
+      });
+
+      try {
+        return requestTree(args.requesterUserId, args.postId);
+      } catch {
+        queryClient.setQueryData(["getPosts"], previousData);
+      }
     },
     onSuccess: async () => {
       return queryClient.invalidateQueries({ queryKey: ["getPosts"] });

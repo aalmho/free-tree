@@ -1,9 +1,10 @@
 import { FC } from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { RequestMadeByUser } from "../../api/api";
-import dayjs from "dayjs";
+import dayjs from "../../dayjsWithLocale";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 interface RequestByUserProps {
   request: RequestMadeByUser;
@@ -11,54 +12,66 @@ interface RequestByUserProps {
 
 export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
   const { t } = useTranslation();
+  const navigation: NavigationProp<any> = useNavigation();
+  const firstNameOfTreeDonator = request?.posts?.profiles?.first_name;
+
+  const onCardPress = () => {
+    if (request.approved) {
+      navigation.navigate("Chat", {
+        requestId: request.id,
+        otherPersonFirstName: firstNameOfTreeDonator,
+      });
+    }
+  };
+
   return (
-    <View
-      style={{
-        backgroundColor: "lightgrey",
-        borderColor: "white",
-        borderBottomWidth: 1,
-        height: 90,
-      }}
-    >
+    <TouchableOpacity onPress={onCardPress} disabled={!request.approved}>
       <View
         style={{
-          paddingHorizontal: 5,
-          flex: 1,
-          flexDirection: "row",
-          alignItems: "center",
+          backgroundColor: "lightgrey",
+          borderColor: "white",
+          borderBottomWidth: 1,
+          height: 90,
         }}
       >
-        <View style={{ flex: 0.5, padding: 10 }}>
-          <Image
-            style={{
-              height: "100%",
-              borderRadius: 100,
-            }}
-            source={{ uri: request?.posts?.image_url }}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text>{request?.posts?.profiles?.first_name}</Text>
-          <Text>
-            {dayjs(request.created_at).format("DD MMM YYYY").toString()}
-          </Text>
-        </View>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          {request.approved ? (
-            <Ionicons name="chatbubbles-sharp" color="green" size={40} />
-          ) : (
-            <Text
+        <View
+          style={{
+            paddingHorizontal: 5,
+            flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <View style={{ flex: 0.5, padding: 10 }}>
+            <Image
               style={{
-                color: "green",
-                paddingHorizontal: 10,
-                paddingVertical: 10,
+                height: "100%",
+                borderRadius: 100,
               }}
-            >
-              {t("requestByUserPendingButton")}
-            </Text>
-          )}
+              source={{ uri: request?.posts?.image_url }}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text>{firstNameOfTreeDonator}</Text>
+            <Text>{dayjs(request.created_at).format("ll").toString()}</Text>
+          </View>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            {request.approved ? (
+              <Ionicons name="chatbubbles-sharp" color="green" size={40} />
+            ) : (
+              <Text
+                style={{
+                  color: "green",
+                  paddingHorizontal: 10,
+                  paddingVertical: 10,
+                }}
+              >
+                {t("requestByUserPendingButton")}
+              </Text>
+            )}
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };

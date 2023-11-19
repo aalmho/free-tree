@@ -1,9 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Button } from "react-native";
-import { supabase } from "../utils/supabase";
 import HomeScreen from "../screens/HomeScreen";
-import MessageScreen from "../screens/MessagesScreen";
 import RequestsScreen from "../screens/RequestsScreen";
 import MyPostsScreen from "../screens/MyPostsScreen";
 import { useTranslation } from "react-i18next";
@@ -50,28 +47,22 @@ const BottomTabsNavigator = () => {
         component={HomeScreen}
         options={{
           ...iconOptions("home-outline", "home"),
-          headerRight: () => (
-            <Button
-              title={t("signOut")}
-              onPress={() => supabase.auth.signOut()}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Kø og beskeder"
-        component={MessageScreen}
-        options={{
-          ...iconOptions("chatbox-outline", "chatbox"),
-          headerShown: false,
         }}
       />
       <Tab.Screen
         name={t("btnMyTrees")}
         component={MyPostsScreen}
-        options={{
+        options={({ navigation, route }) => ({
           ...iconOptions("person-outline", "person"),
-        }}
+          headerRight: () => (
+            <Ionicons
+              name="menu-outline"
+              color="green"
+              size={30}
+              style={{ paddingRight: 10 }}
+            />
+          ),
+        })}
       />
       <Tab.Screen
         name={t("btnRequests")}

@@ -12,8 +12,8 @@
     "cpsTreeDescription": "Beskrivelse",
     "cpsZipCode": "Postnummer",
     "cpsCity": "By",
-    "cpsDateOfPickUp": "Dato for afhentnnig",
-    "cpsSubmit": "Opret",
+    "cpsDateOfPickUp": "Afhentningsdato",
+    "cpsSubmitButton": "Opret",
     "loginScreenText": "Find eller giv et juletræ",
     "requestsScreenNoRequests": "Du har ingen anmodninger",
     "requestsScreenWhenNoRequests": "Opret et træ eller anmod om at hente et træ for at se dine anmodninger",
@@ -21,6 +21,7 @@
     "requestScreenMyRequests": "Mine anmodninger",
     "feedPostDelete": "Slet",
     "feedPostPending": "Afventer",
-    "feedPostRequestTree": "Anmod træ"
+    "feedPostRequestTree": "Anmod træ",
+    "uploadingTree": "Uploader dit juletræe"
   }
   
