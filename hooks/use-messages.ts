@@ -37,32 +37,3 @@ export const useGetMessages = (requestId: number) => {
   }, []);
   return { messages, setMessages };
 };
-
-// export const useMessagesByRequest = (requestId: number) => {
-//   const queryKey: QueryKey = ["messagesByRequest", requestId];
-//   return useQuery({
-//     queryKey,
-//     queryFn: async () => {
-//       const messagesByRequestId = await getMessages(requestId);
-//       return messagesByRequestId;
-//     },
-//   });
-// };
-
-// export const useSendMessage = () => {
-//   const queryClient = useQueryClient();
-//   const mutate = useMutation({
-//     mutationFn: async (args: {
-//       requestId: number;
-//       content: string;
-//       author: string;
-//     }) => {
-//       return sendMessage(args.requestId, args.content, args.author);
-//     },
-//     onSuccess: async (data, variables) => {
-//       const queryKey: QueryKey = ["messagesByRequest", variables.requestId];
-//       return queryClient.invalidateQueries({ queryKey });
-//     },
-//   });
-//   return mutate;
-// };
