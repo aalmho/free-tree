@@ -45,6 +45,7 @@ export type Post = {
   postal_code: string;
   city: string;
   user_id: string;
+  reserved?: string;
   requests?: Request[];
 };
 
@@ -80,7 +81,7 @@ export const getPosts = async () => {
   const { data, error } = await supabase
     .from("posts")
     .select(
-      `id, created_at, image_url, description, user_id, pick_up_date, postal_code, city, requests (id, profiles (id))`
+      `id, created_at, image_url, description, user_id, pick_up_date, postal_code, city, reserved, requests (id, profiles (id))`
     )
     .order("created_at", { ascending: false });
   handleError(error);
@@ -126,10 +127,17 @@ export const approveRequest = async (requestId: number) => {
 };
 
 export const deleteUser = async (userId: string) => {
-  const {error, data} = await supabase
-  .from("users")
-  .delete()
-  .eq("id", userId)
+  const { error, data } = await supabase
+    .from("users")
+    .delete()
+    .eq("id", userId);
+};
+
+export const markPostAsReserved = async (postId: number, mark: boolean) => {
+  const { error, data } = await supabase
+    .from("posts")
+    .update({ reserved: mark })
+    .eq("id", postId);
 };
 
 export const getMessages = async (request_id: number) => {

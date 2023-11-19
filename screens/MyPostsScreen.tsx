@@ -1,10 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, ScrollView, RefreshControl, Pressable } from "react-native";
+import {
+  View,
+  ScrollView,
+  RefreshControl,
+  TouchableOpacity,
+} from "react-native";
 import { usePosts } from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
 import { SessionContext } from "../context/SessionContext";
 import { Ionicons } from "@expo/vector-icons";
-import {SignOutDropdown} from "../components/SignOutDropdown";
+import { SignOutDropdown } from "../components/SignOutDropdown";
 
 const MyPostsScreen = ({ navigation }: any) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -15,12 +20,12 @@ const MyPostsScreen = ({ navigation }: any) => {
     navigation.setOptions({
       headerRight: () => (
         <Ionicons
-        onPress={() => setIsDropdownOpen(!isDropdownOpen)}
-        name="menu-outline"
-        color="green"
-        size={30}
-        style={{ paddingRight: 10 }}
-      />
+          onPress={() => setIsDropdownOpen(!isDropdownOpen)}
+          name="menu-outline"
+          color="green"
+          size={30}
+          style={{ paddingRight: 10 }}
+        />
       ),
     });
   }, [navigation, isDropdownOpen]);
@@ -36,7 +41,7 @@ const MyPostsScreen = ({ navigation }: any) => {
       }
     >
       <View style={{ gap: 20 }}>
-      {isDropdownOpen && <SignOutDropdown userId={session?.user?.id!} />}
+        {isDropdownOpen && <SignOutDropdown userId={session?.user?.id!} />}
         <View
           style={{
             justifyContent: "center",
@@ -44,7 +49,7 @@ const MyPostsScreen = ({ navigation }: any) => {
             paddingTop: 30,
           }}
         >
-          <Pressable
+          <TouchableOpacity
             style={{
               justifyContent: "center",
               alignItems: "center",
@@ -58,7 +63,7 @@ const MyPostsScreen = ({ navigation }: any) => {
               size={70}
               style={{ position: "absolute" }}
             />
-          </Pressable>
+          </TouchableOpacity>
         </View>
         <View style={{ gap: 20 }}>
           {posts

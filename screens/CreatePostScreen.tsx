@@ -8,7 +8,8 @@ import {
   Image,
   Text,
   ScrollView,
-  Pressable,
+  TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { uploadImage } from "../api/api";
@@ -22,6 +23,7 @@ import { useTranslation } from "react-i18next";
 const CreatePostScreen = ({ navigation }: any) => {
   const { t } = useTranslation();
   const [fileName, setFilename] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<FormData | null>(null);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [fileUri, setFileUri] = useState("");
@@ -32,7 +34,7 @@ const CreatePostScreen = ({ navigation }: any) => {
     date: new Date(),
   });
 
-  const { mutate: createPostMutation, isPending } = useCreatePost();
+  const { mutate: createPostMutation } = useCreatePost();
 
   const cleanUp = useCallback(() => {
     setPostInfo({
@@ -48,14 +50,16 @@ const CreatePostScreen = ({ navigation }: any) => {
 
   const submitPost = useCallback(async () => {
     if (formData && fileName) {
+      setIsLoading(true);
       await uploadImage(fileName, formData);
-      createPostMutation({
+      await createPostMutation({
         fileName,
         description: postInfo.description,
         date: postInfo.date,
         postalCode: postInfo.postalCode,
         city: postInfo.city,
       });
+      setIsLoading(false);
       cleanUp();
       navigation.navigate(t("btnMyTrees"));
     }
@@ -67,7 +71,7 @@ const CreatePostScreen = ({ navigation }: any) => {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
-        quality: 0.2,
+        quality: 0.1,
       });
 
       if (!result.canceled) {
@@ -96,7 +100,7 @@ const CreatePostScreen = ({ navigation }: any) => {
   }, [permission]);
 
   return (
-    <ScrollView>
+    <ScrollView refreshControl={<RefreshControl refreshing={isLoading} />}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View
           style={{
@@ -119,14 +123,14 @@ const CreatePostScreen = ({ navigation }: any) => {
               <Text>{t("cpsDateOfPickUp")}</Text>
               <DateTimePicker
                 value={postInfo.date}
-                minimumDate={postInfo.date}
+                minimumDate={new Date()}
                 mode="date"
                 onChange={(event, date) => {
                   setPostInfo({ ...postInfo, date: date! });
                 }}
               />
             </View>
-            <Pressable onPress={selectImage}>
+            <TouchableOpacity onPress={selectImage}>
               <View
                 style={{
                   height: 150,
@@ -144,7 +148,7 @@ const CreatePostScreen = ({ navigation }: any) => {
                 )}
                 {!fileUri && <Ionicons name="camera-outline" size={30} />}
               </View>
-            </Pressable>
+            </TouchableOpacity>
           </View>
           <View style={{ flexDirection: "row", gap: 10 }}>
             <TextInput
@@ -172,7 +176,7 @@ const CreatePostScreen = ({ navigation }: any) => {
             }
             placeholder={t("cpsTreeDescription")}
           />
-          <Pressable onPress={submitPost} disabled={isPending}>
+          <TouchableOpacity onPress={submitPost} disabled={isLoading}>
             <View
               style={{
                 backgroundColor: "green",
@@ -191,12 +195,7 @@ const CreatePostScreen = ({ navigation }: any) => {
                 {t("cpsSubmitButton")}
               </Text>
             </View>
-          </Pressable>
-          {isPending && (
-            <View>
-              <Text>{t("uploadingTree")}</Text>
-            </View>
-          )}
+          </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
     </ScrollView>

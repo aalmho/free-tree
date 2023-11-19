@@ -22,6 +22,8 @@
     "feedPostDelete": "Slet",
     "feedPostPending": "Afventer",
     "feedPostRequestTree": "Anmod træ",
-    "uploadingTree": "Uploader dit juletræe"
+    "back": "Tilbage",
+    "markAsReserved": "Skjul træ",
+    "unreserve": "Vis træ"
   }
   

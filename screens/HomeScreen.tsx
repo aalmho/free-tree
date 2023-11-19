@@ -17,9 +17,11 @@ const HomeScreen = () => {
       }
     >
       <View style={{ gap: 20 }}>
-        {posts?.map((post) => (
-          <FeedPost key={post.created_at.toString()} post={post} />
-        ))}
+        {posts
+          ?.filter((post) => !post.reserved)
+          ?.map((post) => (
+            <FeedPost key={post.created_at.toString()} post={post} />
+          ))}
       </View>
     </ScrollView>
   );
