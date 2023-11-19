@@ -117,6 +117,7 @@ const CreatePostScreen = ({ navigation }: any) => {
               <Text>Afhetningsdato</Text>
               <DateTimePicker
                 value={postInfo.date}
+                minimumDate={postInfo.date}
                 mode="date"
                 onChange={(event, date) => {
                   setPostInfo({ ...postInfo, date: date! });
