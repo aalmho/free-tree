@@ -1,7 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
-import MessageScreen from "../screens/MessagesScreen";
 import RequestsScreen from "../screens/RequestsScreen";
 import MyPostsScreen from "../screens/MyPostsScreen";
 
@@ -43,14 +42,6 @@ const BottomTabsNavigator = () => {
         component={HomeScreen}
         options={{
           ...iconOptions("home-outline", "home"),
-        }}
-      />
-      <Tab.Screen
-        name="Kø og beskeder"
-        component={MessageScreen}
-        options={{
-          ...iconOptions("chatbox-outline", "chatbox"),
-          headerShown: false,
         }}
       />
       <Tab.Screen

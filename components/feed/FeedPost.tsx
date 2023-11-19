@@ -3,7 +3,7 @@ import { Post } from "../../api/api";
 import { View, Image, Text, Pressable } from "react-native";
 import { SessionContext } from "../../context/SessionContext";
 import { useRequestTree } from "../../hooks/use-requests";
-import dayjs from "dayjs";
+import dayjs from "../../dayjsWithLocale";
 import { useDeletePost } from "../../hooks/use-posts";
 
 interface FeedPost {
@@ -83,9 +83,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
           <View style={{ paddingTop: 10, marginBottom: 15, gap: 10, flex: 1 }}>
             <Text>🎄 {post.description}</Text>
             <Text>📍 {`${post.postal_code}, ${post.city}`}</Text>
-            <Text>
-              🗓️ {dayjs(post.pick_up_date).format("DD MMM YYYY").toString()}
-            </Text>
+            <Text>🗓️ {dayjs(post.pick_up_date).format("ll").toString()}</Text>
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
             {requestText === "Afventer" ? (
