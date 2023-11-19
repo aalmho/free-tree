@@ -26,6 +26,12 @@
     "markAsReserved": "Skjul træ",
     "unreserve": "Vis træ",
     "noTreesPlaceholder": "Ingen træer at vise.",
-    "youHaveNoTreesPlaceholder": "Du har ingen træer endnu. Opret et træ for at få det vist her."
+    "youHaveNoTreesPlaceholder": "Du har ingen træer endnu. Opret et træ for at få det vist her.",
+    "cancel": "Fortryd",
+    "continue": "Fortsæt",
+    "deletePostTitle": "Slet opslag",
+    "deletePostMessage": "Vil du slette dette opslag?",
+    "deleteAccountTitle": "Slet konto",
+    "deleteAccountMessage": "Vil du slette din konto?"
   }
   

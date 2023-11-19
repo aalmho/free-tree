@@ -1,6 +1,6 @@
 import { FC, useCallback, useContext, useMemo } from "react";
 import { Post } from "../../api/api";
-import { View, Image, Text, TouchableOpacity } from "react-native";
+import { View, Image, Text, TouchableOpacity, Alert } from "react-native";
 import { SessionContext } from "../../context/SessionContext";
 import { useRequestTree } from "../../hooks/use-requests";
 import dayjs from "../../dayjsWithLocale";
@@ -40,7 +40,16 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
 
   const toggleRequest = useCallback(() => {
     if (isUsersPost) {
-      return deleteTreeMutation({ postId: post.id });
+      return Alert.alert(t("deletePostTitle"), "Vil du slette dette opslag", [
+        {
+          text: t("cancel"),
+          style: "cancel",
+        },
+        {
+          text: t("continue"),
+          onPress: () => deleteTreeMutation({ postId: post.id }),
+        },
+      ]);
     }
     if (!isTreeRequested) {
       requestTreeMutation({
