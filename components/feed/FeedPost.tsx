@@ -5,12 +5,14 @@ import { SessionContext } from "../../context/SessionContext";
 import { useRequestTree } from "../../hooks/use-requests";
 import dayjs from "dayjs";
 import { useDeletePost } from "../../hooks/use-posts";
+import { useTranslation } from "react-i18next";
 
 interface FeedPost {
   post: Post;
 }
 
 export const FeedPost: FC<FeedPost> = ({ post }) => {
+  const { t } = useTranslation();
   const { session } = useContext(SessionContext);
   const { mutate: requestTreeMutation, isPending: isRequestPending } =
     useRequestTree();
@@ -29,9 +31,9 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
 
   const requestText = useMemo(() => {
     if (isUsersPost) {
-      return "Delete";
+      return t("feedPostDelete");
     }
-    return isTreeRequested ? "Pending" : "Request tree";
+    return isTreeRequested ? t("feedPostPending") : t("feedPostRequestTree");
   }, [post, session]);
 
   const toggleRequest = useCallback(() => {
