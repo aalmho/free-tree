@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { RequestMadeByUser } from "../../api/api";
-import dayjs from "../../locales";
+import dayjs from "../../dayjsWithLocale";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 

@@ -3,7 +3,7 @@ import { Post } from "../../api/api";
 import { View, Image, Text, Pressable } from "react-native";
 import { SessionContext } from "../../context/SessionContext";
 import { useRequestTree } from "../../hooks/use-requests";
-import dayjs from "../../locales";
+import dayjs from "../../dayjsWithLocale";
 import { useDeletePost } from "../../hooks/use-posts";
 
 interface FeedPost {

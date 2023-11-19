@@ -11,7 +11,7 @@ import { SessionContext } from "../../context/SessionContext";
 import { sendMessage } from "../../api/api";
 import { useGetMessages } from "../../hooks/use-messages";
 import { LogBox, View } from "react-native";
-import { locale } from "../../locales";
+import { locale } from "../../dayjsWithLocale";
 import da from "dayjs/locale/da";
 import { ChatParams } from "../../navigation/StackNavigator";
 

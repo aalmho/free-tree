@@ -3,7 +3,7 @@ import { View, Text, Pressable, Image, TouchableOpacity } from "react-native";
 import {} from "../../api/api";
 import { RequestWithImg, useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
-import dayjs from "../../locales";
+import dayjs from "../../dayjsWithLocale";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 
