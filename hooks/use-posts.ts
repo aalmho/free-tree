@@ -1,4 +1,4 @@
-import { createPost, deletePost, getPosts } from "../api/api";
+import { Post, createPost, deletePost, getPosts } from "../api/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const usePosts = () => {
@@ -40,7 +40,20 @@ export const useDeletePost = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: async (args: { postId: number }) => {
-      return deletePost(args.postId);
+      const previousData = queryClient.getQueryData(["getPosts"]);
+
+      queryClient.setQueryData(["getPosts"], (oldData: Post[] | undefined) => {
+        if (oldData) {
+          return oldData.filter((post) => post.id !== args.postId);
+        }
+        return oldData;
+      });
+
+      try {
+        return deletePost(args.postId);
+      } catch {
+        queryClient.setQueryData(["getPosts"], previousData);
+      }
     },
     onSuccess: async () => {
       return queryClient.invalidateQueries({ queryKey: ["getPosts"] });
