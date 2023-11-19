@@ -4,8 +4,10 @@ import { useRequests, useRequestsByUser } from "../hooks/use-requests";
 import { SessionContext } from "../context/SessionContext";
 import { PostRequest } from "../components/requests/PostRequest";
 import { RequestByUser } from "../components/requests/RequestByUser";
+import { useTranslation } from "react-i18next";
 
 const RequestsScreen = () => {
+  const { t } = useTranslation();
   const { session } = useContext(SessionContext);
   const {
     data: requests,
@@ -25,7 +27,7 @@ const RequestsScreen = () => {
   ) {
     return (
       <View>
-        <Text>You have no requests</Text>
+        <Text>{t("requestsScreenNoRequests")} </Text>
       </View>
     );
   }
@@ -53,13 +55,13 @@ const RequestsScreen = () => {
       {requests?.length === 0 && requestsByUser?.length === 0 && (
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Text style={{ padding: 8 }}>
-            Create a post or request a tree to see your requests
+            {t("requestsScreenWhenNoRequests")}
           </Text>
         </View>
       )}
       {!!requests?.length && (
         <View>
-          <Text style={{ padding: 8 }}>Requests of my trees</Text>
+          <Text style={{ padding: 8 }}>{t("requestsOfMyTrees")} </Text>
           {requests?.map((req) => (
             <PostRequest key={req.id} request={req} />
           ))}
@@ -67,7 +69,7 @@ const RequestsScreen = () => {
       )}
       {!!requestsByUser?.length && (
         <View>
-          <Text style={{ padding: 8 }}>My requests</Text>
+          <Text style={{ padding: 8 }}>{t("requestScreenMyRequests")} </Text>
           {requestsByUser?.map((req) => (
             <RequestByUser key={req.id} request={req} />
           ))}

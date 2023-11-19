@@ -17,8 +17,10 @@ import { Camera } from "expo-camera";
 import { v4 as uuidv4 } from "uuid";
 import { useCreatePost } from "../hooks/use-posts";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useTranslation } from "react-i18next";
 
 const CreatePostScreen = ({ navigation }: any) => {
+  const { t } = useTranslation();
   const [fileName, setFilename] = useState("");
   const [formData, setFormData] = useState<FormData | null>(null);
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -55,7 +57,7 @@ const CreatePostScreen = ({ navigation }: any) => {
         city: postInfo.city,
       });
       cleanUp();
-      navigation.navigate("Mine træer");
+      navigation.navigate(t("btnMyTrees"));
     }
   }, [fileName, formData, postInfo]);
 
@@ -114,7 +116,7 @@ const CreatePostScreen = ({ navigation }: any) => {
                 width: 150,
               }}
             >
-              <Text>Afhetningsdato</Text>
+              <Text>{t("cpsDateOfPickUp")}</Text>
               <DateTimePicker
                 value={postInfo.date}
                 minimumDate={postInfo.date}
@@ -152,13 +154,13 @@ const CreatePostScreen = ({ navigation }: any) => {
               onChangeText={(val) =>
                 setPostInfo({ ...postInfo, postalCode: val })
               }
-              placeholder="Postnummer"
+              placeholder={t("cpsZipCode")}
             />
             <TextInput
               style={[styles.input, { width: 150 }]}
               value={postInfo.city}
               onChangeText={(data) => setPostInfo({ ...postInfo, city: data })}
-              placeholder="By"
+              placeholder={t("cpsCity")}
             />
           </View>
           <TextInput
@@ -168,7 +170,7 @@ const CreatePostScreen = ({ navigation }: any) => {
             onChangeText={(val) =>
               setPostInfo({ ...postInfo, description: val })
             }
-            placeholder="Tilføj beskrivelse"
+            placeholder={t("cpsTreeDescription")}
           />
           <Pressable onPress={submitPost} disabled={isPending}>
             <View
@@ -186,13 +188,13 @@ const CreatePostScreen = ({ navigation }: any) => {
                   paddingVertical: 10,
                 }}
               >
-                Opret
+                {t("cpsSubmitButton")}
               </Text>
             </View>
           </Pressable>
           {isPending && (
             <View>
-              <Text>Uploader dit juletræ...</Text>
+              <Text>{t("uploadingTree")}</Text>
             </View>
           )}
         </View>

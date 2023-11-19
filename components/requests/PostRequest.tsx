@@ -5,6 +5,7 @@ import { RequestWithImg, useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
 import dayjs from "../../dayjsWithLocale";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 interface RequestProps {
@@ -14,6 +15,7 @@ interface RequestProps {
 export const PostRequest: FC<RequestProps> = ({ request }) => {
   const { session } = useContext(SessionContext);
   const { mutate, isPending } = useApproveRequest();
+  const { t } = useTranslation();
   const navigation: NavigationProp<any> = useNavigation();
   const firstNameOfTreeGetter = request?.profiles?.first_name;
 
@@ -78,7 +80,9 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
                     paddingVertical: 10,
                   }}
                 >
-                  {request.approved ? "approved" : "approve"}
+                  {request.approved
+                    ? t("postRequestButtonApproved")
+                    : t("postRequestApproveButton")}
                 </Text>
               </Pressable>
             )}

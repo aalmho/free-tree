@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
 import RequestsScreen from "../screens/RequestsScreen";
 import MyPostsScreen from "../screens/MyPostsScreen";
+import { useTranslation } from "react-i18next";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,17 +36,21 @@ const iconOptions = (
 });
 
 const BottomTabsNavigator = () => {
+  const { t } = useTranslation();
   return (
-    <Tab.Navigator initialRouteName="Find et træ" screenOptions={screenOptions}>
+    <Tab.Navigator
+      initialRouteName={t("btnFindATree")}
+      screenOptions={screenOptions}
+    >
       <Tab.Screen
-        name="Find et træ"
+        name={t("btnFindATree")}
         component={HomeScreen}
         options={{
           ...iconOptions("home-outline", "home"),
         }}
       />
       <Tab.Screen
-        name="Mine træer"
+        name={t("btnMyTrees")}
         component={MyPostsScreen}
         options={({ navigation, route }) => ({
           ...iconOptions("person-outline", "person"),
@@ -60,7 +65,7 @@ const BottomTabsNavigator = () => {
         })}
       />
       <Tab.Screen
-        name="Requests"
+        name={t("btnRequests")}
         component={RequestsScreen}
         options={iconOptions("filter-outline", "filter")}
       />

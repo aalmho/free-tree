@@ -5,12 +5,14 @@ import { SessionContext } from "../../context/SessionContext";
 import { useRequestTree } from "../../hooks/use-requests";
 import dayjs from "../../dayjsWithLocale";
 import { useDeletePost } from "../../hooks/use-posts";
+import { useTranslation } from "react-i18next";
 
 interface FeedPost {
   post: Post;
 }
 
 export const FeedPost: FC<FeedPost> = ({ post }) => {
+  const { t } = useTranslation();
   const { session } = useContext(SessionContext);
   const { mutate: requestTreeMutation, isPending: isRequestPending } =
     useRequestTree();
@@ -29,9 +31,9 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
 
   const requestText = useMemo(() => {
     if (isUsersPost) {
-      return "Slet";
+      return t("feedPostDelete");
     }
-    return isTreeRequested ? "Afventer" : "Anmod";
+    return isTreeRequested ? t("feedPostPending") : t("feedPostRequestTree");
   }, [post, session]);
 
   const toggleRequest = useCallback(() => {
@@ -86,7 +88,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
             <Text>🗓️ {dayjs(post.pick_up_date).format("ll").toString()}</Text>
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
-            {requestText === "Afventer" ? (
+            {requestText === t("feedPostPending") ? (
               <Text
                 style={{
                   color: "green",

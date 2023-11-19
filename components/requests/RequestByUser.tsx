@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { RequestMadeByUser } from "../../api/api";
 import dayjs from "../../dayjsWithLocale";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 interface RequestByUserProps {
@@ -10,6 +11,7 @@ interface RequestByUserProps {
 }
 
 export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
+  const { t } = useTranslation();
   const navigation: NavigationProp<any> = useNavigation();
   const firstNameOfTreeDonator = request?.posts?.profiles?.first_name;
 
@@ -64,7 +66,7 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
                   paddingVertical: 10,
                 }}
               >
-                afventer
+                {t("requestByUserPendingButton")}
               </Text>
             )}
           </View>
