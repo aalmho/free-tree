@@ -5,12 +5,12 @@ import {
   View,
   TouchableWithoutFeedback,
   Keyboard,
-  Button,
   Image,
-  Dimensions,
   Text,
   ScrollView,
+  Pressable,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { uploadImage } from "../api/api";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
@@ -18,14 +18,11 @@ import { v4 as uuidv4 } from "uuid";
 import { useCreatePost } from "../hooks/use-posts";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const deviceWidth = Dimensions.get("window").width;
-
 const CreatePostScreen = ({ navigation }: any) => {
   const [fileName, setFilename] = useState("");
   const [formData, setFormData] = useState<FormData | null>(null);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [fileUri, setFileUri] = useState("");
-  const uploadImageText = fileUri ? "Change image" : "Upload image";
   const [postInfo, setPostInfo] = useState({
     description: "",
     postalCode: "",
@@ -33,7 +30,7 @@ const CreatePostScreen = ({ navigation }: any) => {
     date: new Date(),
   });
 
-  const { mutate: createPostMutation } = useCreatePost();
+  const { mutate: createPostMutation, isPending } = useCreatePost();
 
   const cleanUp = useCallback(() => {
     setPostInfo({
@@ -48,7 +45,7 @@ const CreatePostScreen = ({ navigation }: any) => {
   }, []);
 
   const submitPost = useCallback(async () => {
-    if (formData) {
+    if (formData && fileName) {
       await uploadImage(fileName, formData);
       createPostMutation({
         fileName,
@@ -105,42 +102,99 @@ const CreatePostScreen = ({ navigation }: any) => {
             justifyContent: "center",
             alignItems: "center",
             gap: 10,
+            paddingTop: 40,
           }}
         >
-          <Button title={uploadImageText} onPress={selectImage} />
-          {fileUri && <Image style={styles.image} source={{ uri: fileUri }} />}
+          <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 10,
+                width: 150,
+              }}
+            >
+              <Text>Afhetningsdato</Text>
+              <DateTimePicker
+                value={postInfo.date}
+                minimumDate={postInfo.date}
+                mode="date"
+                onChange={(event, date) => {
+                  setPostInfo({ ...postInfo, date: date! });
+                }}
+              />
+            </View>
+            <Pressable onPress={selectImage}>
+              <View
+                style={{
+                  height: 150,
+                  width: 150,
+                  borderColor: "green",
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderStyle: "dashed",
+                }}
+              >
+                {fileUri && (
+                  <Image style={styles.image} source={{ uri: fileUri }} />
+                )}
+                {!fileUri && <Ionicons name="camera-outline" size={30} />}
+              </View>
+            </Pressable>
+          </View>
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <TextInput
+              inputMode="numeric"
+              style={[styles.input, { width: 150 }]}
+              value={postInfo.postalCode}
+              onChangeText={(val) =>
+                setPostInfo({ ...postInfo, postalCode: val })
+              }
+              placeholder="Postnummer"
+            />
+            <TextInput
+              style={[styles.input, { width: 150 }]}
+              value={postInfo.city}
+              onChangeText={(data) => setPostInfo({ ...postInfo, city: data })}
+              placeholder="By"
+            />
+          </View>
           <TextInput
-            style={styles.input}
+            multiline
+            style={[styles.input, { width: 310, height: 80 }]}
             value={postInfo.description}
             onChangeText={(val) =>
               setPostInfo({ ...postInfo, description: val })
             }
-            placeholder="Tree description"
+            placeholder="Tilføj beskrivelse"
           />
-          <TextInput
-            inputMode="numeric"
-            style={styles.input}
-            value={postInfo.postalCode}
-            onChangeText={(val) =>
-              setPostInfo({ ...postInfo, postalCode: val })
-            }
-            placeholder="Postal code"
-          />
-          <TextInput
-            style={styles.input}
-            value={postInfo.city}
-            onChangeText={(data) => setPostInfo({ ...postInfo, city: data })}
-            placeholder="City"
-          />
-          <Text>Date of pick up</Text>
-          <DateTimePicker
-            value={postInfo.date}
-            mode="date"
-            onChange={(event, date) => {
-              setPostInfo({ ...postInfo, date: date! });
-            }}
-          />
-          <Button onPress={submitPost} title="Submit" />
+          <Pressable onPress={submitPost} disabled={isPending}>
+            <View
+              style={{
+                backgroundColor: "green",
+                borderRadius: 24,
+                minWidth: 100,
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  paddingHorizontal: 10,
+                  paddingVertical: 10,
+                }}
+              >
+                Opret
+              </Text>
+            </View>
+          </Pressable>
+          {isPending && (
+            <View>
+              <Text>Uploader dit juletræ...</Text>
+            </View>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </ScrollView>
@@ -149,16 +203,14 @@ const CreatePostScreen = ({ navigation }: any) => {
 
 const styles = StyleSheet.create({
   input: {
-    minWidth: 200,
-    height: 40,
     borderWidth: 1,
     padding: 10,
     borderRadius: 8,
   },
   image: {
-    width: deviceWidth / 2,
-    height: deviceWidth / 2,
-    borderRadius: 8,
+    width: 150,
+    height: 150,
+    borderRadius: 10,
   },
 });
 
