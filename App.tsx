@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createStackNavigator } from "@react-navigation/stack";
 import CreatePostScreen from "./screens/CreatePostScreen";
 import { useTranslation } from "react-i18next";
-import "./assets/i18n/i18next";
+import "./i18n/i18next";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
