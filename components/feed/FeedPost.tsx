@@ -1,10 +1,10 @@
 import { FC, useCallback, useContext, useMemo } from "react";
 import { Post } from "../../api/api";
-import { View, Image, Text, Pressable } from "react-native";
+import { View, Image, Text, TouchableOpacity } from "react-native";
 import { SessionContext } from "../../context/SessionContext";
 import { useRequestTree } from "../../hooks/use-requests";
 import dayjs from "../../dayjsWithLocale";
-import { useDeletePost } from "../../hooks/use-posts";
+import { useDeletePost, useMarkPostAsReserved } from "../../hooks/use-posts";
 import { useTranslation } from "react-i18next";
 
 interface FeedPost {
@@ -18,6 +18,8 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
     useRequestTree();
   const { mutate: deleteTreeMutation, isPending: isDeletePending } =
     useDeletePost();
+  const { mutate: markTreeMutation, isPending: isMarkTreePending } =
+    useMarkPostAsReserved();
 
   const isTreeRequested = useMemo(() => {
     return post.requests?.some(
@@ -87,7 +89,31 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
             <Text>📍 {`${post.postal_code}, ${post.city}`}</Text>
             <Text>🗓️ {dayjs(post.pick_up_date).format("ll").toString()}</Text>
           </View>
-          <View style={{ flex: 1, alignItems: "center" }}>
+          <View style={{ flex: 1, alignItems: "center", gap: 5 }}>
+            {isUsersPost && (
+              <TouchableOpacity
+                disabled={isMarkTreePending}
+                style={{
+                  backgroundColor: "green",
+                  borderRadius: 24,
+                  minWidth: 100,
+                  alignItems: "center",
+                }}
+                onPress={() =>
+                  markTreeMutation({ postId: post.id, mark: !post.reserved })
+                }
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                  }}
+                >
+                  {post.reserved ? t("unreserve") : t("markAsReserved")}
+                </Text>
+              </TouchableOpacity>
+            )}
             {requestText === t("feedPostPending") ? (
               <Text
                 style={{
@@ -100,7 +126,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
                 {requestText}
               </Text>
             ) : (
-              <Pressable
+              <TouchableOpacity
                 disabled={isDeletePending || isRequestPending}
                 style={{
                   backgroundColor: `${isUsersPost ? "red" : "green"}`,
@@ -119,7 +145,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
                 >
                   {requestText}
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             )}
           </View>
         </View>

@@ -1,4 +1,10 @@
-import { Post, createPost, deletePost, getPosts } from "../api/api";
+import {
+  Post,
+  createPost,
+  deletePost,
+  getPosts,
+  markPostAsReserved,
+} from "../api/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const usePosts = () => {
@@ -59,5 +65,34 @@ export const useDeletePost = () => {
       return queryClient.invalidateQueries({ queryKey: ["getPosts"] });
     },
   });
+  return mutate;
+};
+
+export const useMarkPostAsReserved = () => {
+  const queryClient = useQueryClient();
+
+  const mutate = useMutation({
+    mutationFn: async (args: { postId: number; mark: boolean }) => {
+      const previousData = queryClient.getQueryData(["getPosts"]);
+      queryClient.setQueryData(["getPosts"], (oldData: Post[] | undefined) => {
+        if (oldData) {
+          return oldData.map((post) =>
+            post.id === args.postId ? { ...post, reserved: args.mark } : post
+          );
+        }
+        return oldData;
+      });
+
+      try {
+        return await markPostAsReserved(args.postId, args.mark);
+      } catch {
+        queryClient.setQueryData(["getPosts"], previousData);
+      }
+    },
+    onSuccess: async () => {
+      return queryClient.invalidateQueries({ queryKey: ["getPosts"] });
+    },
+  });
+
   return mutate;
 };

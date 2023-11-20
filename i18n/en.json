@@ -22,5 +22,10 @@
   "feedPostDelete": "Delete",
   "feedPostPending": "Pending",
   "feedPostRequestTree": "Request tree",
-  "uploadingTree": "Uploading your christmas tree"
+  "back": "Back",
+  "markAsReserved": "Hide",
+  "unreserve": "Unhide",
+  "noTreesPlaceholder": "No trees to show",
+  "youHaveNoTreesPlaceholder": "You have no trees yet. Create one to see it here."
+
 }

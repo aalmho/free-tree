@@ -1,5 +1,5 @@
 import { FC, useContext } from "react";
-import { View, Text, Pressable, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import {} from "../../api/api";
 import { RequestWithImg, useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
@@ -32,7 +32,6 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
     <TouchableOpacity onPress={onCardPress} disabled={!request.approved}>
       <View
         style={{
-          backgroundColor: "lightgrey",
           height: 90,
         }}
       >
@@ -61,7 +60,7 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
             {request.approved ? (
               <Ionicons name="chatbubbles-sharp" color="green" size={40} />
             ) : (
-              <Pressable
+              <TouchableOpacity
                 disabled={isPending}
                 style={{
                   backgroundColor: "green",
@@ -84,7 +83,7 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
                     ? t("postRequestButtonApproved")
                     : t("postRequestApproveButton")}
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             )}
           </View>
         </View>
