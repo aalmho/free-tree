@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StackNavigator } from "./navigation/StackNavigator";
 import { useTranslation } from "react-i18next";
 import "./i18n/i18next";
+import { registerForPushNotificationsAsync } from "./utils/registerForPushNotifications";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -25,6 +26,12 @@ export default function App() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+    });
+
+    registerForPushNotificationsAsync().then(async (token) => {
+      await supabase
+        .from("profiles")
+        .upsert({ id: session?.user.id, expo_push_token: token });
     });
 
     return () => subscription.unsubscribe();
