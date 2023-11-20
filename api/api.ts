@@ -3,14 +3,16 @@ import { supabase, supabaseUrl } from "../utils/supabase";
 import { PostgrestError } from "@supabase/supabase-js";
 import { IMessage, User } from "react-native-gifted-chat";
 
+export type Profile = {
+  id?: string;
+  first_name?: string;
+};
+
 export type Request = {
   id: number;
   post_id?: number;
   approved?: string;
-  profiles?: {
-    id?: string;
-    first_name?: string;
-  };
+  profiles?: Profile;
   created_at?: Date;
 };
 
@@ -29,10 +31,7 @@ export type RequestMadeByUser = {
     id?: number;
     image_url?: string;
     user_id?: string;
-    profiles?: {
-      id?: string;
-      first_name?: string;
-    };
+    profiles?: Profile;
   };
 };
 
@@ -176,6 +175,13 @@ export const sendMessage = async (
   const { error: messageError } = await supabase
     .from("messages")
     .insert({ request_id: requestId, content, author });
+  handleError(messageError);
+};
+
+export const createNotification = async (userId: string, message: string) => {
+  const { error: messageError } = await supabase
+    .from("notifications")
+    .insert({ user_id: userId, body: message });
   handleError(messageError);
 };
 

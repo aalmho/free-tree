@@ -26,6 +26,10 @@
     "markAsReserved": "Skjul træ",
     "unreserve": "Vis træ",
     "noTreesPlaceholder": "Ingen træer at vise.",
-    "youHaveNoTreesPlaceholder": "Du har ingen træer endnu. Opret et træ for at få det vist her."
+    "youHaveNoTreesPlaceholder": "Du har ingen træer endnu. Opret et træ for at få det vist her.",
+    "RequestApprovedNotificationTitle": "Din juletræsanmodning er godkendt",
+    "RequestApprovedNotificationBody": "Du kan nu skrive til ejeren",
+    "YourTreeIsRequestedNotificationTitle": "Nogen har anmodet om at hente dit juletræ",
+    "YourTreeIsRequestedNotificationBody": "I kan aftale nærmere i appen"
   }
   

@@ -5,6 +5,7 @@ import {
   getRequestsByUser,
   PostRequest,
   Post,
+  Profile,
 } from "../api/api";
 import {
   useQuery,
@@ -18,10 +19,7 @@ export type RequestWithImg = {
   image_url?: string;
   post_id?: number;
   approved?: string;
-  profiles?: {
-    id?: string;
-    first_name?: string;
-  };
+  profiles?: Profile;
   created_at?: Date;
 };
 

@@ -1,6 +1,6 @@
 import { FC, useContext } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import {} from "../../api/api";
+import { createNotification } from "../../api/api";
 import { RequestWithImg, useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
 import dayjs from "../../dayjsWithLocale";
@@ -17,13 +17,13 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
   const { mutate, isPending } = useApproveRequest();
   const { t } = useTranslation();
   const navigation: NavigationProp<any> = useNavigation();
-  const firstNameOfTreeGetter = request?.profiles?.first_name;
+  const otherPersonProfile = request?.profiles;
 
   const onCardPress = () => {
     if (request.approved) {
       navigation.navigate("Chat", {
         requestId: request.id,
-        otherPersonFirstName: firstNameOfTreeGetter,
+        otherPersonProfile: otherPersonProfile,
       });
     }
   };
@@ -53,7 +53,7 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text>{firstNameOfTreeGetter}</Text>
+            <Text>{otherPersonProfile?.first_name}</Text>
             <Text>{dayjs(request.created_at).format("ll").toString()}</Text>
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
@@ -68,9 +68,16 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
                   minWidth: 100,
                   alignItems: "center",
                 }}
-                onPress={() =>
-                  mutate({ requestId: request.id!, userId: session?.user?.id! })
-                }
+                onPress={() => {
+                  mutate({
+                    requestId: request.id!,
+                    userId: session?.user?.id!,
+                  });
+                  createNotification(
+                    request.profiles?.id!,
+                    t("RequestApprovedNotificationTitle")
+                  );
+                }}
               >
                 <Text
                   style={{

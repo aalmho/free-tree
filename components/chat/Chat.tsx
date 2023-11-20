@@ -8,7 +8,7 @@ import {
 } from "react-native-gifted-chat";
 import { Route } from "@react-navigation/native";
 import { SessionContext } from "../../context/SessionContext";
-import { sendMessage } from "../../api/api";
+import { createNotification, sendMessage } from "../../api/api";
 import { useGetMessages } from "../../hooks/use-messages";
 import { LogBox, View } from "react-native";
 import { locale } from "../../dayjsWithLocale";
@@ -22,7 +22,7 @@ const Chat = ({
   route: Route<string, ChatParams>;
   navigation: any;
 }) => {
-  const { requestId, otherPersonFirstName } = route.params;
+  const { requestId, otherPersonProfile } = route.params;
   const { session } = useContext(SessionContext);
   const { messages, setMessages } = useGetMessages(requestId);
 
@@ -31,11 +31,12 @@ const Chat = ({
       GiftedChat.append(previousMessages, messages)
     );
     sendMessage(requestId, messages[0].text, session?.user?.id!);
+    createNotification(otherPersonProfile.id!, messages[0].text);
   }, []);
 
   useEffect(() => {
     navigation.setOptions({
-      title: otherPersonFirstName,
+      title: otherPersonProfile.first_name,
     });
   }, []);
 

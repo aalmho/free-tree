@@ -1,5 +1,5 @@
 import { FC, useCallback, useContext, useMemo } from "react";
-import { Post } from "../../api/api";
+import { Post, createNotification } from "../../api/api";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { SessionContext } from "../../context/SessionContext";
 import { useRequestTree } from "../../hooks/use-requests";
@@ -47,6 +47,10 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
         requesterUserId: session?.user?.id!,
         postId: post.id,
       });
+      createNotification(
+        post.user_id,
+        t("YourTreeIsRequestedNotificationTitle")
+      );
     }
   }, [post, session]);
 

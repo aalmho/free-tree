@@ -4,8 +4,9 @@ import CreatePostScreen from "../screens/CreatePostScreen";
 import BottomTabsNavigator from "./BottomTabsNavigator";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { Profile } from "../api/api";
 
-export type ChatParams = { requestId: number; otherPersonFirstName: string };
+export type ChatParams = { requestId: number; otherPersonProfile: Profile };
 
 type StackParamList = {
   Home: undefined;
