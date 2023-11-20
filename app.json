@@ -17,6 +17,11 @@
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c129b2d0-14ba-423a-8d31-d44217c8759a"
+      }
     }
   }
 }
