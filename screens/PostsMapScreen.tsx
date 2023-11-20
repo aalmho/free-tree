@@ -107,7 +107,7 @@ const PostsMapScreen = () => {
         ))}
       </MapView>
       <Modal visible={isVisible}>
-        <SafeAreaView style={{ height: "100%" }}>
+        <SafeAreaView style={{ flex: 1 }}>
           <ScrollView>
             <View
               style={{
