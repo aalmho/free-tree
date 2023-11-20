@@ -4,6 +4,7 @@ import HomeScreen from "../screens/HomeScreen";
 import RequestsScreen from "../screens/RequestsScreen";
 import MyPostsScreen from "../screens/MyPostsScreen";
 import { useTranslation } from "react-i18next";
+import PostsMapScreen from "../screens/PostsMapScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -47,6 +48,13 @@ const BottomTabsNavigator = () => {
         component={HomeScreen}
         options={{
           ...iconOptions("home-outline", "home"),
+        }}
+      />
+      <Tab.Screen
+        name="Kort"
+        component={PostsMapScreen}
+        options={{
+          ...iconOptions("map-outline", "map"),
         }}
       />
       <Tab.Screen
