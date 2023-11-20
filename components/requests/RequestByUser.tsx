@@ -61,6 +61,7 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
                   color: "green",
                   paddingHorizontal: 10,
                   paddingVertical: 10,
+                  fontWeight: "600",
                 }}
               >
                 {t("requestByUserPendingButton")}

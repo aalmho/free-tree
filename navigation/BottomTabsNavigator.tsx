@@ -51,7 +51,7 @@ const BottomTabsNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Kort"
+        name={t("btnMap")}
         component={PostsMapScreen}
         options={{
           ...iconOptions("map-outline", "map"),

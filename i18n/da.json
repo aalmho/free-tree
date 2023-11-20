@@ -20,12 +20,13 @@
     "requestsOfMyTrees": "Anmodninger af mine træer",
     "requestScreenMyRequests": "Mine anmodninger",
     "feedPostDelete": "Slet",
-    "feedPostPending": "Afventer",
+    "feedPostPending": "Anmodet",
     "feedPostRequestTree": "Anmod træ",
     "back": "Tilbage",
     "markAsReserved": "Skjul træ",
     "unreserve": "Vis træ",
     "noTreesPlaceholder": "Ingen træer at vise.",
-    "youHaveNoTreesPlaceholder": "Du har ingen træer endnu. Opret et træ for at få det vist her."
+    "youHaveNoTreesPlaceholder": "Du har ingen træer endnu. Opret et træ for at få det vist her.",
+    "btnMap": "Kort"
   }
   

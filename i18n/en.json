@@ -20,12 +20,13 @@
   "requestsOfMyTrees": "Requests of my trees",
   "requestScreenMyRequests": "My requests",
   "feedPostDelete": "Delete",
-  "feedPostPending": "Pending",
+  "feedPostPending": "Requested",
   "feedPostRequestTree": "Request tree",
   "back": "Back",
   "markAsReserved": "Hide",
   "unreserve": "Unhide",
   "noTreesPlaceholder": "No trees to show",
-  "youHaveNoTreesPlaceholder": "You have no trees yet. Create one to see it here."
+  "youHaveNoTreesPlaceholder": "You have no trees yet. Create one to see it here.",
+  "btnMap": "Map"
 
 }
