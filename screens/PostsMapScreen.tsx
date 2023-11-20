@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Modal, ScrollView, SafeAreaView } from "react-native";
+import { View, Text, Modal, ScrollView, SafeAreaView, RefreshControl } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { FeedPost } from "../components/feed/FeedPost";
 import { usePosts } from "../hooks/use-posts";
@@ -35,6 +35,7 @@ const PostsMapScreen = () => {
   const { data } = usePosts();
   const [isVisible, setIsVisible] = useState(false);
   const [selectedPostalCode, setSelectedPostalCode] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [mappedData, setMappedData] = useState<
     {
       postalCode: string;
@@ -65,14 +66,19 @@ const PostsMapScreen = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     fetchAndMapData().then((result) => {
       setMappedData(result);
+      setIsLoading(false);
     });
   }, [data]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <MapView style={{ width: "100%", height: "100%" }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+        {isLoading && <View style={{height: 50}}>
+        <ScrollView refreshControl={<RefreshControl refreshing={isLoading} />} />
+        </View>}
+      <MapView style={{ width: "100%", height: "100%" }} loadingEnabled={true}>
         {mappedData.map((entry) => (
           <Marker
             key={entry.postalCode}
