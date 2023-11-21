@@ -26,6 +26,7 @@
   "markAsReserved": "Hide",
   "unreserve": "Unhide",
   "noTreesPlaceholder": "No trees to show",
-  "youHaveNoTreesPlaceholder": "You have no trees yet. Create one to see it here."
+  "youHaveNoTreesPlaceholder": "You have no trees yet. Create one to see it here.",
+  "postDescription": "Description"
 
 }
