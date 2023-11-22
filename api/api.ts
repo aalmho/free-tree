@@ -126,11 +126,16 @@ export const approveRequest = async (requestId: number) => {
     .eq("id", requestId);
 };
 
-export const deleteUser = async (userId: string) => {
-  const { error, data } = await supabase
-    .from("users")
+export const deleteUserData = async (userId: string) => {
+  const { error: postsError } = await supabase
+    .from("posts")
     .delete()
-    .eq("id", userId);
+    .eq("user_id", userId);
+  const { error: requestsError } = await supabase
+    .from("requests")
+    .delete()
+    .eq("requester", userId);
+  handleError(postsError || requestsError);
 };
 
 export const markPostAsReserved = async (postId: number, mark: boolean) => {
