@@ -11,23 +11,21 @@ interface FeedPost {
 export const FeedPost: FC<FeedPost> = ({ post }) => {
   return (
     <View style={{ marginHorizontal: 15, margin: 10 }}>
-      <View>
-        <View
-          style={{ width: "100%", height: 450 }}
-          key={post.created_at.toString()}
-        >
-          <Image
-            style={{
-              height: "100%",
-              resizeMode: "cover",
-              borderRadius: 10,
-            }}
-            source={{ uri: post.image_url }}
-          />
-          <Location post={post} />
-          <Information post={post} />
-        </View>
+      <View
+        style={{ width: "100%", height: 350 }}
+        key={post.created_at.toString()}
+      >
+        <Image
+          style={{
+            height: "100%",
+            resizeMode: "cover",
+            borderRadius: 20,
+          }}
+          source={{ uri: post.image_url }}
+        />
+        <Location post={post} />
       </View>
+      <Information post={post} />
     </View>
   );
 };

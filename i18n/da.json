@@ -7,8 +7,6 @@
     "btnMyTrees": "Mine træer",
     "btnRequests": "Anmodninger",
     "cpsTitle": "Opret træ",
-    "cpsUploadImage": "Tag billede",
-    "cpsChangeImage": "Skift billede",
     "cpsTreeDescription": "Beskrivelse",
     "cpsZipCode": "Postnummer",
     "cpsCity": "By",
@@ -19,14 +17,9 @@
     "requestsScreenWhenNoRequests": "Opret et træ eller anmod om at hente et træ for at se dine anmodninger",
     "requestsOfMyTrees": "Anmodninger af mine træer",
     "requestScreenMyRequests": "Mine anmodninger",
-    "feedPostDelete": "Slet",
     "feedPostPending": "Afventer",
-    "feedPostRequestTree": "Anmod træ",
     "back": "Tilbage",
-    "markAsReserved": "Skjul",
-    "unreserve": "Vis",
     "noTreesPlaceholder": "Ingen træer at vise.",
-    "youHaveNoTreesPlaceholder": "Du har ingen træer endnu. Opret et træ for at få det vist her.",
-    "postDescription": "Beskrivelse"
+    "youHaveNoTreesPlaceholder": "Du har ingen træer endnu. Opret et træ for at få det vist her."
   }
   
