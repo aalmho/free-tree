@@ -20,6 +20,15 @@ import { useCreatePost } from "../hooks/use-posts";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useTranslation } from "react-i18next";
 
+const fetchAddressData = async (postalCode: string) => {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${postalCode}+dk`
+    );
+    return await response.json();
+  } catch (error) {}
+};
+
 const CreatePostScreen = ({ navigation }: any) => {
   const { t } = useTranslation();
   const [fileName, setFilename] = useState("");
@@ -49,8 +58,16 @@ const CreatePostScreen = ({ navigation }: any) => {
   }, []);
 
   const submitPost = useCallback(async () => {
-    if (formData && fileName) {
+    if (
+      formData &&
+      fileName &&
+      postInfo.city &&
+      postInfo.description &&
+      postInfo.postalCode
+    ) {
       setIsLoading(true);
+      const data = await fetchAddressData(postInfo.postalCode);
+      const { lat, lon } = data[0];
       await uploadImage(fileName, formData);
       await createPostMutation({
         fileName,
@@ -58,6 +75,8 @@ const CreatePostScreen = ({ navigation }: any) => {
         date: postInfo.date,
         postalCode: postInfo.postalCode,
         city: postInfo.city,
+        lat,
+        lon,
       });
       setIsLoading(false);
       cleanUp();
@@ -165,6 +184,7 @@ const CreatePostScreen = ({ navigation }: any) => {
               value={postInfo.city}
               onChangeText={(data) => setPostInfo({ ...postInfo, city: data })}
               placeholder={t("cpsCity")}
+              blurOnSubmit
             />
           </View>
           <TextInput
