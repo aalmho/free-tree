@@ -7,8 +7,6 @@
   "btnMyTrees": "My trees",
   "btnRequests": "Requests",
   "cpsTitle": "Create tree",
-  "cpsUploadImage": "Upload image",
-  "cpsChangeImage": "Change image",
   "cpsTreeDescription": "Tree description",
   "cpsZipCode": "Postal code",
   "cpsCity": "City",
@@ -23,10 +21,13 @@
   "feedPostPending": "Requested",
   "feedPostRequestTree": "Request tree",
   "back": "Back",
-  "markAsReserved": "Hide",
-  "unreserve": "Unhide",
   "noTreesPlaceholder": "No trees to show",
   "youHaveNoTreesPlaceholder": "You have no trees yet. Create one to see it here.",
-  "btnMap": "Map"
-
+  "btnMap": "Map",
+  "cancel": "Cancel",
+  "continue": "Continue",
+  "deletePostTitle": "Delete post",
+  "deletePostMessage": "Do you want to delete this post?",
+  "deleteAccountTitle": "Delete account",
+  "deleteAccountMessage": "Do you want to delete your account?"
 }

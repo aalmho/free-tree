@@ -5,6 +5,8 @@ import RequestsScreen from "../screens/RequestsScreen";
 import MyPostsScreen from "../screens/MyPostsScreen";
 import { useTranslation } from "react-i18next";
 import PostsMapScreen from "../screens/PostsMapScreen";
+import { SvgXml } from "react-native-svg";
+import { tree, treeOutline } from "../assets/treeIcons";
 
 const Tab = createBottomTabNavigator();
 
@@ -36,6 +38,15 @@ const iconOptions = (
   ),
 });
 
+const treeIconOptions = () => ({
+  tabBarIcon: ({ focused }: { focused: boolean }) =>
+    focused ? (
+      <SvgXml xml={tree} width="70%" height="70%" />
+    ) : (
+      <SvgXml xml={treeOutline} width="70%" height="70%" />
+    ),
+});
+
 const BottomTabsNavigator = () => {
   const { t } = useTranslation();
   return (
@@ -46,9 +57,7 @@ const BottomTabsNavigator = () => {
       <Tab.Screen
         name={t("btnFindATree")}
         component={HomeScreen}
-        options={{
-          ...iconOptions("home-outline", "home"),
-        }}
+        options={treeIconOptions}
       />
       <Tab.Screen
         name={t("btnMap")}
