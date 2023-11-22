@@ -56,7 +56,7 @@ const RequestsScreen = () => {
     >
       {!!requests?.length && (
         <View>
-          <Text style={{ padding: 8 }}>{t("requestsOfMyTrees")} </Text>
+          <Text style={{ padding: 8, fontWeight: "800" }}>{t("requestsOfMyTrees")} </Text>
           {requests?.map((req) => (
             <PostRequest key={req.id} request={req} />
           ))}
@@ -64,7 +64,7 @@ const RequestsScreen = () => {
       )}
       {!!requestsByUser?.length && (
         <View>
-          <Text style={{ padding: 8 }}>{t("requestScreenMyRequests")} </Text>
+          <Text style={{ padding: 8, fontWeight: "800" }}>{t("requestScreenMyRequests")} </Text>
           {requestsByUser?.map((req) => (
             <RequestByUser key={req.id} request={req} />
           ))}
