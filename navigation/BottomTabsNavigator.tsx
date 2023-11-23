@@ -4,6 +4,7 @@ import HomeScreen from "../screens/HomeScreen";
 import RequestsScreen from "../screens/RequestsScreen";
 import MyPostsScreen from "../screens/MyPostsScreen";
 import { useTranslation } from "react-i18next";
+import PostsMapScreen from "../screens/PostsMapScreen";
 import { SvgXml } from "react-native-svg";
 import { tree, treeOutline } from "../assets/treeIcons";
 
@@ -57,6 +58,13 @@ const BottomTabsNavigator = () => {
         name={t("btnFindATree")}
         component={HomeScreen}
         options={treeIconOptions}
+      />
+      <Tab.Screen
+        name={t("btnMap")}
+        component={PostsMapScreen}
+        options={{
+          ...iconOptions("map-outline", "map"),
+        }}
       />
       <Tab.Screen
         name={t("btnMyTrees")}

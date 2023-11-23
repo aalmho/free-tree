@@ -26,13 +26,17 @@ export const useCreatePost = () => {
       date: Date;
       postalCode: string;
       city: string;
+      lat: number;
+      lon: number;
     }) => {
       return createPost(
         args.fileName,
         args.description,
         args.date,
         args.postalCode,
-        args.city
+        args.city,
+        args.lat,
+        args.lon
       );
     },
     onSuccess: async () => {
