@@ -1,5 +1,7 @@
 import {
   Post,
+  PostRequest,
+  Request,
   createPost,
   deletePost,
   getPosts,
@@ -49,8 +51,24 @@ export const useCreatePost = () => {
 export const useDeletePost = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
-    mutationFn: async (args: { postId: number }) => {
+    mutationFn: async (args: { postId: number; userId: string }) => {
       const previousData = queryClient.getQueryData(["getPosts"]);
+      const previousRequestData = queryClient.getQueryData([
+        "requestsByUser",
+        args.userId,
+      ]);
+
+      queryClient.setQueryData(
+        ["userRequests", args.userId],
+        (oldData: PostRequest | undefined) => {
+          if (oldData && Array.isArray(oldData)) {
+            return oldData.filter(
+              (request: Request) => request.post_id !== args.postId
+            );
+          }
+          return oldData;
+        }
+      );
 
       queryClient.setQueryData(["getPosts"], (oldData: Post[] | undefined) => {
         if (oldData) {
@@ -63,6 +81,10 @@ export const useDeletePost = () => {
         return deletePost(args.postId);
       } catch {
         queryClient.setQueryData(["getPosts"], previousData);
+        queryClient.setQueryData(
+          ["requestsByUser", args.userId],
+          previousRequestData
+        );
       }
     },
     onSuccess: async () => {

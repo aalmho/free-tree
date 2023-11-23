@@ -41,7 +41,8 @@ export const Information: FC<InformationProps> = ({ post }) => {
         },
         {
           text: t("continue"),
-          onPress: () => deleteTreeMutation({ postId: post.id }),
+          onPress: () =>
+            deleteTreeMutation({ postId: post.id, userId: session?.user?.id! }),
         },
       ]);
     }
