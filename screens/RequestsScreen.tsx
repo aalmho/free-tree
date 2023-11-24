@@ -26,7 +26,9 @@ const RequestsScreen = () => {
     (!requestsByUser?.length || !requestsByUser)
   ) {
     return (
-      <View>
+      <View
+        style={{ justifyContent: "center", alignItems: "center", padding: 20 }}
+      >
         <Text>{t("requestsScreenNoRequests")} </Text>
       </View>
     );
@@ -52,16 +54,9 @@ const RequestsScreen = () => {
         />
       }
     >
-      {requests?.length === 0 && requestsByUser?.length === 0 && (
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Text style={{ padding: 8 }}>
-            {t("requestsScreenWhenNoRequests")}
-          </Text>
-        </View>
-      )}
       {!!requests?.length && (
         <View>
-          <Text style={{ padding: 8 }}>{t("requestsOfMyTrees")} </Text>
+          <Text style={{ padding: 8, fontWeight: "800" }}>{t("requestsOfMyTrees")} </Text>
           {requests?.map((req) => (
             <PostRequest key={req.id} request={req} />
           ))}
@@ -69,7 +64,7 @@ const RequestsScreen = () => {
       )}
       {!!requestsByUser?.length && (
         <View>
-          <Text style={{ padding: 8 }}>{t("requestScreenMyRequests")} </Text>
+          <Text style={{ padding: 8, fontWeight: "800" }}>{t("requestScreenMyRequests")} </Text>
           {requestsByUser?.map((req) => (
             <RequestByUser key={req.id} request={req} />
           ))}

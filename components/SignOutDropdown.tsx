@@ -2,14 +2,16 @@ import React, { useRef, FC } from "react";
 import { Text, TouchableOpacity, Animated, View, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { supabase } from "../utils/supabase";
-import { deleteUser } from "../api/api";
+import { deleteUserData } from "../api/api";
+import { useTranslation } from "react-i18next";
 
 interface SignOutDropdownProps {
   userId: string;
 }
 
-export const SignOutDropdown: FC<SignOutDropdownProps> = ({userId}) => {
+export const SignOutDropdown: FC<SignOutDropdownProps> = ({ userId }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const { t } = useTranslation();
 
   const fadeIn = () => {
     Animated.timing(fadeAnim, {
@@ -26,12 +28,16 @@ export const SignOutDropdown: FC<SignOutDropdownProps> = ({userId}) => {
   };
 
   const onDeleteProfile = () => {
-    return Alert.alert('Slet konto', 'Vil du slette din konto', [
+    return Alert.alert(t("deleteAccountTitle"), t("deleteAccountMessage"), [
       {
-        text: 'Fortryd',
-        style: 'cancel',
+        text: t("cancel"),
+        style: "cancel",
       },
-      {text: 'Fortsæt', onPress: () => deleteUser(userId)},
+      {
+        text: t("continue"),
+        onPress: () =>
+          deleteUserData(userId).then(() => supabase.auth.signOut()),
+      },
     ]);
   };
 
@@ -60,7 +66,9 @@ export const SignOutDropdown: FC<SignOutDropdownProps> = ({userId}) => {
         <TouchableOpacity onPress={onDeleteProfile}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <Ionicons name="trash-outline" size={16} color="red" />
-            <Text style={{ fontSize: 16, color: "red", fontWeight: "600" }}>Slet konto</Text>
+            <Text style={{ fontSize: 16, color: "red", fontWeight: "600" }}>
+              Slet konto
+            </Text>
           </View>
         </TouchableOpacity>
       </View>

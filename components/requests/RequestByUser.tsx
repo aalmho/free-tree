@@ -54,13 +54,14 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
             {request.approved ? (
-              <Ionicons name="chatbubbles-sharp" color="green" size={40} />
+              <Ionicons name="chatbubbles" color="green" size={40} />
             ) : (
               <Text
                 style={{
                   color: "green",
                   paddingHorizontal: 10,
                   paddingVertical: 10,
+                  fontWeight: "600",
                 }}
               >
                 {t("requestByUserPendingButton")}

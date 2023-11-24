@@ -44,6 +44,8 @@ export type Post = {
   postal_code: string;
   city: string;
   user_id: string;
+  lat?: number;
+  lon?: number;
   reserved?: string;
   requests?: Request[];
 };
@@ -57,7 +59,9 @@ export const createPost = async (
   description: string,
   date: Date,
   postalCode: string,
-  city: string
+  city: string,
+  lat: number,
+  lon: number
 ) => {
   const storagePath = "/storage/v1/object/public/tree_images/";
   const storageUrl = supabaseUrl + storagePath + fileName;
@@ -67,6 +71,8 @@ export const createPost = async (
     pick_up_date: date,
     postal_code: postalCode,
     city,
+    lat,
+    lon
   });
   handleError(error);
 };
@@ -80,7 +86,7 @@ export const getPosts = async () => {
   const { data, error } = await supabase
     .from("posts")
     .select(
-      `id, created_at, image_url, description, user_id, pick_up_date, postal_code, city, reserved, requests (id, profiles (id))`
+      `id, created_at, image_url, description, user_id, pick_up_date, postal_code, city, reserved, lat, lon, requests (id, profiles (id))`
     )
     .order("created_at", { ascending: false });
   handleError(error);
@@ -125,11 +131,16 @@ export const approveRequest = async (requestId: number) => {
     .eq("id", requestId);
 };
 
-export const deleteUser = async (userId: string) => {
-  const { error, data } = await supabase
-    .from("users")
+export const deleteUserData = async (userId: string) => {
+  const { error: postsError } = await supabase
+    .from("posts")
     .delete()
-    .eq("id", userId);
+    .eq("user_id", userId);
+  const { error: requestsError } = await supabase
+    .from("requests")
+    .delete()
+    .eq("requester", userId);
+  handleError(postsError || requestsError);
 };
 
 export const markPostAsReserved = async (postId: number, mark: boolean) => {
