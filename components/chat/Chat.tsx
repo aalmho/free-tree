@@ -22,7 +22,7 @@ const Chat = ({
   route: Route<string, ChatParams>;
   navigation: any;
 }) => {
-  const { requestId, otherPersonProfile } = route.params;
+  const { requestId, recipientProfile } = route.params;
   const { session } = useContext(SessionContext);
   const { messages, setMessages } = useGetMessages(requestId);
 
@@ -31,12 +31,12 @@ const Chat = ({
       GiftedChat.append(previousMessages, messages)
     );
     sendMessage(requestId, messages[0].text, session?.user?.id!);
-    createNotification(otherPersonProfile.id!, messages[0].text);
+    createNotification(recipientProfile.id!, messages[0].text);
   }, []);
 
   useEffect(() => {
     navigation.setOptions({
-      title: otherPersonProfile.first_name,
+      title: recipientProfile.first_name,
     });
   }, []);
 

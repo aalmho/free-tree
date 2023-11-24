@@ -6,7 +6,7 @@ import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Profile } from "../api/api";
 
-export type ChatParams = { requestId: number; otherPersonProfile: Profile };
+export type ChatParams = { requestId: number; recipientProfile: Profile };
 
 type StackParamList = {
   Home: undefined;

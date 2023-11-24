@@ -31,7 +31,7 @@ export default function App() {
     registerForPushNotificationsAsync().then(async (token) => {
       await supabase
         .from("profiles")
-        .upsert({ id: session?.user.id, expo_push_token: token });
+        .update({ id: session?.user.id, expo_push_token: token });
     });
 
     return () => subscription.unsubscribe();

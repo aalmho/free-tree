@@ -17,13 +17,13 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
   const { mutate, isPending } = useApproveRequest();
   const { t } = useTranslation();
   const navigation: NavigationProp<any> = useNavigation();
-  const otherPersonProfile = request?.profiles;
+  const treeGetter = request?.profiles;
 
   const onCardPress = () => {
     if (request.approved) {
       navigation.navigate("Chat", {
         requestId: request.id,
-        otherPersonProfile: otherPersonProfile,
+        recipientProfile: treeGetter,
       });
     }
   };
@@ -53,7 +53,7 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text>{otherPersonProfile?.first_name}</Text>
+            <Text>{treeGetter?.first_name}</Text>
             <Text>{dayjs(request.created_at).format("ll").toString()}</Text>
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
