@@ -9,8 +9,16 @@ import { SessionContext } from "./context/SessionContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StackNavigator } from "./navigation/StackNavigator";
 import "./i18n/i18next";
-import { registerForPushNotificationsAsync } from "./utils/registerForPushNotifications";
+import * as Notifications from "expo-notifications";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);

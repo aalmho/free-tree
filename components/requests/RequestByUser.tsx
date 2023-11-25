@@ -19,7 +19,7 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
     if (request.approved) {
       navigation.navigate("Chat", {
         requestId: request.id,
-        otherPersonProfile: request?.posts?.profiles,
+        recipientProfile: request?.posts?.profiles,
       });
     }
   };

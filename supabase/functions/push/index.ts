@@ -28,6 +28,16 @@ Deno.serve(async (req) => {
     .eq("id", payload.record.user_id)
     .single();
 
+  const countNotificationsForUser = async (userId: string) => {
+    const { count } = await supabase
+      .from("notifications")
+      .select('*', { count: 'exact', head: true })
+      .eq("user_id", userId);
+      return count;
+  };
+
+  const badgeCount = await countNotificationsForUser(payload.record.user_id);
+
   const res = await fetch("https://exp.host/--/api/v2/push/send", {
     method: "POST",
     headers: {
@@ -39,6 +49,7 @@ Deno.serve(async (req) => {
       sound: "default",
       title: payload.record.title,
       body: payload.record.body,
+      badge: badgeCount
     }),
   }).then((res) => res.json());
 

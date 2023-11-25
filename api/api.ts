@@ -196,6 +196,14 @@ export const createNotification = async (userId: string, title: string, message:
   handleError(messageError);
 };
 
+export const removeAllNotificationsForUser = async (userId: string) => {
+  const { error: messageError } = await supabase
+    .from("notifications")
+    .delete()
+    .eq("user_id", userId);
+  handleError(messageError);
+};
+
 const handleError = (error: PostgrestError | null) => {
   if (error) {
     return Alert.alert("Something went wrong. Please try again");

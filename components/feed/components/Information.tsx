@@ -43,7 +43,8 @@ export const Information: FC<InformationProps> = ({ post }) => {
       });
       createNotification(
         post.user_id,
-        t("YourTreeIsRequestedNotificationTitle")
+        t("YourTreeIsRequestedNotificationTitle"),
+        t("YourTreeIsRequestedNotificationBody")
       );
     }
   }, [post, session]);

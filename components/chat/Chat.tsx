@@ -32,8 +32,8 @@ const Chat = ({
     );
     sendMessage(requestId, messages[0].text, session?.user?.id!);
     createNotification(
-      otherPersonProfile.id!,
-      otherPersonProfile.first_name!,
+      recipientProfile.id!,
+      recipientProfile.first_name!,
       messages[0].text
     );
   }, []);
