@@ -31,7 +31,11 @@ const Chat = ({
       GiftedChat.append(previousMessages, messages)
     );
     sendMessage(requestId, messages[0].text, session?.user?.id!);
-    createNotification(recipientProfile.id!, messages[0].text);
+    createNotification(
+      otherPersonProfile.id!,
+      otherPersonProfile.first_name!,
+      messages[0].text
+    );
   }, []);
 
   useEffect(() => {

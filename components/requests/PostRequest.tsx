@@ -75,7 +75,8 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
                   });
                   createNotification(
                     request.profiles?.id!,
-                    t("RequestApprovedNotificationTitle")
+                    t("RequestApprovedNotificationTitle"),
+                    t("RequestApprovedNotificationBody")
                   );
                 }}
               >

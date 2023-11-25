@@ -189,10 +189,10 @@ export const sendMessage = async (
   handleError(messageError);
 };
 
-export const createNotification = async (userId: string, message: string) => {
+export const createNotification = async (userId: string, title: string, message: string) => {
   const { error: messageError } = await supabase
     .from("notifications")
-    .insert({ user_id: userId, body: message });
+    .insert({ user_id: userId, title, body: message });
   handleError(messageError);
 };
 
