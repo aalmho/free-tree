@@ -28,12 +28,6 @@ export default function App() {
       setSession(session);
     });
 
-    registerForPushNotificationsAsync().then(async (token) => {
-      await supabase
-        .from("profiles")
-        .update({ id: session?.user.id, expo_push_token: token });
-    });
-
     return () => subscription.unsubscribe();
   }, []);
 
