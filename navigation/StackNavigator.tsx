@@ -5,10 +5,7 @@ import BottomTabsNavigator from "./BottomTabsNavigator";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Profile } from "../api/api";
-import {
-  useGetNotificationConsentAndToken,
-  useClearNotificationsOnActiveAppState,
-} from "../hooks/use-notifications";
+import { useGetNotificationConsentAndToken } from "../hooks/use-notifications";
 
 export type ChatParams = { requestId: number; recipientProfile: Profile };
 
@@ -23,7 +20,6 @@ export const StackNavigator: FC = () => {
   const { t } = useTranslation();
 
   useGetNotificationConsentAndToken();
-  useClearNotificationsOnActiveAppState();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
