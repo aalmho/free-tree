@@ -29,6 +29,10 @@
     "deletePostTitle": "Slet opslag",
     "deletePostMessage": "Vil du slette dette opslag?",
     "deleteAccountTitle": "Slet konto",
-    "deleteAccountMessage": "Vil du slette din konto?"
+    "deleteAccountMessage": "Vil du slette din konto?",
+    "RequestApprovedNotificationTitle": "Din juletræsanmodning er godkendt",
+    "RequestApprovedNotificationBody": "Du kan nu skrive til ejeren 🎄",
+    "YourTreeIsRequestedNotificationTitle": "Nogen vil have dit 🎄",
+    "YourTreeIsRequestedNotificationBody": "I kan aftale nærmere i appen"
   }
   

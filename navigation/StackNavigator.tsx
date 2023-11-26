@@ -4,8 +4,13 @@ import CreatePostScreen from "../screens/CreatePostScreen";
 import BottomTabsNavigator from "./BottomTabsNavigator";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { Profile } from "../api/api";
+import {
+  useGetNotificationConsentAndToken,
+  useClearNotificationsOnActiveAppState,
+} from "../hooks/use-notifications";
 
-export type ChatParams = { requestId: number; otherPersonFirstName: string };
+export type ChatParams = { requestId: number; recipientProfile: Profile };
 
 type StackParamList = {
   Home: undefined;
@@ -16,6 +21,9 @@ type StackParamList = {
 export const StackNavigator: FC = () => {
   const Stack = createStackNavigator<StackParamList>();
   const { t } = useTranslation();
+
+  useGetNotificationConsentAndToken();
+  useClearNotificationsOnActiveAppState();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

@@ -9,9 +9,19 @@ import { SessionContext } from "./context/SessionContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StackNavigator } from "./navigation/StackNavigator";
 import "./i18n/i18next";
+import * as Notifications from "expo-notifications";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AppState } from "react-native";
 import type { AppStateStatus } from "react-native";
+import { removeAllNotificationsForUser } from "./api/api";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -21,6 +31,8 @@ export default function App() {
   const onAppStateChange = (status: AppStateStatus) => {
     if (status === "active" && session) {
       queryClient.getQueryData(["getPosts"]);
+      Notifications.setBadgeCountAsync(0);
+      removeAllNotificationsForUser(session?.user.id);
     }
   };
 
