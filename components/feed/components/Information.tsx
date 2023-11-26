@@ -1,6 +1,6 @@
 import { FC, useCallback, useContext, useMemo } from "react";
 import { Post, createNotification } from "../../../api/api";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { SessionContext } from "../../../context/SessionContext";
 import { useRequestTree } from "../../../hooks/use-requests";
 import dayjs from "../../../dayjsWithLocale";
@@ -34,7 +34,17 @@ export const Information: FC<InformationProps> = ({ post }) => {
 
   const toggleRequest = useCallback(() => {
     if (isUsersPost) {
-      return deleteTreeMutation({ postId: post.id });
+      return Alert.alert(t("deletePostTitle"), t("deletePostMessage"), [
+        {
+          text: t("cancel"),
+          style: "cancel",
+        },
+        {
+          text: t("continue"),
+          onPress: () =>
+            deleteTreeMutation({ postId: post.id, userId: session?.user?.id! }),
+        },
+      ]);
     }
     if (!isTreeRequestedByUser) {
       requestTreeMutation({

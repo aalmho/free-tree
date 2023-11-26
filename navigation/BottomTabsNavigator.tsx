@@ -84,7 +84,7 @@ const BottomTabsNavigator = () => {
       <Tab.Screen
         name={t("btnRequests")}
         component={RequestsScreen}
-        options={iconOptions("filter-outline", "filter")}
+        options={iconOptions("chatbubbles-outline", "chatbubbles")}
       />
     </Tab.Navigator>
   );
