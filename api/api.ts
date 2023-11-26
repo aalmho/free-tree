@@ -73,7 +73,7 @@ export const createPost = async (
     postal_code: postalCode,
     city,
     lat,
-    lon
+    lon,
   });
   handleError(error);
 };
