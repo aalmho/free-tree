@@ -1,9 +1,10 @@
-import React, { useContext, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { View, ScrollView, RefreshControl, Text } from "react-native";
 import { usePosts } from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
 import { useTranslation } from "react-i18next";
 import { SessionContext } from "../context/SessionContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = () => {
   const { session } = useContext(SessionContext);
@@ -13,6 +14,12 @@ const HomeScreen = () => {
   const unreservedTrees = useMemo(
     () => (posts || [])?.filter((post) => !post.reserved),
     [posts]
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [])
   );
 
   return (
