@@ -9,6 +9,7 @@ interface FeedPost {
 }
 
 export const FeedPost: FC<FeedPost> = ({ post }) => {
+
   return (
     <View style={{ marginHorizontal: 15, margin: 10 }}>
       <View
@@ -21,7 +22,7 @@ export const FeedPost: FC<FeedPost> = ({ post }) => {
             resizeMode: "cover",
             borderRadius: 20,
           }}
-          source={{ uri: post.image_url }}
+          source={{ uri: `${post.image_url}?height=700&width=700` }}
         />
         <Location post={post} />
       </View>

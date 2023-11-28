@@ -49,7 +49,7 @@ export const PostRequest: FC<RequestProps> = ({ request }) => {
                 height: "100%",
                 borderRadius: 100,
               }}
-              source={{ uri: request?.image_url }}
+              source={{ uri: `${request?.image_url}?height=350&width=350` }}
             />
           </View>
           <View style={{ flex: 1 }}>

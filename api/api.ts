@@ -63,7 +63,7 @@ export const createPost = async (
   lat: number,
   lon: number
 ) => {
-  const storagePath = "/storage/v1/object/public/tree_images/";
+  const storagePath = "/storage/v1/render/image/public/tree_images/";
   const storageUrl = supabaseUrl + storagePath + fileName;
   const { error } = await supabase.from("posts").insert({
     image_url: storageUrl,

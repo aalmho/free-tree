@@ -45,7 +45,7 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
                 height: "100%",
                 borderRadius: 100,
               }}
-              source={{ uri: request?.posts?.image_url }}
+              source={{ uri: `${request?.posts?.image_url}?height=350&width=350` }}
             />
           </View>
           <View style={{ flex: 1 }}>
