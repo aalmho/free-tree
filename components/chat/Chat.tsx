@@ -9,7 +9,7 @@ import {
 import { Route } from "@react-navigation/native";
 import { SessionContext } from "../../context/SessionContext";
 import { createNotification, sendMessage } from "../../api/api";
-import { useGetMessages } from "../../hooks/use-messages";
+import { useGetFirstName, useGetMessages } from "../../hooks/use-messages";
 import { LogBox, SafeAreaView, View, Text } from "react-native";
 import { locale } from "../../dayjsWithLocale";
 import da from "dayjs/locale/da";
@@ -27,6 +27,7 @@ const Chat = ({
   const { session } = useContext(SessionContext);
   const { messages, setMessages } = useGetMessages(requestId);
   const { t } = useTranslation();
+  const firstNameOfSender = useGetFirstName(session?.user?.id!);
 
   const onSend = useCallback((messages: IMessage[] = []) => {
     setMessages((previousMessages) =>
@@ -35,7 +36,7 @@ const Chat = ({
     sendMessage(requestId, messages[0].text, session?.user?.id!);
     createNotification(
       recipientProfile.id!,
-      recipientProfile.first_name!,
+      firstNameOfSender,
       messages[0].text
     );
   }, []);

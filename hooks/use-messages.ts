@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
-import { getMessages, sendMessage } from "../api/api";
+import { getFirstName, getMessages, sendMessage } from "../api/api";
 import { IMessage } from "react-native-gifted-chat";
 import {
   QueryKey,
@@ -37,3 +37,13 @@ export const useGetMessages = (requestId: number) => {
   }, []);
   return { messages, setMessages };
 };
+
+export const useGetFirstName = (userId: string) => {
+    const [firstName, setFirstName] = useState<string>('');
+    useEffect(() => {
+      getFirstName(userId).then((value) => {
+        setFirstName(value);
+      });
+    }, []);
+    return firstName;
+}
