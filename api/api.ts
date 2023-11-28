@@ -82,13 +82,26 @@ export const deletePost = async (postId: number) => {
   handleError(error);
 };
 
-export const getPosts = async () => {
+export const getPosts = async (userId: string) => {
   const { data, error } = await supabase
     .from("posts")
     .select(
       `id, created_at, image_url, description, user_id, pick_up_date, postal_code, city, reserved, lat, lon, requests (id, profiles (id))`
     )
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .eq("reserved", false);
+  handleError(error);
+  return data as Post[];
+};
+
+export const getPostsByUser = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      `id, created_at, image_url, description, user_id, pick_up_date, postal_code, city, reserved, lat, lon, requests (id, profiles (id))`
+    )
+    .order("created_at", { ascending: false })
+    .eq("user_id", userId);
   handleError(error);
   return data as Post[];
 };
@@ -189,7 +202,11 @@ export const sendMessage = async (
   handleError(messageError);
 };
 
-export const createNotification = async (userId: string, title: string, message: string) => {
+export const createNotification = async (
+  userId: string,
+  title: string,
+  message: string
+) => {
   const { error: messageError } = await supabase
     .from("notifications")
     .insert({ user_id: userId, title, body: message });
