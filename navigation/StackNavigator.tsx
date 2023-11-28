@@ -9,7 +9,7 @@ import { useGetNotificationConsentAndToken } from "../hooks/use-notifications";
 
 export type ChatParams = { requestId: number; recipientProfile: Profile };
 
-type StackParamList = {
+export type StackParamList = {
   Home: undefined;
   CreatePostScreen: undefined;
   Chat: ChatParams;
@@ -26,7 +26,7 @@ export const StackNavigator: FC = () => {
       <Stack.Screen name="Home" component={BottomTabsNavigator} />
       <Stack.Screen
         options={{
-          title: "Create tree",
+          title: t("cpsTitle"),
           headerShown: true,
           headerBackTitle: t("back"),
         }}

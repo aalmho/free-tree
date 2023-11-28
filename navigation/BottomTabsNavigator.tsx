@@ -54,39 +54,40 @@ const BottomTabsNavigator = () => {
   const { t } = useTranslation();
   const [badgeCount, setBadgeCount] = useState(0);
 
+  const updateBadgeCount = async () => {
+    const count = await Notifications.getBadgeCountAsync();
+    setBadgeCount(count);
+  };
+
   const onAppStateChange = (status: AppStateStatus) => {
     if (status === "active") {
-      console.log("hitiy?");
-      Notifications.getBadgeCountAsync().then((count) => {
-        setBadgeCount(count);
-      });
+      updateBadgeCount();
     }
   };
 
   useEffect(() => {
+    updateBadgeCount();
     const subscription = AppState.addEventListener("change", onAppStateChange);
     return () => subscription.remove();
   }, []);
 
   return (
-    <Tab.Navigator
-      initialRouteName={t("btnFindATree")}
-      screenOptions={screenOptions}
-    >
+    <Tab.Navigator initialRouteName="FindATree" screenOptions={screenOptions}>
       <Tab.Screen
-        name={t("btnFindATree")}
+        name="FindATree"
         component={HomeScreen}
-        options={treeIconOptions}
+        options={{ ...treeIconOptions(), title: t("btnFindATree") }}
       />
       <Tab.Screen
-        name={t("btnMap")}
+        name="Map"
         component={PostsMapScreen}
         options={{
           ...iconOptions("map-outline", "map"),
+          title: t("btnMap"),
         }}
       />
       <Tab.Screen
-        name={t("btnMyTrees")}
+        name="MyTrees"
         component={MyPostsScreen}
         options={({ navigation, route }) => ({
           ...iconOptions("person-outline", "person"),
@@ -98,14 +99,16 @@ const BottomTabsNavigator = () => {
               style={{ paddingRight: 10 }}
             />
           ),
+          title: t("btnMyTrees"),
         })}
       />
       <Tab.Screen
-        name={t("btnRequests")}
+        name="Requests"
         component={RequestsScreen}
         options={{
           ...iconOptions("chatbubbles-outline", "chatbubbles"),
           tabBarBadge: badgeCount !== 0 ? badgeCount : undefined,
+          title: t("btnRequests"),
         }}
       />
     </Tab.Navigator>

@@ -3,17 +3,19 @@ import "react-native-get-random-values";
 import { supabase } from "./utils/supabase";
 import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
-import { NavigationContainer } from "@react-navigation/native";
+import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "./screens/LoginScreen";
 import { SessionContext } from "./context/SessionContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { StackNavigator } from "./navigation/StackNavigator";
+import { StackNavigator, StackParamList } from "./navigation/StackNavigator";
 import "./i18n/i18next";
 import * as Notifications from "expo-notifications";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AppState } from "react-native";
+import * as Linking from "expo-linking";
 import type { AppStateStatus } from "react-native";
 import { removeAllNotificationsForUser } from "./api/api";
+import NavigationContainerComponent from "./navigation/NavigationcontainerComponent";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -60,11 +62,11 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       {session ? (
         <SessionContext.Provider value={{ session }}>
-          <NavigationContainer>
+          <NavigationContainerComponent>
             <QueryClientProvider client={queryClient}>
               <StackNavigator />
             </QueryClientProvider>
-          </NavigationContainer>
+          </NavigationContainerComponent>
         </SessionContext.Provider>
       ) : (
         <LoginScreen />

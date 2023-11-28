@@ -80,7 +80,7 @@ const CreatePostScreen = ({ navigation }: any) => {
       });
       setIsLoading(false);
       cleanUp();
-      navigation.navigate(t("btnMyTrees"));
+      navigation.navigate("MyTrees");
     }
   }, [fileName, formData, postInfo]);
 
