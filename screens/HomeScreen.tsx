@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useMemo } from "react";
-import { View, ScrollView, RefreshControl, Text } from "react-native";
+import React, { useCallback, useContext, useState } from "react";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { usePosts } from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
 import { useTranslation } from "react-i18next";
@@ -8,13 +8,11 @@ import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = () => {
   const { session } = useContext(SessionContext);
-  const { data: posts, isLoading, refetch, isRefetching } = usePosts();
+  const { data: posts, isLoading, refetch } = usePosts(session?.user?.id!);
   const { t } = useTranslation();
+  const [offset, setOffset] = useState(4);
 
-  const unreservedTrees = useMemo(
-    () => (posts || [])?.filter((post) => !post.reserved),
-    [posts]
-  );
+  const postList = posts?.slice(0, offset);
 
   useFocusEffect(
     useCallback(() => {
@@ -22,35 +20,45 @@ const HomeScreen = () => {
     }, [])
   );
 
-  return (
-    <ScrollView
-      style={{ flex: 1 }}
-      refreshControl={
-        <RefreshControl
-          refreshing={isLoading || isRefetching}
-          onRefresh={refetch}
-        />
-      }
-    >
-      {unreservedTrees?.length === 0 && (
-        <View
-          style={{
-            justifyContent: "center",
-            padding: 20,
-            alignItems: "center",
-          }}
-        >
-          <Text>{t("noTreesPlaceholder")}</Text>
-        </View>
-      )}
-      <View style={{ gap: 20 }}>
-        {unreservedTrees
-          ?.filter((post) => post.user_id !== session?.user?.id)
-          ?.map((post) => (
-            <FeedPost key={post.created_at.toString()} post={post} />
-          ))}
+  const onEndReached = () => {
+    setOffset((prev) => prev + 4);
+  };
+
+  if (isLoading) {
+    return (
+      <View>
+        <ActivityIndicator />
       </View>
-    </ScrollView>
+    );
+  }
+
+  return (
+    <>
+      <View>
+        {postList?.length === 0 && (
+          <View
+            style={{
+              justifyContent: "center",
+              padding: 20,
+              alignItems: "center",
+            }}
+          >
+            <Text>{t("noTreesPlaceholder")}</Text>
+          </View>
+        )}
+      </View>
+      <View>
+        <FlatList
+          data={postList}
+          renderItem={({ item }) => (
+            <FeedPost key={item.created_at.toString()} post={item} />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={0.1}
+        />
+      </View>
+    </>
   );
 };
 
