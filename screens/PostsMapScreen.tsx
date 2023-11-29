@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from "react";
-import { View, Text, Modal, ScrollView, SafeAreaView } from "react-native";
+import React, { useContext, useMemo, useState } from "react";
+import { View, Text, Modal, SafeAreaView, FlatList } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { FeedPost } from "../components/feed/FeedPost";
 import { usePosts } from "../hooks/use-posts";
 import { Ionicons } from "@expo/vector-icons";
 import { Post } from "../api/api";
+import { SessionContext } from "../context/SessionContext";
 
 const groupPostsByPostalCode = (posts: Post[]): Record<string, Post[]> => {
   const groupedPosts: Record<string, Post[]> = {};
@@ -25,7 +26,9 @@ const groupPostsByPostalCode = (posts: Post[]): Record<string, Post[]> => {
 };
 
 const PostsMapScreen = () => {
-  const { data } = usePosts();
+  const { session } = useContext(SessionContext);
+  const [offset, setOffset] = useState(4);
+  const { data } = usePosts(session?.user?.id!);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedPostalCode, setSelectedPostalCode] = useState("");
   const groupedPosts = groupPostsByPostalCode(data || []);
@@ -33,17 +36,26 @@ const PostsMapScreen = () => {
   const mappedData = useMemo(() => {
     return Object.keys(groupedPosts).map((postalCode) => {
       const postsForCurrentCode = groupedPosts[postalCode];
-  
+
       const processedPosts = postsForCurrentCode.map((post) => {
         return { ...post };
       });
-  
+
       return {
         postalCode: postalCode,
         posts: processedPosts,
       };
-    })
-  }, [groupedPosts])
+    });
+  }, [groupedPosts]);
+
+  const postList = mappedData
+    ?.flatMap((entry) => entry.posts)
+    ?.filter((post) => post?.postal_code === selectedPostalCode)
+    ?.splice(0, offset);
+
+  const onEndReached = () => {
+    setOffset((prev) => prev + 4);
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -66,7 +78,7 @@ const PostsMapScreen = () => {
       </MapView>
       <Modal visible={isVisible}>
         <SafeAreaView style={{ flex: 1 }}>
-          <ScrollView>
+          <View>
             <View
               style={{
                 alignItems: "flex-end",
@@ -80,18 +92,16 @@ const PostsMapScreen = () => {
                 style={{ paddingRight: 10 }}
               />
             </View>
-            <View
-              style={{
-                gap: 20,
-              }}
-            >
-              {mappedData.map((entry) =>
-                entry.posts
-                  .filter((post) => post.postal_code === selectedPostalCode)
-                  .map((post) => <FeedPost key={post.id} post={post} />)
+            <FlatList
+              data={postList}
+              renderItem={({ item }) => (
+                <FeedPost key={item.created_at.toString()} post={item} />
               )}
-            </View>
-          </ScrollView>
+              keyExtractor={(item) => item.id.toString()}
+              onEndReached={onEndReached}
+              onEndReachedThreshold={0.1}
+            />
+          </View>
         </SafeAreaView>
       </Modal>
     </View>

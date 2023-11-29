@@ -1,10 +1,11 @@
 import { FC } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { RequestMadeByUser } from "../../api/api";
 import dayjs from "../../dayjsWithLocale";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { Image } from "@rneui/themed";
 
 interface RequestByUserProps {
   request: RequestMadeByUser;
@@ -45,7 +46,10 @@ export const RequestByUser: FC<RequestByUserProps> = ({ request }) => {
                 height: "100%",
                 borderRadius: 100,
               }}
-              source={{ uri: request?.posts?.image_url }}
+              source={{
+                uri: `${request?.posts?.image_url}?height=350&width=350`,
+              }}
+              PlaceholderContent={<ActivityIndicator />}
             />
           </View>
           <View style={{ flex: 1 }}>

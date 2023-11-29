@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { useRequests, useRequestsByUser } from "../hooks/use-requests";
 import { SessionContext } from "../context/SessionContext";
 import { PostRequest } from "../components/requests/PostRequest";
 import { RequestByUser } from "../components/requests/RequestByUser";
 import { useTranslation } from "react-i18next";
+import { useFocusEffect } from "@react-navigation/native";
 
 const RequestsScreen = () => {
   const { t } = useTranslation();
@@ -21,6 +22,18 @@ const RequestsScreen = () => {
     isRefetching: isRequestByUserFetching,
     refetch: refetchRequestsByUser,
   } = useRequestsByUser(session?.user?.id!);
+
+  const refetchAllRequests = () => {
+    refetch();
+    refetchRequestsByUser();
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchAllRequests();
+    }, [])
+  );
+
   if (
     (!requests || !requests.length) &&
     (!requestsByUser?.length || !requestsByUser)
@@ -33,11 +46,6 @@ const RequestsScreen = () => {
       </View>
     );
   }
-
-  const refetchAllRequests = () => {
-    refetch();
-    refetchRequestsByUser();
-  };
 
   return (
     <ScrollView
@@ -56,7 +64,9 @@ const RequestsScreen = () => {
     >
       {!!requests?.length && (
         <View>
-          <Text style={{ padding: 8, fontWeight: "800" }}>{t("requestsOfMyTrees")} </Text>
+          <Text style={{ padding: 8, fontWeight: "800" }}>
+            {t("requestsOfMyTrees")}{" "}
+          </Text>
           {requests?.map((req) => (
             <PostRequest key={req.id} request={req} />
           ))}
@@ -64,7 +74,9 @@ const RequestsScreen = () => {
       )}
       {!!requestsByUser?.length && (
         <View>
-          <Text style={{ padding: 8, fontWeight: "800" }}>{t("requestScreenMyRequests")} </Text>
+          <Text style={{ padding: 8, fontWeight: "800" }}>
+            {t("requestScreenMyRequests")}{" "}
+          </Text>
           {requestsByUser?.map((req) => (
             <RequestByUser key={req.id} request={req} />
           ))}
