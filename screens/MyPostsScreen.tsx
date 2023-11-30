@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   View,
   Text,
@@ -6,21 +12,34 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import { usePosts } from "../hooks/use-posts";
+import { usePostsByUser } from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
 import { SessionContext } from "../context/SessionContext";
 import { Ionicons } from "@expo/vector-icons";
 import { SignOutDropdown } from "../components/SignOutDropdown";
 import { useTranslation } from "react-i18next";
+import { useFocusEffect } from "@react-navigation/native";
 
 const MyPostsScreen = ({ navigation }: any) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { data: posts, isLoading, refetch, isRefetching } = usePosts();
   const { session } = useContext(SessionContext);
+  const {
+    data: posts,
+    isLoading,
+    refetch,
+    isRefetching,
+  } = usePostsByUser(session?.user?.id!);
+
   const { t } = useTranslation();
   const userPost = useMemo(
     () => (posts || [])?.filter((post) => post.user_id === session?.user?.id),
     [posts, session]
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [])
   );
 
   useEffect(() => {
@@ -73,13 +92,19 @@ const MyPostsScreen = ({ navigation }: any) => {
           </TouchableOpacity>
         </View>
         {userPost?.length === 0 && (
-        <View style={{justifyContent: "center", padding: 20, alignItems: "center"}}>
-          <Text>{t("youHaveNoTreesPlaceholder")}</Text>
-        </View>
-      )}
+          <View
+            style={{
+              justifyContent: "center",
+              padding: 20,
+              alignItems: "center",
+            }}
+          >
+            <Text>{t("youHaveNoTreesPlaceholder")}</Text>
+          </View>
+        )}
         <View style={{ gap: 20 }}>
           {userPost.map((post) => (
-            <FeedPost key={post.created_at.toString()} post={post} />
+            <FeedPost key={post.id.toString()} post={post} />
           ))}
         </View>
       </View>

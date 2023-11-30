@@ -32,7 +32,6 @@ export default function App() {
 
   const onAppStateChange = (status: AppStateStatus) => {
     if (status === "active" && session) {
-      queryClient.getQueryData(["getPosts"]);
       Notifications.setBadgeCountAsync(0);
       removeAllNotificationsForUser(session?.user.id);
     }
