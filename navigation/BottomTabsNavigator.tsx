@@ -7,9 +7,6 @@ import { useTranslation } from "react-i18next";
 import PostsMapScreen from "../screens/PostsMapScreen";
 import { SvgXml } from "react-native-svg";
 import { tree, treeOutline } from "../assets/treeIcons";
-import * as Notifications from "expo-notifications";
-import { useEffect, useState } from "react";
-import { AppState, AppStateStatus } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -52,24 +49,6 @@ const treeIconOptions = () => ({
 
 const BottomTabsNavigator = () => {
   const { t } = useTranslation();
-  const [badgeCount, setBadgeCount] = useState(0);
-
-  const updateBadgeCount = async () => {
-    const count = await Notifications.getBadgeCountAsync();
-    setBadgeCount(count);
-  };
-
-  const onAppStateChange = (status: AppStateStatus) => {
-    if (status === "active") {
-      updateBadgeCount();
-    }
-  };
-
-  useEffect(() => {
-    updateBadgeCount();
-    const subscription = AppState.addEventListener("change", onAppStateChange);
-    return () => subscription.remove();
-  }, []);
 
   return (
     <Tab.Navigator initialRouteName="FindATree" screenOptions={screenOptions}>
@@ -107,7 +86,6 @@ const BottomTabsNavigator = () => {
         component={RequestsScreen}
         options={{
           ...iconOptions("chatbubbles-outline", "chatbubbles"),
-          tabBarBadge: badgeCount !== 0 ? badgeCount : undefined,
           title: t("btnRequests"),
         }}
       />
