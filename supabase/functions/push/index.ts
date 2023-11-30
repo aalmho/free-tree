@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
       body: payload.record.body,
       badge: badgeCount,
       data: {
-        url: 'free-tree://requests'
+        url: 'juletraet://requests'
       }
     }),
   }).then((res) => res.json());
