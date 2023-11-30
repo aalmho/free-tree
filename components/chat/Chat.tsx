@@ -9,11 +9,12 @@ import {
 import { Route } from "@react-navigation/native";
 import { SessionContext } from "../../context/SessionContext";
 import { createNotification, sendMessage } from "../../api/api";
-import { useGetMessages } from "../../hooks/use-messages";
-import { LogBox, View } from "react-native";
+import { useGetFirstName, useGetMessages } from "../../hooks/use-messages";
+import { LogBox, SafeAreaView, View, Text } from "react-native";
 import { locale } from "../../dayjsWithLocale";
 import da from "dayjs/locale/da";
 import { ChatParams } from "../../navigation/StackNavigator";
+import { useTranslation } from "react-i18next";
 
 const Chat = ({
   route,
@@ -25,6 +26,8 @@ const Chat = ({
   const { requestId, recipientProfile } = route.params;
   const { session } = useContext(SessionContext);
   const { messages, setMessages } = useGetMessages(requestId);
+  const { t } = useTranslation();
+  const firstNameOfSender = useGetFirstName(session?.user?.id!);
 
   const onSend = useCallback((messages: IMessage[] = []) => {
     setMessages((previousMessages) =>
@@ -33,7 +36,7 @@ const Chat = ({
     sendMessage(requestId, messages[0].text, session?.user?.id!);
     createNotification(
       recipientProfile.id!,
-      recipientProfile.first_name!,
+      firstNameOfSender,
       messages[0].text
     );
   }, []);
@@ -81,20 +84,23 @@ const Chat = ({
     "Warning: Failed prop type: Invalid prop `locale` of type `object` supplied to `GiftedChat`",
   ]);
   return (
-    <View style={{ backgroundColor: "white", flex: 1 }}>
-      <GiftedChat
-        messages={messages}
-        locale={locale.substring(0, 2) === "da" ? da : undefined}
-        renderBubble={renderBubble}
-        renderDay={renderDay}
-        renderTime={renderTime}
-        renderAvatar={null}
-        onSend={(messages) => onSend(messages)}
-        user={{
-          _id: session?.user?.id!,
-        }}
-      />
-    </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={{ backgroundColor: "white", flex: 1 }}>
+        <GiftedChat
+          messages={messages}
+          locale={locale.substring(0, 2) === "da" ? da : undefined}
+          renderBubble={renderBubble}
+          renderDay={renderDay}
+          renderTime={renderTime}
+          placeholder={t("ChatMessagePlaceholder")}
+          renderAvatar={null}
+          onSend={(messages) => onSend(messages)}
+          user={{
+            _id: session?.user?.id!,
+          }}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 

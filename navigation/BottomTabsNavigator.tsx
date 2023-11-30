@@ -49,25 +49,24 @@ const treeIconOptions = () => ({
 
 const BottomTabsNavigator = () => {
   const { t } = useTranslation();
+
   return (
-    <Tab.Navigator
-      initialRouteName={t("btnFindATree")}
-      screenOptions={screenOptions}
-    >
+    <Tab.Navigator initialRouteName="FindATree" screenOptions={screenOptions}>
       <Tab.Screen
-        name={t("btnFindATree")}
+        name="FindATree"
         component={HomeScreen}
-        options={treeIconOptions}
+        options={{ ...treeIconOptions(), title: t("btnFindATree") }}
       />
       <Tab.Screen
-        name={t("btnMap")}
+        name="Map"
         component={PostsMapScreen}
         options={{
           ...iconOptions("map-outline", "map"),
+          title: t("btnMap"),
         }}
       />
       <Tab.Screen
-        name={t("btnMyTrees")}
+        name="MyTrees"
         component={MyPostsScreen}
         options={({ navigation, route }) => ({
           ...iconOptions("person-outline", "person"),
@@ -79,12 +78,16 @@ const BottomTabsNavigator = () => {
               style={{ paddingRight: 10 }}
             />
           ),
+          title: t("btnMyTrees"),
         })}
       />
       <Tab.Screen
-        name={t("btnRequests")}
+        name="Requests"
         component={RequestsScreen}
-        options={iconOptions("chatbubbles-outline", "chatbubbles")}
+        options={{
+          ...iconOptions("chatbubbles-outline", "chatbubbles"),
+          title: t("btnRequests"),
+        }}
       />
     </Tab.Navigator>
   );

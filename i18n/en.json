@@ -30,8 +30,9 @@
   "deletePostMessage": "Do you want to delete this post?",
   "deleteAccountTitle": "Delete account",
   "deleteAccountMessage": "Do you want to delete your account?",
-  "RequestApprovedNotificationTitle": "Your Christmas tree request has been approved",
-  "RequestApprovedNotificationBody": "You can now write to the owner 🎄",
-  "YourTreeIsRequestedNotificationTitle": "Someone wants your 🎄",
-  "YourTreeIsRequestedNotificationBody": "You can agree in more detail in the app"
+  "RequestApprovedNotificationTitle": "Din juletræsanmodning er godkendt",
+  "RequestApprovedNotificationBody": "Du kan nu skrive til ejeren 🎄",
+  "YourTreeIsRequestedNotificationTitle": "Nogen vil have dit 🎄",
+  "YourTreeIsRequestedNotificationBody": "I kan aftale nærmere i appen",
+  "ChatMessagePlaceholder": "Type a message..."
 }

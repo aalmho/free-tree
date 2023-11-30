@@ -49,7 +49,10 @@ Deno.serve(async (req) => {
       sound: "default",
       title: payload.record.title,
       body: payload.record.body,
-      badge: badgeCount
+      badge: badgeCount,
+      data: {
+        url: 'juletraet://requests'
+      }
     }),
   }).then((res) => res.json());
 

@@ -221,6 +221,20 @@ export const removeAllNotificationsForUser = async (userId: string) => {
   handleError(messageError);
 };
 
+export const getFirstName = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(`id, first_name`)
+    .eq("id", userId)
+  handleError(error);
+  if (data && data.length > 0) {
+    return data[0].first_name as string;
+  }
+  else {
+    return ''
+  }
+};
+
 const handleError = (error: PostgrestError | null) => {
   if (error) {
     return Alert.alert("Something went wrong. Please try again");
