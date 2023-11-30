@@ -12,7 +12,7 @@ const NavigationContainerComponent: FC<NavigationContainerComponentProps> = ({
   children,
 }) => {
   const linking: LinkingOptions<StackParamList> = {
-    prefixes: ["free-tree://"],
+    prefixes: ["juletraet://"],
     config: {
       screens: {
         Home: {

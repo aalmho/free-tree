@@ -20,12 +20,14 @@
       "usesAppleSignIn": true,
       "bundleIdentifier": "com.2100appiness.freetree"
     },
-    "plugins": ["expo-apple-authentication"],
+    "plugins": [
+      "expo-apple-authentication"
+    ],
+    "owner": "2100appiness",
     "extra": {
       "eas": {
-        "projectId": "c129b2d0-14ba-423a-8d31-d44217c8759a"
+        "projectId": "f82dd3b0-67da-4b67-8624-388bf8e795fa"
       }
-    },
-    "owner": "2100appiness"
+    }
   }
 }
