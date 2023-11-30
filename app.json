@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "free-tree",
-    "slug": "free-tree",
+    "name": "Juletræet",
+    "slug": "juletraeet",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
