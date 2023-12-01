@@ -82,7 +82,7 @@ export const deletePost = async (postId: number) => {
   handleError(error);
 };
 
-export const getPosts = async (userId: string) => {
+export const getPosts = async () => {
   const { data, error } = await supabase
     .from("posts")
     .select(
@@ -225,13 +225,12 @@ export const getFirstName = async (userId: string) => {
   const { data, error } = await supabase
     .from("profiles")
     .select(`id, first_name`)
-    .eq("id", userId)
+    .eq("id", userId);
   handleError(error);
   if (data && data.length > 0) {
     return data[0].first_name as string;
-  }
-  else {
-    return ''
+  } else {
+    return "";
   }
 };
 

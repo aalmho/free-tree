@@ -10,11 +10,11 @@ import {
 } from "../api/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const usePosts = (userId: string) => {
+export const usePosts = () => {
   return useQuery({
     queryKey: ["getPosts"],
     queryFn: async () => {
-      return await getPosts(userId);
+      return await getPosts();
     },
   });
 };

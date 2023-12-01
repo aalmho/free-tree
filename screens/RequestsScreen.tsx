@@ -10,6 +10,7 @@ import { useFocusEffect } from "@react-navigation/native";
 const RequestsScreen = () => {
   const { t } = useTranslation();
   const { session } = useContext(SessionContext);
+  const firstTimeRef = React.useRef(true);
   const {
     data: requests,
     isLoading,
@@ -30,8 +31,12 @@ const RequestsScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
+      if (firstTimeRef.current) {
+        firstTimeRef.current = false;
+        return;
+      }
       refetchAllRequests();
-    }, [])
+    }, [refetch, refetchRequestsByUser])
   );
 
   if (
@@ -39,11 +44,30 @@ const RequestsScreen = () => {
     (!requestsByUser?.length || !requestsByUser)
   ) {
     return (
-      <View
-        style={{ justifyContent: "center", alignItems: "center", padding: 20 }}
+      <ScrollView
+        style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={
+              isLoading ||
+              isRefetching ||
+              isRequestByUserFetching ||
+              isRequestByUserLoading
+            }
+            onRefresh={refetchAllRequests}
+          />
+        }
       >
-        <Text>{t("requestsScreenNoRequests")} </Text>
-      </View>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+          }}
+        >
+          <Text>{t("requestsScreenNoRequests")} </Text>
+        </View>
+      </ScrollView>
     );
   }
 

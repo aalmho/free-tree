@@ -1,23 +1,44 @@
-import React, { useCallback, useContext, useState } from "react";
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  AppState,
+  AppStateStatus,
+} from "react-native";
 import { usePosts } from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
 import { useTranslation } from "react-i18next";
-import { SessionContext } from "../context/SessionContext";
 import { useFocusEffect } from "@react-navigation/native";
+import { focusManager } from "@tanstack/react-query";
 
 const HomeScreen = () => {
-  const { session } = useContext(SessionContext);
-  const { data: posts, isLoading, refetch } = usePosts(session?.user?.id!);
+  const { data: posts, isLoading, refetch, isRefetching } = usePosts();
   const { t } = useTranslation();
   const [offset, setOffset] = useState(4);
+  const firstTimeRef = React.useRef(true);
+
+  const onAppStateChange = (status: AppStateStatus) => {
+    focusManager.setFocused(status === "active");
+  };
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", onAppStateChange);
+
+    return () => subscription.remove();
+  }, []);
 
   const postList = posts?.slice(0, offset);
 
   useFocusEffect(
     useCallback(() => {
+      if (firstTimeRef.current) {
+        firstTimeRef.current = false;
+        return;
+      }
       refetch();
-    }, [])
+    }, [refetch])
   );
 
   const onEndReached = () => {
@@ -56,6 +77,8 @@ const HomeScreen = () => {
           keyExtractor={(item) => item.id.toString()}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.1}
+          onRefresh={refetch}
+          refreshing={isRefetching}
         />
       </View>
     </>
