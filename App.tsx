@@ -5,10 +5,7 @@ import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import LoginScreen from "./screens/LoginScreen";
 import { SessionContext } from "./context/SessionContext";
-import {
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StackNavigator } from "./navigation/StackNavigator";
 import "./i18n/i18next";
 import * as Notifications from "expo-notifications";
