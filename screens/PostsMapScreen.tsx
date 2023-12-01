@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import { View, Text, Modal, SafeAreaView, FlatList } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { FeedPost } from "../components/feed/FeedPost";
@@ -6,8 +6,18 @@ import { usePosts } from "../hooks/use-posts";
 import { Ionicons } from "@expo/vector-icons";
 import { Post } from "../api/api";
 import { SessionContext } from "../context/SessionContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 const groupPostsByPostalCode = (posts: Post[]): Record<string, Post[]> => {
+  const { session } = useContext(SessionContext);
+  const { refetch } = usePosts(session?.user?.id!);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [])
+  );
+
   const groupedPosts: Record<string, Post[]> = {};
 
   posts.forEach((post) => {
