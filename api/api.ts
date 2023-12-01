@@ -133,7 +133,7 @@ export const getRequestsByUser = async (userId: string) => {
 export const requestTree = async (requesterUserId: string, postId: number) => {
   const { error, data } = await supabase
     .from("requests")
-    .insert({ requester: requesterUserId, post_id: postId });
+    .upsert({ requester: requesterUserId, post_id: postId });
   handleError(error);
 };
 
