@@ -53,12 +53,6 @@ export const Information: FC<InformationProps> = ({
 }) => {
   const { session } = useContext(SessionContext);
   const { t } = useTranslation();
-  // const { mutate: markTreeMutation, isPending: isMarkTreePending } =
-  //   useMarkPostAsReserved();
-  // const { mutate: requestTreeMutation, isPending: isRequestPending } =
-  //   useRequestTree();
-  // const { mutate: deleteTreeMutation, isPending: isDeletePending } =
-  //   useDeletePost();
 
   const isUsersPost = useMemo(() => {
     return post.user_id === session?.user?.id;
