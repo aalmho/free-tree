@@ -2,25 +2,63 @@ import { FC, useCallback, useContext, useMemo } from "react";
 import { Post, createNotification } from "../../../api/api";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { SessionContext } from "../../../context/SessionContext";
-import { useRequestTree } from "../../../hooks/use-requests";
 import dayjs from "../../../dayjsWithLocale";
-import { useDeletePost, useMarkPostAsReserved } from "../../../hooks/use-posts";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
+import { UseMutateFunction } from "@tanstack/react-query";
 
 interface InformationProps {
   post: Post;
+  hideTreeMutation?: UseMutateFunction<
+    void,
+    Error,
+    {
+      postId: number;
+      mark: boolean;
+      userId: string;
+    },
+    unknown
+  >;
+  isHideTreePending?: boolean;
+  deleteTreeMutation?: UseMutateFunction<
+    void,
+    Error,
+    {
+      postId: number;
+      userId: string;
+    },
+    unknown
+  >;
+  isDeletePending?: boolean;
+  requestMutation?: UseMutateFunction<
+    void,
+    Error,
+    {
+      requesterUserId: string;
+      postId: number;
+    },
+    unknown
+  >;
+  isRequestPending?: boolean;
 }
 
-export const Information: FC<InformationProps> = ({ post }) => {
+export const Information: FC<InformationProps> = ({
+  post,
+  hideTreeMutation,
+  isHideTreePending,
+  deleteTreeMutation,
+  isDeletePending,
+  requestMutation,
+  isRequestPending,
+}) => {
   const { session } = useContext(SessionContext);
   const { t } = useTranslation();
-  const { mutate: markTreeMutation, isPending: isMarkTreePending } =
-    useMarkPostAsReserved();
-  const { mutate: requestTreeMutation, isPending: isRequestPending } =
-    useRequestTree();
-  const { mutate: deleteTreeMutation, isPending: isDeletePending } =
-    useDeletePost();
+  // const { mutate: markTreeMutation, isPending: isMarkTreePending } =
+  //   useMarkPostAsReserved();
+  // const { mutate: requestTreeMutation, isPending: isRequestPending } =
+  //   useRequestTree();
+  // const { mutate: deleteTreeMutation, isPending: isDeletePending } =
+  //   useDeletePost();
 
   const isUsersPost = useMemo(() => {
     return post.user_id === session?.user?.id;
@@ -33,7 +71,7 @@ export const Information: FC<InformationProps> = ({ post }) => {
   }, [post, session]);
 
   const toggleRequest = useCallback(() => {
-    if (isUsersPost) {
+    if (isUsersPost && deleteTreeMutation) {
       return Alert.alert(t("deletePostTitle"), t("deletePostMessage"), [
         {
           text: t("cancel"),
@@ -46,11 +84,8 @@ export const Information: FC<InformationProps> = ({ post }) => {
         },
       ]);
     }
-    if (!isTreeRequestedByUser) {
-      requestTreeMutation({
-        requesterUserId: session?.user?.id!,
-        postId: post.id,
-      });
+    if (!isTreeRequestedByUser && requestMutation) {
+      requestMutation({ postId: post.id, requesterUserId: session?.user?.id! });
       createNotification(
         post.user_id,
         t("YourTreeIsRequestedNotificationTitle"),
@@ -128,12 +163,13 @@ export const Information: FC<InformationProps> = ({ post }) => {
       <View style={{ flexDirection: "row", gap: 5 }}>
         {isUsersPost && (
           <TouchableOpacity
-            disabled={isMarkTreePending}
+            disabled={isHideTreePending}
             style={{
               alignItems: "center",
             }}
             onPress={() =>
-              markTreeMutation({
+              hideTreeMutation &&
+              hideTreeMutation({
                 postId: post.id,
                 mark: !post.reserved,
                 userId: session?.user?.id!,

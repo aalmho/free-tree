@@ -12,7 +12,11 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import { usePostsByUser } from "../hooks/use-posts";
+import {
+  useDeletePost,
+  useMarkPostAsReserved,
+  usePostsByUser,
+} from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
 import { SessionContext } from "../context/SessionContext";
 import { Ionicons } from "@expo/vector-icons";
@@ -23,6 +27,10 @@ import { useFocusEffect } from "@react-navigation/native";
 const MyPostsScreen = ({ navigation }: any) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { session } = useContext(SessionContext);
+  const { mutate: markTreeMutation, isPending: isHideTreePending } =
+    useMarkPostAsReserved();
+  const { mutate: deleteTreeMutation, isPending: isDeletePending } =
+    useDeletePost();
   const {
     data: posts,
     isLoading,
@@ -104,7 +112,14 @@ const MyPostsScreen = ({ navigation }: any) => {
         )}
         <View style={{ gap: 20 }}>
           {userPost.map((post) => (
-            <FeedPost key={post.id.toString()} post={post} />
+            <FeedPost
+              isDeletePending={isDeletePending}
+              isHideTreePending={isHideTreePending}
+              deleteTreeMutation={deleteTreeMutation}
+              hideTreeMutation={markTreeMutation}
+              key={post.id.toString()}
+              post={post}
+            />
           ))}
         </View>
       </View>

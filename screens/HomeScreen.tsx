@@ -7,23 +7,32 @@ import {
   AppState,
   AppStateStatus,
 } from "react-native";
-import { usePosts } from "../hooks/use-posts";
+import {
+  useDeletePost,
+  useMarkPostAsReserved,
+  usePosts,
+} from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "@react-navigation/native";
 import { focusManager } from "@tanstack/react-query";
+import { useRequestTree } from "../hooks/use-requests";
 
 const HomeScreen = () => {
   const { data: posts, isLoading, refetch, isRefetching } = usePosts();
   const { t } = useTranslation();
   const [offset, setOffset] = useState(4);
   const firstTimeRef = React.useRef(true);
+  const { mutate: requestTreeMutation, isPending: isRequestPending } =
+    useRequestTree();
+  const { mutate: markTreeMutation, isPending: isHideTreePending } =
+    useMarkPostAsReserved();
+  const { mutate: deleteTreeMutation, isPending: isDeletePending } =
+    useDeletePost();
 
   const onAppStateChange = (status: AppStateStatus) => {
     focusManager.setFocused(status === "active");
   };
-
-  console.log("renders");
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", onAppStateChange);
@@ -74,7 +83,16 @@ const HomeScreen = () => {
         <FlatList
           data={postList}
           renderItem={({ item }) => (
-            <FeedPost key={item.created_at.toString()} post={item} />
+            <FeedPost
+              key={item.created_at.toString()}
+              isRequestPending={isRequestPending}
+              requestMutation={requestTreeMutation}
+              isDeletePending={isDeletePending}
+              deleteTreeMutation={deleteTreeMutation}
+              isHideTreePending={isHideTreePending}
+              hideTreeMutation={markTreeMutation}
+              post={item}
+            />
           )}
           keyExtractor={(item) => item.id.toString()}
           onEndReached={onEndReached}

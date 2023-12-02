@@ -2,10 +2,15 @@ import React, { useCallback, useMemo, useState } from "react";
 import { View, Text, Modal, SafeAreaView, FlatList } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { FeedPost } from "../components/feed/FeedPost";
-import { usePosts } from "../hooks/use-posts";
+import {
+  useDeletePost,
+  useMarkPostAsReserved,
+  usePosts,
+} from "../hooks/use-posts";
 import { Ionicons } from "@expo/vector-icons";
 import { Post } from "../api/api";
 import { useFocusEffect } from "@react-navigation/native";
+import { useRequestTree } from "../hooks/use-requests";
 
 const groupPostsByPostalCode = (posts: Post[]): Record<string, Post[]> => {
   const groupedPosts: Record<string, Post[]> = {};
@@ -31,6 +36,12 @@ const PostsMapScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedPostalCode, setSelectedPostalCode] = useState("");
   const groupedPosts = groupPostsByPostalCode(data || []);
+  const { mutate: requestTreeMutation, isPending: isRequestPending } =
+    useRequestTree();
+  const { mutate: markTreeMutation, isPending: isHideTreePending } =
+    useMarkPostAsReserved();
+  const { mutate: deleteTreeMutation, isPending: isDeletePending } =
+    useDeletePost();
 
   useFocusEffect(
     useCallback(() => {
@@ -100,7 +111,16 @@ const PostsMapScreen = () => {
             <FlatList
               data={postList}
               renderItem={({ item }) => (
-                <FeedPost key={item.created_at.toString()} post={item} />
+                <FeedPost
+                  key={item.created_at.toString()}
+                  isRequestPending={isRequestPending}
+                  requestMutation={requestTreeMutation}
+                  isDeletePending={isDeletePending}
+                  deleteTreeMutation={deleteTreeMutation}
+                  isHideTreePending={isHideTreePending}
+                  hideTreeMutation={markTreeMutation}
+                  post={item}
+                />
               )}
               keyExtractor={(item) => item.id.toString()}
               onEndReached={onEndReached}

@@ -1,6 +1,10 @@
 import React, { useCallback, useContext } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
-import { useRequests, useRequestsByUser } from "../hooks/use-requests";
+import {
+  useApproveRequest,
+  useRequests,
+  useRequestsByUser,
+} from "../hooks/use-requests";
 import { SessionContext } from "../context/SessionContext";
 import { PostRequest } from "../components/requests/PostRequest";
 import { RequestByUser } from "../components/requests/RequestByUser";
@@ -23,6 +27,8 @@ const RequestsScreen = () => {
     isRefetching: isRequestByUserFetching,
     refetch: refetchRequestsByUser,
   } = useRequestsByUser(session?.user?.id!);
+  const { mutate: approveMutation, isPending: isApprovePending } =
+    useApproveRequest();
 
   const refetchAllRequests = () => {
     refetch();
@@ -89,17 +95,22 @@ const RequestsScreen = () => {
       {!!requests?.length && (
         <View>
           <Text style={{ padding: 8, fontWeight: "800" }}>
-            {t("requestsOfMyTrees")}{" "}
+            {t("requestsOfMyTrees")}
           </Text>
           {requests?.map((req) => (
-            <PostRequest key={req.id} request={req} />
+            <PostRequest
+              key={req.id}
+              request={req}
+              approveMutation={approveMutation}
+              isApprovePending={isApprovePending}
+            />
           ))}
         </View>
       )}
       {!!requestsByUser?.length && (
         <View>
           <Text style={{ padding: 8, fontWeight: "800" }}>
-            {t("requestScreenMyRequests")}{" "}
+            {t("requestScreenMyRequests")}
           </Text>
           {requestsByUser?.map((req) => (
             <RequestByUser key={req.id} request={req} />
