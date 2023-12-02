@@ -6,6 +6,7 @@ import {
   PostRequest,
   Post,
   Profile,
+  getPosts,
 } from "../api/api";
 import {
   useQuery,
@@ -23,24 +24,26 @@ export type RequestWithImg = {
   created_at?: Date;
 };
 
+export const getRequests = async (userId: string) => {
+  const postRequests = await getPostRequests(userId);
+  const postsWithRequests = postRequests.filter(
+    (post) => post.requests && post.requests.length > 0
+  );
+  const requestsWithImageUrls = postsWithRequests.flatMap((post) => {
+    return post.requests!.map((request) => ({
+      ...request,
+      image_url: post.image_url || "",
+    }));
+  });
+
+  return requestsWithImageUrls;
+};
+
 export const useRequests = (userId: string) => {
   const queryKey: QueryKey = ["userRequests", userId];
   return useQuery({
     queryKey,
-    queryFn: async () => {
-      const postRequests = await getPostRequests(userId);
-      const postsWithRequests = postRequests.filter(
-        (post) => post.requests && post.requests.length > 0
-      );
-      const requestsWithImageUrls = postsWithRequests.flatMap((post) => {
-        return post.requests!.map((request) => ({
-          ...request,
-          image_url: post.image_url || "",
-        }));
-      });
-
-      return requestsWithImageUrls;
-    },
+    queryFn: async () => await getRequests(userId),
   });
 };
 
@@ -60,10 +63,11 @@ export const useApproveRequest = () => {
 
   const mutate = useMutation({
     mutationFn: async (args: { requestId: number; userId: string }) => {
-      const previousData = queryClient.getQueryData([
-        "userRequests",
-        args.userId,
-      ]);
+      const previousData = queryClient.ensureQueryData({
+        queryKey: ["userRequests", args.userId],
+        queryFn: async () => await getRequests(args.userId),
+      });
+
       queryClient.setQueryData(
         ["userRequests", args.userId],
         (oldData: PostRequest | undefined) => {
@@ -74,7 +78,6 @@ export const useApproveRequest = () => {
                 : request
             );
           }
-          return oldData;
         }
       );
 
@@ -97,7 +100,10 @@ export const useRequestTree = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: async (args: { requesterUserId: string; postId: number }) => {
-      const previousData = queryClient.getQueryData(["getPosts"]);
+      const previousData = queryClient.ensureQueryData({
+        queryKey: ["getPosts"],
+        queryFn: () => getPosts(),
+      });
 
       queryClient.setQueryData(["getPosts"], (oldData: Post[] | undefined) => {
         if (oldData) {
@@ -117,7 +123,6 @@ export const useRequestTree = () => {
               : post
           );
         }
-        return oldData;
       });
 
       try {

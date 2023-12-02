@@ -9,6 +9,7 @@ import {
   markPostAsReserved,
 } from "../api/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getRequests } from "./use-requests";
 
 export const usePosts = () => {
   return useQuery({
@@ -61,13 +62,19 @@ export const useDeletePost = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: async (args: { postId: number; userId: string }) => {
-      const previousData = queryClient.getQueryData(["getPostsByUser"]);
-      const previousPostData = queryClient.getQueryData(["getPosts"]);
+      const previousData = queryClient.ensureQueryData({
+        queryKey: ["getPostsByUser"],
+        queryFn: () => getPostsByUser(args.userId),
+      });
+      const previousPostData = queryClient.ensureQueryData({
+        queryKey: ["getPosts"],
+        queryFn: () => usePosts(),
+      });
 
-      const previousRequestData = queryClient.getQueryData([
-        "requestsByUser",
-        args.userId,
-      ]);
+      const previousRequestData = queryClient.ensureQueryData({
+        queryKey: ["requestsByUser", args.userId],
+        queryFn: () => getRequests(args.userId),
+      });
 
       queryClient.setQueryData(
         ["userRequests", args.userId],
@@ -120,9 +127,21 @@ export const useMarkPostAsReserved = () => {
   const queryClient = useQueryClient();
 
   const mutate = useMutation({
-    mutationFn: async (args: { postId: number; mark: boolean }) => {
-      const previousUserPostData = queryClient.getQueryData(["getPostsByUser"]);
-      const previousPostData = queryClient.getQueryData(["getPosts"]);
+    mutationFn: async (args: {
+      postId: number;
+      mark: boolean;
+      userId: string;
+    }) => {
+      const previousUserPostData = queryClient.ensureQueryData({
+        queryKey: ["getPostsByUser"],
+        queryFn: () => getPostsByUser(args.userId),
+      });
+
+      const previousPostData = queryClient.ensureQueryData({
+        queryKey: ["getPosts"],
+        queryFn: () => getPosts(),
+      });
+
       queryClient.setQueryData(
         ["getPostsByUser"],
         (oldData: Post[] | undefined) => {
@@ -131,7 +150,6 @@ export const useMarkPostAsReserved = () => {
               post.id === args.postId ? { ...post, reserved: args.mark } : post
             );
           }
-          return oldData;
         }
       );
 
@@ -141,7 +159,6 @@ export const useMarkPostAsReserved = () => {
             post.id === args.postId ? { ...post, reserved: args.mark } : post
           );
         }
-        return oldData;
       });
 
       try {

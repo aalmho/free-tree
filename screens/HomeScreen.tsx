@@ -23,6 +23,8 @@ const HomeScreen = () => {
     focusManager.setFocused(status === "active");
   };
 
+  console.log("renders");
+
   useEffect(() => {
     const subscription = AppState.addEventListener("change", onAppStateChange);
 
