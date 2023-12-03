@@ -15,7 +15,7 @@ interface InformationProps {
 export const Information: FC<InformationProps> = ({ post }) => {
   const { session } = useContext(SessionContext);
   const { t } = useTranslation();
-  const { mutate: markTreeMutation, isPending: isHideTreePending } =
+  const { mutate: markTreeMutation, isPending: isMarkTreePending } =
     useMarkPostAsReserved();
   const { mutate: requestTreeMutation, isPending: isRequestPending } =
     useRequestTree();
@@ -128,7 +128,7 @@ export const Information: FC<InformationProps> = ({ post }) => {
       <View style={{ flexDirection: "row", gap: 5 }}>
         {isUsersPost && (
           <TouchableOpacity
-            disabled={isHideTreePending}
+            disabled={isMarkTreePending}
             style={{
               alignItems: "center",
             }}
