@@ -1,35 +1,21 @@
 import { FC, useContext } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { createNotification } from "../../api/api";
-import { RequestWithImg } from "../../hooks/use-requests";
+import { RequestWithImg, useApproveRequest } from "../../hooks/use-requests";
 import { SessionContext } from "../../context/SessionContext";
 import dayjs from "../../dayjsWithLocale";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Image } from "@rneui/themed";
-import { UseMutateFunction } from "@tanstack/react-query";
 
 interface RequestProps {
   request: RequestWithImg;
-  approveMutation: UseMutateFunction<
-    void,
-    Error,
-    {
-      requestId: number;
-      userId: string;
-    },
-    unknown
-  >;
-  isApprovePending: boolean;
 }
 
-export const PostRequest: FC<RequestProps> = ({
-  request,
-  approveMutation,
-  isApprovePending,
-}) => {
+export const PostRequest: FC<RequestProps> = ({ request }) => {
   const { session } = useContext(SessionContext);
+  const { mutate, isPending } = useApproveRequest();
   const { t } = useTranslation();
   const navigation: NavigationProp<any> = useNavigation();
   const treeGetter = request?.profiles;
@@ -77,7 +63,7 @@ export const PostRequest: FC<RequestProps> = ({
               <Ionicons name="chatbubbles" color="green" size={40} />
             ) : (
               <TouchableOpacity
-                disabled={isApprovePending}
+                disabled={isPending}
                 style={{
                   backgroundColor: "green",
                   borderRadius: 24,
@@ -85,7 +71,7 @@ export const PostRequest: FC<RequestProps> = ({
                   alignItems: "center",
                 }}
                 onPress={() => {
-                  approveMutation({
+                  mutate({
                     requestId: request.id!,
                     userId: session?.user?.id!,
                   });

@@ -2,11 +2,11 @@ import { FC, useCallback, useContext, useMemo } from "react";
 import { Post, createNotification } from "../../../api/api";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { SessionContext } from "../../../context/SessionContext";
+import { useRequestTree } from "../../../hooks/use-requests";
 import dayjs from "../../../dayjsWithLocale";
+import { useDeletePost, useMarkPostAsReserved } from "../../../hooks/use-posts";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
-import { useRequestTree } from "../../../hooks/use-requests";
-import { useDeletePost, useMarkPostAsReserved } from "../../../hooks/use-posts";
 
 interface InformationProps {
   post: Post;
@@ -15,10 +15,10 @@ interface InformationProps {
 export const Information: FC<InformationProps> = ({ post }) => {
   const { session } = useContext(SessionContext);
   const { t } = useTranslation();
+  const { mutate: markTreeMutation, isPending: isHideTreePending } =
+    useMarkPostAsReserved();
   const { mutate: requestTreeMutation, isPending: isRequestPending } =
     useRequestTree();
-  const { mutate: hideTreeMutation, isPending: isHideTreePending } =
-    useMarkPostAsReserved();
   const { mutate: deleteTreeMutation, isPending: isDeletePending } =
     useDeletePost();
 
@@ -33,7 +33,7 @@ export const Information: FC<InformationProps> = ({ post }) => {
   }, [post, session]);
 
   const toggleRequest = useCallback(() => {
-    if (isUsersPost && deleteTreeMutation) {
+    if (isUsersPost) {
       return Alert.alert(t("deletePostTitle"), t("deletePostMessage"), [
         {
           text: t("cancel"),
@@ -48,8 +48,8 @@ export const Information: FC<InformationProps> = ({ post }) => {
     }
     if (!isTreeRequestedByUser) {
       requestTreeMutation({
-        postId: post.id,
         requesterUserId: session?.user?.id!,
+        postId: post.id,
       });
       createNotification(
         post.user_id,
@@ -133,7 +133,7 @@ export const Information: FC<InformationProps> = ({ post }) => {
               alignItems: "center",
             }}
             onPress={() =>
-              hideTreeMutation({
+              markTreeMutation({
                 postId: post.id,
                 mark: !post.reserved,
                 userId: session?.user?.id!,

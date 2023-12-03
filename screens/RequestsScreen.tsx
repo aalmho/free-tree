@@ -1,10 +1,6 @@
 import React, { useCallback, useContext, useMemo } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
-import {
-  useApproveRequest,
-  useRequests,
-  useRequestsByUser,
-} from "../hooks/use-requests";
+import { useRequests, useRequestsByUser } from "../hooks/use-requests";
 import { SessionContext } from "../context/SessionContext";
 import { PostRequest } from "../components/requests/PostRequest";
 import { RequestByUser } from "../components/requests/RequestByUser";
@@ -27,8 +23,6 @@ const RequestsScreen = () => {
     isRefetching: isRequestByUserFetching,
     refetch: refetchRequestsByUser,
   } = useRequestsByUser(session?.user?.id!);
-  const { mutate: approveMutation, isPending: isApprovePending } =
-    useApproveRequest();
 
   const requestsOfTrees = useMemo(() => requests, [requests, session]);
   const requestsByUsers = useMemo(
@@ -104,12 +98,7 @@ const RequestsScreen = () => {
             {t("requestsOfMyTrees")}
           </Text>
           {requestsOfTrees?.map((req) => (
-            <PostRequest
-              key={req.id}
-              request={req}
-              approveMutation={approveMutation}
-              isApprovePending={isApprovePending}
-            />
+            <PostRequest key={req.id} request={req} />
           ))}
         </View>
       )}

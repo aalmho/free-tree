@@ -4,6 +4,7 @@ import { View, ActivityIndicator } from "react-native";
 import { Information } from "./components/Information";
 import { Location } from "./components/Location";
 import { Image } from "@rneui/themed";
+
 interface FeedPost {
   post: Post;
 }
