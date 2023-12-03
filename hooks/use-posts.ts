@@ -142,24 +142,16 @@ export const useMarkPostAsReserved = () => {
         queryFn: () => getPosts(),
       });
 
-      queryClient.setQueryData(
-        ["getPostsByUser"],
-        (oldData: Post[] | undefined) => {
-          if (oldData) {
-            return oldData.map((post) =>
-              post.id === args.postId ? { ...post, reserved: args.mark } : post
-            );
-          }
-        }
-      );
-
-      queryClient.setQueryData(["getPosts"], (oldData: Post[] | undefined) => {
+      const updatePostData = (oldData: Post[] | undefined) => {
         if (oldData) {
           return oldData.map((post) =>
             post.id === args.postId ? { ...post, reserved: args.mark } : post
           );
         }
-      });
+      };
+
+      queryClient.setQueryData(["getPostsByUser"], updatePostData);
+      queryClient.setQueryData(["getPosts"], updatePostData);
 
       try {
         return await markPostAsReserved(args.postId, args.mark);

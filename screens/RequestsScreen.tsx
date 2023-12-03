@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
 import {
   useApproveRequest,
@@ -30,6 +30,12 @@ const RequestsScreen = () => {
   const { mutate: approveMutation, isPending: isApprovePending } =
     useApproveRequest();
 
+  const requestsOfTrees = useMemo(() => requests, [requests, session]);
+  const requestsByUsers = useMemo(
+    () => requestsByUser,
+    [requestsByUser, session]
+  );
+
   const refetchAllRequests = () => {
     refetch();
     refetchRequestsByUser();
@@ -46,8 +52,8 @@ const RequestsScreen = () => {
   );
 
   if (
-    (!requests || !requests.length) &&
-    (!requestsByUser?.length || !requestsByUser)
+    (!requestsOfTrees || !requestsOfTrees.length) &&
+    (!requestsByUsers?.length || !requestsByUsers)
   ) {
     return (
       <ScrollView
@@ -92,12 +98,12 @@ const RequestsScreen = () => {
         />
       }
     >
-      {!!requests?.length && (
+      {!!requestsOfTrees?.length && (
         <View>
           <Text style={{ padding: 8, fontWeight: "800" }}>
             {t("requestsOfMyTrees")}
           </Text>
-          {requests?.map((req) => (
+          {requestsOfTrees?.map((req) => (
             <PostRequest
               key={req.id}
               request={req}
@@ -107,12 +113,12 @@ const RequestsScreen = () => {
           ))}
         </View>
       )}
-      {!!requestsByUser?.length && (
+      {!!requestsByUsers?.length && (
         <View>
           <Text style={{ padding: 8, fontWeight: "800" }}>
             {t("requestScreenMyRequests")}
           </Text>
-          {requestsByUser?.map((req) => (
+          {requestsByUsers?.map((req) => (
             <RequestByUser key={req.id} request={req} />
           ))}
         </View>

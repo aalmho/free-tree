@@ -5,54 +5,22 @@ import { SessionContext } from "../../../context/SessionContext";
 import dayjs from "../../../dayjsWithLocale";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
-import { UseMutateFunction } from "@tanstack/react-query";
+import { useRequestTree } from "../../../hooks/use-requests";
+import { useDeletePost, useMarkPostAsReserved } from "../../../hooks/use-posts";
 
 interface InformationProps {
   post: Post;
-  hideTreeMutation?: UseMutateFunction<
-    void,
-    Error,
-    {
-      postId: number;
-      mark: boolean;
-      userId: string;
-    },
-    unknown
-  >;
-  isHideTreePending?: boolean;
-  deleteTreeMutation?: UseMutateFunction<
-    void,
-    Error,
-    {
-      postId: number;
-      userId: string;
-    },
-    unknown
-  >;
-  isDeletePending?: boolean;
-  requestMutation?: UseMutateFunction<
-    void,
-    Error,
-    {
-      requesterUserId: string;
-      postId: number;
-    },
-    unknown
-  >;
-  isRequestPending?: boolean;
 }
 
-export const Information: FC<InformationProps> = ({
-  post,
-  hideTreeMutation,
-  isHideTreePending,
-  deleteTreeMutation,
-  isDeletePending,
-  requestMutation,
-  isRequestPending,
-}) => {
+export const Information: FC<InformationProps> = ({ post }) => {
   const { session } = useContext(SessionContext);
   const { t } = useTranslation();
+  const { mutate: requestTreeMutation, isPending: isRequestPending } =
+    useRequestTree();
+  const { mutate: hideTreeMutation, isPending: isHideTreePending } =
+    useMarkPostAsReserved();
+  const { mutate: deleteTreeMutation, isPending: isDeletePending } =
+    useDeletePost();
 
   const isUsersPost = useMemo(() => {
     return post.user_id === session?.user?.id;
@@ -78,8 +46,11 @@ export const Information: FC<InformationProps> = ({
         },
       ]);
     }
-    if (!isTreeRequestedByUser && requestMutation) {
-      requestMutation({ postId: post.id, requesterUserId: session?.user?.id! });
+    if (!isTreeRequestedByUser) {
+      requestTreeMutation({
+        postId: post.id,
+        requesterUserId: session?.user?.id!,
+      });
       createNotification(
         post.user_id,
         t("YourTreeIsRequestedNotificationTitle"),
@@ -162,7 +133,6 @@ export const Information: FC<InformationProps> = ({
               alignItems: "center",
             }}
             onPress={() =>
-              hideTreeMutation &&
               hideTreeMutation({
                 postId: post.id,
                 mark: !post.reserved,

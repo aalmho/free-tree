@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -7,28 +7,17 @@ import {
   AppState,
   AppStateStatus,
 } from "react-native";
-import {
-  useDeletePost,
-  useMarkPostAsReserved,
-  usePosts,
-} from "../hooks/use-posts";
+import { usePosts } from "../hooks/use-posts";
 import { FeedPost } from "../components/feed/FeedPost";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "@react-navigation/native";
 import { focusManager } from "@tanstack/react-query";
-import { useRequestTree } from "../hooks/use-requests";
 
 const HomeScreen = () => {
   const { data: posts, isLoading, refetch, isRefetching } = usePosts();
   const { t } = useTranslation();
   const [offset, setOffset] = useState(4);
   const firstTimeRef = React.useRef(true);
-  const { mutate: requestTreeMutation, isPending: isRequestPending } =
-    useRequestTree();
-  const { mutate: markTreeMutation, isPending: isHideTreePending } =
-    useMarkPostAsReserved();
-  const { mutate: deleteTreeMutation, isPending: isDeletePending } =
-    useDeletePost();
 
   const onAppStateChange = (status: AppStateStatus) => {
     focusManager.setFocused(status === "active");
@@ -40,7 +29,7 @@ const HomeScreen = () => {
     return () => subscription.remove();
   }, []);
 
-  const postList = posts?.slice(0, offset);
+  const postList = useMemo(() => posts?.slice(0, offset), [posts, offset]);
 
   useFocusEffect(
     useCallback(() => {
@@ -83,16 +72,7 @@ const HomeScreen = () => {
         <FlatList
           data={postList}
           renderItem={({ item }) => (
-            <FeedPost
-              key={item.created_at.toString()}
-              isRequestPending={isRequestPending}
-              requestMutation={requestTreeMutation}
-              isDeletePending={isDeletePending}
-              deleteTreeMutation={deleteTreeMutation}
-              isHideTreePending={isHideTreePending}
-              hideTreeMutation={markTreeMutation}
-              post={item}
-            />
+            <FeedPost key={item.created_at.toString()} post={item} />
           )}
           keyExtractor={(item) => item.id.toString()}
           onEndReached={onEndReached}

@@ -3,6 +3,7 @@ import { StackParamList } from "./StackNavigator";
 import * as Notifications from "expo-notifications";
 import * as Linking from "expo-linking";
 import { FC } from "react";
+import { StatusBar } from "expo-status-bar";
 
 interface NavigationContainerComponentProps {
   children: JSX.Element;
@@ -45,7 +46,7 @@ const NavigationContainerComponent: FC<NavigationContainerComponentProps> = ({
   };
 
   return (
-    <NavigationContainer linking={linking}>{children}</NavigationContainer>
+    <NavigationContainer linking={linking}>{children}<StatusBar style="auto" /></NavigationContainer>
   );
 };
 
