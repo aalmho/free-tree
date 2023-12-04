@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useRef } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { useRequests, useRequestsByUser } from "../hooks/use-requests";
 import { SessionContext } from "../context/SessionContext";
@@ -6,6 +6,9 @@ import { PostRequest } from "../components/requests/PostRequest";
 import { RequestByUser } from "../components/requests/RequestByUser";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "@react-navigation/native";
+import SwipeToDeleteRequest from "../components/requests/SwipeToDeleteRequest";
+import { deleteRequestById } from "../api/api";
+import { Swipeable } from "react-native-gesture-handler";
 
 const RequestsScreen = () => {
   const { t } = useTranslation();
@@ -33,6 +36,12 @@ const RequestsScreen = () => {
       refetchAllRequests();
     }, [])
   );
+
+  const openedRow = useRef<Swipeable>(null);
+  const deleteRequest = async (requestId: number, refetch: () => void) => {
+    await deleteRequestById(requestId);
+    refetch();
+  };
 
   if (
     (!requests || !requests.length) &&
@@ -68,7 +77,13 @@ const RequestsScreen = () => {
             {t("requestsOfMyTrees")}{" "}
           </Text>
           {requests?.map((req) => (
-            <PostRequest key={req.id} request={req} />
+            <SwipeToDeleteRequest
+              key={req.id}
+              openedRow={openedRow}
+              deleteRequest={() => deleteRequest(req.id!, refetch)}
+            >
+              <PostRequest key={req.id} request={req} />
+            </SwipeToDeleteRequest>
           ))}
         </View>
       )}
@@ -78,7 +93,15 @@ const RequestsScreen = () => {
             {t("requestScreenMyRequests")}{" "}
           </Text>
           {requestsByUser?.map((req) => (
-            <RequestByUser key={req.id} request={req} />
+            <SwipeToDeleteRequest
+              key={req.id}
+              openedRow={openedRow}
+              deleteRequest={() =>
+                deleteRequest(req.id!, refetchRequestsByUser)
+              }
+            >
+              <RequestByUser key={req.id} request={req} />
+            </SwipeToDeleteRequest>
           ))}
         </View>
       )}
