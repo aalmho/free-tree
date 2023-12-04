@@ -5,12 +5,16 @@ import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import LoginScreen from "./screens/LoginScreen";
 import { SessionContext } from "./context/SessionContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, focusManager } from "@tanstack/react-query";
 import { StackNavigator } from "./navigation/StackNavigator";
 import "./i18n/i18next";
 import * as Notifications from "expo-notifications";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import NavigationContainerComponent from "./navigation/NavigationcontainerComponent";
+import { AppState, AppStateStatus } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -23,7 +27,27 @@ Notifications.setNotificationHandler({
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        gcTime: Infinity,
+      },
+    },
+  });
+
+  const asyncStoragePersister = createAsyncStoragePersister({
+    storage: AsyncStorage,
+  });
+
+  const onAppStateChange = (status: AppStateStatus) => {
+    focusManager.setFocused(status === "active");
+  };
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", onAppStateChange);
+
+    return () => subscription.remove();
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -44,9 +68,12 @@ export default function App() {
       {session ? (
         <SessionContext.Provider value={{ session }}>
           <NavigationContainerComponent>
-            <QueryClientProvider client={queryClient}>
+            <PersistQueryClientProvider
+              client={queryClient}
+              persistOptions={{ persister: asyncStoragePersister }}
+            >
               <StackNavigator />
-            </QueryClientProvider>
+            </PersistQueryClientProvider>
           </NavigationContainerComponent>
         </SessionContext.Provider>
       ) : (
