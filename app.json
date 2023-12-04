@@ -2,7 +2,7 @@
   "expo": {
     "name": "Juletræet",
     "slug": "juletraet",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,7 +18,8 @@
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
-      "bundleIdentifier": "com.2100appiness.freetree"
+      "bundleIdentifier": "com.2100appiness.freetree",
+      "buildNumber": "2"
     },
     "plugins": [
       "expo-apple-authentication"
@@ -28,6 +29,13 @@
       "eas": {
         "projectId": "f82dd3b0-67da-4b67-8624-388bf8e795fa"
       }
-    }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f82dd3b0-67da-4b67-8624-388bf8e795fa"
+    },
+    "android": {}
   }
 }

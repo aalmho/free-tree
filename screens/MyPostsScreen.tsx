@@ -31,10 +31,8 @@ const MyPostsScreen = ({ navigation }: any) => {
   } = usePostsByUser(session?.user?.id!);
 
   const { t } = useTranslation();
-  const userPost = useMemo(
-    () => (posts || [])?.filter((post) => post.user_id === session?.user?.id),
-    [posts, session]
-  );
+
+  const userPosts = useMemo(() => posts, [posts, session]);
 
   useFocusEffect(
     useCallback(() => {
@@ -91,7 +89,7 @@ const MyPostsScreen = ({ navigation }: any) => {
             />
           </TouchableOpacity>
         </View>
-        {userPost?.length === 0 && (
+        {userPosts?.length === 0 && (
           <View
             style={{
               justifyContent: "center",
@@ -103,7 +101,7 @@ const MyPostsScreen = ({ navigation }: any) => {
           </View>
         )}
         <View style={{ gap: 20 }}>
-          {userPost.map((post) => (
+          {userPosts?.map((post) => (
             <FeedPost key={post.id.toString()} post={post} />
           ))}
         </View>
