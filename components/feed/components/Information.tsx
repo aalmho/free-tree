@@ -21,7 +21,8 @@ export const Information: FC<InformationProps> = ({ post }) => {
     useRequestTree();
   const { mutate: deleteTreeMutation, isPending: isDeletePending } =
     useDeletePost();
-
+  const ionIconsBackground = "#b3b1b2";
+  const IonIconSize = 35;
   const isUsersPost = useMemo(() => {
     return post.user_id === session?.user?.id;
   }, [post.user_id, session]);
@@ -62,11 +63,20 @@ export const Information: FC<InformationProps> = ({ post }) => {
   const postAction = useMemo(() => {
     if (isUsersPost) {
       return (
-        <View
-          style={{ backgroundColor: "lightgrey", borderRadius: 5, padding: 5 }}
-        >
-          <Ionicons name="trash-outline" size={20} color="black" />
-        </View>
+        <>
+          <View
+            style={{
+              backgroundColor: ionIconsBackground,
+              borderRadius: 5,
+              padding: 10,
+            }}
+          >
+            <Ionicons name="trash-outline" size={IonIconSize} color="black" />
+          </View>
+          <View>
+            <Text style={{ fontSize: 10 }}>{t("deletePostButton")}</Text>
+          </View>
+        </>
       );
     }
     return isTreeRequestedByUser ? (
@@ -81,16 +91,21 @@ export const Information: FC<InformationProps> = ({ post }) => {
         {t("feedPostPending")}
       </Text>
     ) : (
-      <View
-        style={{
-          gap: 5,
-          backgroundColor: "lightgrey",
-          borderRadius: 5,
-          padding: 5,
-        }}
-      >
-        <Ionicons name="mail-outline" size={24} color="black" />
-      </View>
+      <>
+        <View
+          style={{
+            gap: 10,
+            backgroundColor: ionIconsBackground,
+            borderRadius: 5,
+            padding: 10,
+          }}
+        >
+          <Ionicons name="mail-outline" size={IonIconSize} color="black" />
+        </View>
+        <View>
+          <Text style={{ fontSize: 10 }}>{t("requestPostButton")}</Text>
+        </View>
+      </>
     );
   }, [isUsersPost, isTreeRequestedByUser]);
 
@@ -98,6 +113,7 @@ export const Information: FC<InformationProps> = ({ post }) => {
     <View
       style={{
         paddingHorizontal: 5,
+        paddingVertical: 5,
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
@@ -112,7 +128,7 @@ export const Information: FC<InformationProps> = ({ post }) => {
         }}
       >
         <View>
-          <Text style={{ color: "black", fontWeight: "600", fontSize: 18 }}>
+          <Text style={{ color: "black", fontWeight: "400", fontSize: 14 }}>
             {post.description}
           </Text>
         </View>
@@ -125,7 +141,7 @@ export const Information: FC<InformationProps> = ({ post }) => {
           </Text>
         </View>
       </View>
-      <View style={{ flexDirection: "row", gap: 5 }}>
+      <View style={{ flexDirection: "row", gap: 10 }}>
         {isUsersPost && (
           <TouchableOpacity
             disabled={isMarkTreePending}
@@ -137,25 +153,43 @@ export const Information: FC<InformationProps> = ({ post }) => {
             }
           >
             {post.reserved ? (
-              <View
-                style={{
-                  backgroundColor: "lightgrey",
-                  borderRadius: 5,
-                  padding: 5,
-                }}
-              >
-                <Ionicons name="eye-off-outline" size={20} color="black" />
-              </View>
+              <>
+                <View
+                  style={{
+                    backgroundColor: ionIconsBackground,
+                    borderRadius: 5,
+                    padding: 10,
+                  }}
+                >
+                  <Ionicons
+                    name="eye-off-outline"
+                    size={IonIconSize}
+                    color="black"
+                  />
+                </View>
+                <View>
+                  <Text style={{ fontSize: 10 }}>{t("showPostButton")}</Text>
+                </View>
+              </>
             ) : (
-              <View
-                style={{
-                  backgroundColor: "lightgrey",
-                  borderRadius: 5,
-                  padding: 5,
-                }}
-              >
-                <Ionicons name="eye-outline" size={20} color="black" />
-              </View>
+              <>
+                <View
+                  style={{
+                    backgroundColor: ionIconsBackground,
+                    borderRadius: 5,
+                    padding: 10,
+                  }}
+                >
+                  <Ionicons
+                    name="eye-outline"
+                    size={IonIconSize}
+                    color="black"
+                  />
+                </View>
+                <View>
+                  <Text style={{ fontSize: 10 }}>{t("hidePostButton")}</Text>
+                </View>
+              </>
             )}
           </TouchableOpacity>
         )}

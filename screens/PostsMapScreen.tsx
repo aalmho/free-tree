@@ -72,7 +72,7 @@ const PostsMapScreen = () => {
               setSelectedPostalCode(entry.postalCode);
             }}
           >
-            <Text style={{ fontSize: 20 }}>🎄</Text>
+            <Text style={{ fontSize: 28 }}>🎄</Text>
           </Marker>
         ))}
       </MapView>
