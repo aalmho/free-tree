@@ -9,12 +9,13 @@ import {
   markPostAsReserved,
 } from "../api/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getRequests } from "./use-requests";
 
-export const usePosts = (userId: string) => {
+export const usePosts = () => {
   return useQuery({
     queryKey: ["getPosts"],
     queryFn: async () => {
-      return await getPosts(userId);
+      return await getPosts();
     },
   });
 };
@@ -61,13 +62,19 @@ export const useDeletePost = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: async (args: { postId: number; userId: string }) => {
-      const previousData = queryClient.getQueryData(["getPostsByUser"]);
-      const previousPostData = queryClient.getQueryData(["getPosts"]);
+      const previousData = queryClient.ensureQueryData({
+        queryKey: ["getPostsByUser"],
+        queryFn: () => getPostsByUser(args.userId),
+      });
+      const previousPostData = queryClient.ensureQueryData({
+        queryKey: ["getPosts"],
+        queryFn: () => usePosts(),
+      });
 
-      const previousRequestData = queryClient.getQueryData([
-        "requestsByUser",
-        args.userId,
-      ]);
+      const previousRequestData = queryClient.ensureQueryData({
+        queryKey: ["requestsByUser", args.userId],
+        queryFn: () => getRequests(args.userId),
+      });
 
       queryClient.setQueryData(
         ["userRequests", args.userId],
@@ -120,29 +127,31 @@ export const useMarkPostAsReserved = () => {
   const queryClient = useQueryClient();
 
   const mutate = useMutation({
-    mutationFn: async (args: { postId: number; mark: boolean }) => {
-      const previousUserPostData = queryClient.getQueryData(["getPostsByUser"]);
-      const previousPostData = queryClient.getQueryData(["getPosts"]);
-      queryClient.setQueryData(
-        ["getPostsByUser"],
-        (oldData: Post[] | undefined) => {
-          if (oldData) {
-            return oldData.map((post) =>
-              post.id === args.postId ? { ...post, reserved: args.mark } : post
-            );
-          }
-          return oldData;
-        }
-      );
+    mutationFn: async (args: {
+      postId: number;
+      mark: boolean;
+      userId: string;
+    }) => {
+      const previousUserPostData = queryClient.ensureQueryData({
+        queryKey: ["getPostsByUser"],
+        queryFn: () => getPostsByUser(args.userId),
+      });
 
-      queryClient.setQueryData(["getPosts"], (oldData: Post[] | undefined) => {
+      const previousPostData = queryClient.ensureQueryData({
+        queryKey: ["getPosts"],
+        queryFn: () => getPosts(),
+      });
+
+      const updatePostData = (oldData: Post[] | undefined) => {
         if (oldData) {
           return oldData.map((post) =>
             post.id === args.postId ? { ...post, reserved: args.mark } : post
           );
         }
-        return oldData;
-      });
+      };
+
+      queryClient.setQueryData(["getPostsByUser"], updatePostData);
+      queryClient.setQueryData(["getPosts"], updatePostData);
 
       try {
         return await markPostAsReserved(args.postId, args.mark);

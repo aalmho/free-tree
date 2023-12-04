@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { useRequests, useRequestsByUser } from "../hooks/use-requests";
 import { SessionContext } from "../context/SessionContext";
@@ -10,6 +10,7 @@ import { useFocusEffect } from "@react-navigation/native";
 const RequestsScreen = () => {
   const { t } = useTranslation();
   const { session } = useContext(SessionContext);
+  const firstTimeRef = React.useRef(true);
   const {
     data: requests,
     isLoading,
@@ -23,6 +24,12 @@ const RequestsScreen = () => {
     refetch: refetchRequestsByUser,
   } = useRequestsByUser(session?.user?.id!);
 
+  const requestsOfTrees = useMemo(() => requests, [requests, session]);
+  const requestsByUsers = useMemo(
+    () => requestsByUser,
+    [requestsByUser, session]
+  );
+
   const refetchAllRequests = () => {
     refetch();
     refetchRequestsByUser();
@@ -30,20 +37,43 @@ const RequestsScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
+      if (firstTimeRef.current) {
+        firstTimeRef.current = false;
+        return;
+      }
       refetchAllRequests();
-    }, [])
+    }, [refetch, refetchRequestsByUser])
   );
 
   if (
-    (!requests || !requests.length) &&
-    (!requestsByUser?.length || !requestsByUser)
+    (!requestsOfTrees || !requestsOfTrees.length) &&
+    (!requestsByUsers?.length || !requestsByUsers)
   ) {
     return (
-      <View
-        style={{ justifyContent: "center", alignItems: "center", padding: 20 }}
+      <ScrollView
+        style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={
+              isLoading ||
+              isRefetching ||
+              isRequestByUserFetching ||
+              isRequestByUserLoading
+            }
+            onRefresh={refetchAllRequests}
+          />
+        }
       >
-        <Text>{t("requestsScreenNoRequests")} </Text>
-      </View>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+          }}
+        >
+          <Text>{t("requestsScreenNoRequests")} </Text>
+        </View>
+      </ScrollView>
     );
   }
 
@@ -62,22 +92,22 @@ const RequestsScreen = () => {
         />
       }
     >
-      {!!requests?.length && (
+      {!!requestsOfTrees?.length && (
         <View>
           <Text style={{ padding: 8, fontWeight: "800" }}>
-            {t("requestsOfMyTrees")}{" "}
+            {t("requestsOfMyTrees")}
           </Text>
-          {requests?.map((req) => (
+          {requestsOfTrees?.map((req) => (
             <PostRequest key={req.id} request={req} />
           ))}
         </View>
       )}
-      {!!requestsByUser?.length && (
+      {!!requestsByUsers?.length && (
         <View>
           <Text style={{ padding: 8, fontWeight: "800" }}>
-            {t("requestScreenMyRequests")}{" "}
+            {t("requestScreenMyRequests")}
           </Text>
-          {requestsByUser?.map((req) => (
+          {requestsByUsers?.map((req) => (
             <RequestByUser key={req.id} request={req} />
           ))}
         </View>

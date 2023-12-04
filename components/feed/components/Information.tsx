@@ -133,7 +133,11 @@ export const Information: FC<InformationProps> = ({ post }) => {
               alignItems: "center",
             }}
             onPress={() =>
-              markTreeMutation({ postId: post.id, mark: !post.reserved })
+              markTreeMutation({
+                postId: post.id,
+                mark: !post.reserved,
+                userId: session?.user?.id!,
+              })
             }
           >
             {post.reserved ? (

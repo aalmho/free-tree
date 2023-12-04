@@ -1,11 +1,11 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { View, Text, Modal, SafeAreaView, FlatList } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { FeedPost } from "../components/feed/FeedPost";
 import { usePosts } from "../hooks/use-posts";
 import { Ionicons } from "@expo/vector-icons";
 import { Post } from "../api/api";
-import { SessionContext } from "../context/SessionContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 const groupPostsByPostalCode = (posts: Post[]): Record<string, Post[]> => {
   const groupedPosts: Record<string, Post[]> = {};
@@ -26,12 +26,17 @@ const groupPostsByPostalCode = (posts: Post[]): Record<string, Post[]> => {
 };
 
 const PostsMapScreen = () => {
-  const { session } = useContext(SessionContext);
   const [offset, setOffset] = useState(4);
-  const { data } = usePosts(session?.user?.id!);
+  const { data, refetch } = usePosts();
   const [isVisible, setIsVisible] = useState(false);
   const [selectedPostalCode, setSelectedPostalCode] = useState("");
   const groupedPosts = groupPostsByPostalCode(data || []);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [])
+  );
 
   const mappedData = useMemo(() => {
     return Object.keys(groupedPosts).map((postalCode) => {

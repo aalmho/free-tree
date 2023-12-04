@@ -6,7 +6,7 @@ import { Session } from "@supabase/supabase-js";
 import LoginScreen from "./screens/LoginScreen";
 import { SessionContext } from "./context/SessionContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { StackNavigator, StackParamList } from "./navigation/StackNavigator";
+import { StackNavigator } from "./navigation/StackNavigator";
 import "./i18n/i18next";
 import * as Notifications from "expo-notifications";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
