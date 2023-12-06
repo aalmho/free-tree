@@ -1,22 +1,26 @@
-import { FC, MutableRefObject, RefObject, useRef } from "react";
+import { FC, MutableRefObject } from "react";
 import { Alert, TouchableOpacity } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { deleteRequest } from "../../hooks/use-requests";
 
 interface SwipeToDeleteRequestProps {
   children: JSX.Element;
   openedRow: MutableRefObject<Swipeable | null>;
-  deleteRequest: () => void;
+  requestId: number;
+  isRequestedByUser: boolean;
 }
 
 const SwipeToDeleteRequest: FC<SwipeToDeleteRequestProps> = ({
   children,
   openedRow,
-  deleteRequest,
+  requestId,
+  isRequestedByUser,
 }) => {
   const { t } = useTranslation();
+  const { mutate: deleteRequestMutation } = deleteRequest(isRequestedByUser);
 
   const onDelete = (swipeable: Swipeable) => {
     return Alert.alert(t("deleteRequestTitle"), t("deleteRequestMessage"), [
@@ -29,7 +33,7 @@ const SwipeToDeleteRequest: FC<SwipeToDeleteRequestProps> = ({
         text: t("deleteRequest"),
         onPress: () => {
           swipeable.close();
-          deleteRequest();
+          deleteRequestMutation({ requestId });
         },
       },
     ]);

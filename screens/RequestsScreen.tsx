@@ -49,10 +49,6 @@ const RequestsScreen = () => {
   );
 
   const openedRow = useRef<Swipeable>(null);
-  const deleteRequest = async (requestId: number, refetch: () => void) => {
-    await deleteRequestById(requestId);
-    refetch();
-  };
 
   if (
     (!requestsOfTrees || !requestsOfTrees.length) &&
@@ -110,7 +106,8 @@ const RequestsScreen = () => {
             <SwipeToDeleteRequest
               key={req.id}
               openedRow={openedRow}
-              deleteRequest={() => deleteRequest(req.id!, refetch)}
+              requestId={req.id}
+              isRequestedByUser={false}
             >
               <PostRequest key={req.id} request={req} />
             </SwipeToDeleteRequest>
@@ -126,9 +123,8 @@ const RequestsScreen = () => {
             <SwipeToDeleteRequest
               key={req.id}
               openedRow={openedRow}
-              deleteRequest={() =>
-                deleteRequest(req.id!, refetchRequestsByUser)
-              }
+              requestId={req.id!}
+              isRequestedByUser
             >
               <RequestByUser key={req.id} request={req} />
             </SwipeToDeleteRequest>
