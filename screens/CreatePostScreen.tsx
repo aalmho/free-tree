@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 const fetchAddressData = async (postalCode: string) => {
   try {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${postalCode}+dk`
+      `https://nominatim.openstreetmap.org/search?format=json&q=${postalCode}+denmark`
     );
     return await response.json();
   } catch (error) {}
