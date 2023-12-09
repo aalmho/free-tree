@@ -7,6 +7,7 @@ import {
   Post,
   Profile,
   getPosts,
+  unrequestTree,
 } from "../api/api";
 import {
   useQuery,
@@ -100,10 +101,7 @@ export const useRequestTree = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: async (args: { requesterUserId: string; postId: number }) => {
-      const previousData = queryClient.ensureQueryData({
-        queryKey: ["getPosts"],
-        queryFn: () => getPosts(),
-      });
+      const previousData = queryClient.getQueryData(["getPosts"]);
 
       queryClient.setQueryData(["getPosts"], (oldData: Post[] | undefined) => {
         if (oldData) {
@@ -133,6 +131,19 @@ export const useRequestTree = () => {
     },
     onSuccess: async () => {
       return queryClient.invalidateQueries({ queryKey: ["getPosts"] });
+    },
+  });
+  return mutate;
+};
+
+export const useUnrequestTree = () => {
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+    mutationFn: async (args: { requestId: number }) => {
+      return unrequestTree(args.requestId);
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["getPosts"] });
     },
   });
   return mutate;

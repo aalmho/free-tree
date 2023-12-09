@@ -137,6 +137,14 @@ export const requestTree = async (requesterUserId: string, postId: number) => {
   handleError(error);
 };
 
+export const unrequestTree = async (requestId: number) => {
+  const { error } = await supabase
+    .from("requests")
+    .delete()
+    .eq("id", requestId);
+  handleError(error);
+};
+
 export const approveRequest = async (requestId: number) => {
   const { error, data } = await supabase
     .from("requests")
