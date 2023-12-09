@@ -22,7 +22,7 @@ export const usePosts = () => {
 
 export const usePostsByUser = (userId: string) => {
   return useQuery({
-    queryKey: ["getPostsByUser"],
+    queryKey: ["getPostsByUser", userId],
     queryFn: async () => {
       return await getPostsByUser(userId);
     },
@@ -132,15 +132,11 @@ export const useMarkPostAsReserved = () => {
       mark: boolean;
       userId: string;
     }) => {
-      const previousUserPostData = queryClient.ensureQueryData({
-        queryKey: ["getPostsByUser"],
-        queryFn: () => getPostsByUser(args.userId),
-      });
-
-      const previousPostData = queryClient.ensureQueryData({
-        queryKey: ["getPosts"],
-        queryFn: () => getPosts(),
-      });
+      const previousUserPostData = queryClient.getQueryData([
+        "getPostsByUser",
+        args.userId,
+      ]);
+      const previousPostData = queryClient.getQueryData(["getPosts"]);
 
       const updatePostData = (oldData: Post[] | undefined) => {
         if (oldData) {
@@ -150,18 +146,24 @@ export const useMarkPostAsReserved = () => {
         }
       };
 
-      queryClient.setQueryData(["getPostsByUser"], updatePostData);
+      queryClient.setQueryData(["getPostsByUser", args.userId], updatePostData);
       queryClient.setQueryData(["getPosts"], updatePostData);
 
       try {
         return await markPostAsReserved(args.postId, args.mark);
       } catch {
-        queryClient.setQueryData(["getPostsByUser"], previousUserPostData);
+        queryClient.setQueryData(
+          ["getPostsByUser", args.userId],
+          previousUserPostData
+        );
         queryClient.setQueryData(["getPosts"], previousPostData);
       }
     },
-    onSuccess: async () => {
-      return queryClient.invalidateQueries({ queryKey: ["getPosts"] });
+    onSuccess: async (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["getPosts"] });
+      queryClient.invalidateQueries({
+        queryKey: ["getPostsByUser", variables.userId],
+      });
     },
   });
 

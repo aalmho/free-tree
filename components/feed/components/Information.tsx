@@ -2,7 +2,7 @@ import { FC, useCallback, useContext, useMemo } from "react";
 import { Post, createNotification } from "../../../api/api";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { SessionContext } from "../../../context/SessionContext";
-import { useRequestTree } from "../../../hooks/use-requests";
+import { useRequestTree, useUnrequestTree } from "../../../hooks/use-requests";
 import dayjs from "../../../dayjsWithLocale";
 import { useDeletePost, useMarkPostAsReserved } from "../../../hooks/use-posts";
 import { useTranslation } from "react-i18next";
@@ -21,6 +21,8 @@ export const Information: FC<InformationProps> = ({ post }) => {
     useRequestTree();
   const { mutate: deleteTreeMutation, isPending: isDeletePending } =
     useDeletePost();
+  const { mutate: unrequestTreeMutation, isPending: isUnrequestPending } =
+    useUnrequestTree();
 
   const isUsersPost = useMemo(() => {
     return post.user_id === session?.user?.id;
@@ -46,7 +48,13 @@ export const Information: FC<InformationProps> = ({ post }) => {
         },
       ]);
     }
-    if (!isTreeRequestedByUser) {
+    if (isTreeRequestedByUser) {
+      unrequestTreeMutation({
+        requestId: post.requests?.find(
+          (request) => request.profiles?.id === session?.user?.id
+        )?.id!,
+      });
+    } else {
       requestTreeMutation({
         requesterUserId: session?.user?.id!,
         postId: post.id,
@@ -65,21 +73,21 @@ export const Information: FC<InformationProps> = ({ post }) => {
         <View
           style={{ backgroundColor: "lightgrey", borderRadius: 5, padding: 5 }}
         >
-          <Ionicons name="trash-outline" size={20} color="black" />
+          <Ionicons name="trash-outline" size={26} color="black" />
         </View>
       );
     }
     return isTreeRequestedByUser ? (
-      <Text
+      <View
         style={{
-          color: "green",
-          fontWeight: "800",
-          paddingHorizontal: 10,
-          paddingVertical: 10,
+          gap: 5,
+          backgroundColor: "lightgrey",
+          borderRadius: 5,
+          padding: 5,
         }}
       >
-        {t("feedPostPending")}
-      </Text>
+        <Ionicons name="mail-open-outline" size={28} color="black" />
+      </View>
     ) : (
       <View
         style={{
@@ -89,7 +97,7 @@ export const Information: FC<InformationProps> = ({ post }) => {
           padding: 5,
         }}
       >
-        <Ionicons name="mail-outline" size={24} color="black" />
+        <Ionicons name="mail-outline" size={28} color="black" />
       </View>
     );
   }, [isUsersPost, isTreeRequestedByUser]);
@@ -112,7 +120,7 @@ export const Information: FC<InformationProps> = ({ post }) => {
         }}
       >
         <View>
-          <Text style={{ color: "black", fontWeight: "600", fontSize: 18 }}>
+          <Text style={{ color: "black", fontWeight: "600", fontSize: 16 }}>
             {post.description}
           </Text>
         </View>
@@ -148,7 +156,7 @@ export const Information: FC<InformationProps> = ({ post }) => {
                   padding: 5,
                 }}
               >
-                <Ionicons name="eye-off-outline" size={20} color="black" />
+                <Ionicons name="eye-off-outline" size={26} color="black" />
               </View>
             ) : (
               <View
@@ -158,7 +166,7 @@ export const Information: FC<InformationProps> = ({ post }) => {
                   padding: 5,
                 }}
               >
-                <Ionicons name="eye-outline" size={20} color="black" />
+                <Ionicons name="eye-outline" size={26} color="black" />
               </View>
             )}
           </TouchableOpacity>
@@ -166,7 +174,8 @@ export const Information: FC<InformationProps> = ({ post }) => {
         {
           <TouchableOpacity
             disabled={
-              (isDeletePending || isRequestPending) && isTreeRequestedByUser
+              (isDeletePending || isRequestPending || isUnrequestPending) &&
+              isTreeRequestedByUser
             }
             style={{
               alignItems: "center",
