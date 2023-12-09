@@ -30,14 +30,18 @@ const Chat = ({
   const firstNameOfSender = useGetFirstName(session?.user?.id!);
 
   const onSend = useCallback(
-    (messages: IMessage[] = [], senderName: string) => {
+    (messages: IMessage[] = []) => {
       setMessages((previousMessages) =>
         GiftedChat.append(previousMessages, messages)
       );
       sendMessage(requestId, messages[0].text, session?.user?.id!);
-      createNotification(recipientProfile.id!, senderName, messages[0].text);
+      createNotification(
+        recipientProfile.id!,
+        firstNameOfSender,
+        messages[0].text
+      );
     },
-    []
+    [firstNameOfSender, recipientProfile]
   );
 
   useEffect(() => {
@@ -93,7 +97,7 @@ const Chat = ({
           renderTime={renderTime}
           placeholder={t("ChatMessagePlaceholder")}
           renderAvatar={null}
-          onSend={(messages) => onSend(messages, firstNameOfSender)}
+          onSend={(messages) => onSend(messages)}
           user={{
             _id: session?.user?.id!,
           }}
