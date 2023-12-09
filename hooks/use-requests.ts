@@ -7,6 +7,7 @@ import {
   Post,
   Profile,
   getPosts,
+  deleteRequestById,
 } from "../api/api";
 import {
   useQuery,
@@ -38,6 +39,26 @@ export const getRequests = async (userId: string) => {
 
   return requestsWithImageUrls;
 };
+
+export const deleteRequest = (isRequestByUser: boolean) =>  {
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+    mutationFn: async (args: {
+      requestId: number
+    }) => {
+      return deleteRequestById(args.requestId);
+    },
+    onSuccess: async () => {
+      if(isRequestByUser) {
+        return queryClient.invalidateQueries({queryKey: ["requestsByUser"] })
+      }
+      else {
+        return queryClient.invalidateQueries({queryKey: ["userRequests"] })
+      }   
+    },
+  });
+  return mutate
+} 
 
 export const useRequests = (userId: string) => {
   const queryKey: QueryKey = ["userRequests", userId];
