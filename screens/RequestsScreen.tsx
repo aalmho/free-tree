@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { useCallback, useContext, useMemo, useRef } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { useRequests, useRequestsByUser } from "../hooks/use-requests";
 import { SessionContext } from "../context/SessionContext";
@@ -6,11 +6,14 @@ import { PostRequest } from "../components/requests/PostRequest";
 import { RequestByUser } from "../components/requests/RequestByUser";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "@react-navigation/native";
+import SwipeToDeleteRequest from "../components/requests/SwipeToDeleteRequest";
+import { deleteRequestById } from "../api/api";
+import { Swipeable } from "react-native-gesture-handler";
 
 const RequestsScreen = () => {
   const { t } = useTranslation();
   const { session } = useContext(SessionContext);
-  const firstTimeRef = React.useRef(true);
+  const firstTimeRef = useRef(true);
   const {
     data: requests,
     isLoading,
@@ -44,6 +47,8 @@ const RequestsScreen = () => {
       refetchAllRequests();
     }, [refetch, refetchRequestsByUser])
   );
+
+  const openedRow = useRef<Swipeable>(null);
 
   if (
     (!requestsOfTrees || !requestsOfTrees.length) &&
@@ -98,7 +103,14 @@ const RequestsScreen = () => {
             {t("requestsOfMyTrees")}
           </Text>
           {requestsOfTrees?.map((req) => (
-            <PostRequest key={req.id} request={req} />
+            <SwipeToDeleteRequest
+              key={req.id}
+              openedRow={openedRow}
+              requestId={req.id}
+              isRequestedByUser={false}
+            >
+              <PostRequest key={req.id} request={req} />
+            </SwipeToDeleteRequest>
           ))}
         </View>
       )}
@@ -108,7 +120,14 @@ const RequestsScreen = () => {
             {t("requestScreenMyRequests")}
           </Text>
           {requestsByUsers?.map((req) => (
-            <RequestByUser key={req.id} request={req} />
+            <SwipeToDeleteRequest
+              key={req.id}
+              openedRow={openedRow}
+              requestId={req.id!}
+              isRequestedByUser
+            >
+              <RequestByUser key={req.id} request={req} />
+            </SwipeToDeleteRequest>
           ))}
         </View>
       )}

@@ -229,6 +229,14 @@ export const removeAllNotificationsForUser = async (userId: string) => {
   handleError(messageError);
 };
 
+export const deleteRequestById = async (requestId: number) => {
+  const { error: messageError } = await supabase
+    .from("requests")
+    .delete()
+    .eq("id", requestId);
+  handleError(messageError);
+};
+
 export const getFirstName = async (userId: string) => {
   const { data, error } = await supabase
     .from("profiles")

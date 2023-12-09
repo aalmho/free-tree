@@ -34,6 +34,9 @@
     "RequestApprovedNotificationBody": "Du kan nu skrive til ejeren 🎄",
     "YourTreeIsRequestedNotificationTitle": "Nogen vil have dit 🎄",
     "YourTreeIsRequestedNotificationBody": "I kan aftale nærmere i appen",
-    "ChatMessagePlaceholder": "Skriv en besked..."
+    "ChatMessagePlaceholder": "Skriv en besked...",
+    "deleteRequest": "Slet",
+    "deleteRequestTitle": "Slet anmodning",
+    "deleteRequestMessage": "Er du sikker på at du vil slette denne anmodning og alle tilhørende beskeder?"
   }
   
